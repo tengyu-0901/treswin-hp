@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | TRESWIN</title>
+    <style>
+        /* 全体のリセットと基本設定（共通） */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.8;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ヘッダー（共通バナー） */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+        .logo-svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            object-fit: contain;
+        }
+        /* ハンバーガー */
+        .hamburger { display: none; background: transparent; border: none; cursor: pointer; width: 30px; height: 22px; position: relative; z-index: 1001; }
+        .hamburger span { position: absolute; left: 0; width: 100%; height: 2px; background-color: #1a1a1a; transition: all 0.3s ease; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { top: 10px; }
+        .hamburger span:nth-child(3) { bottom: 0; }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #dfd71c;
+        }
+
+        /* ヒーローバナー */
+        .hero {
+            height: 50vh;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 5%;
+            position: relative;
+            background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .hero-content { position: relative; z-index: 2; margin-top: 40px; }
+        .hero-content h1 {
+            font-size: clamp(32px, 6vw, 60px);
+            font-weight: 900;
+            letter-spacing: 6px;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .hero-content p {
+            font-size: 14px;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* サービス紹介エリア */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 5% 100px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-color: #dfd71c;
+        }
+
+        .service-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: #1d184a;
+        }
+
+        .service-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #1d184a;
+            letter-spacing: 1px;
+        }
+
+        .service-card p {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 30px; /* ボタンとの間隔 */
+            flex-grow: 1; /* コンテンツ量に関わらずボタンの位置を揃える */
+        }
+
+        /* サービス詳細ボタン */
+        .service-btn {
+            display: inline-block;
+            align-self: flex-start;
+            padding: 10px 30px;
+            background-color: #1d184a;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .service-btn:hover {
+            background-color: #dfd71c;
+            color: #1d184a;
+        }
+
+        /* 下部装飾バナー（共通） */
+        .decoration-footer {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background-color: #1d184a;
+            margin-top: auto;
+            overflow: hidden;
+        }
+        .slanted-line {
+            position: absolute;
+            top: -50px;
+            left: -5%;
+            width: 110%;
+            height: 100px;
+            background-color: #ffffff;
+            transform: rotate(-3deg);
+            border-bottom: 12px solid #dfd71c;
+            z-index: 2;
+        }
+        .footer-content {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            z-index: 3;
+        }
+        .footer-content .logo-text { color: #fff; margin-bottom: 10px; display: block; }
+        .footer-content .copyright { font-size: 12px; color: #888; margin-top: 10px; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            nav { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background-color: rgba(255,255,255,0.98); box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.3s ease; display: flex; align-items: center; justify-content: center; }
+            nav.active { right: 0; }
+            nav ul { flex-direction: column; text-align: center; }
+            nav ul li { margin: 20px 0; }
+            nav ul li a { font-size: 18px; display: block; padding: 10px; }
+            .hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+            .service-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-area">
+            <img src="treswinlogo2.png" alt="TRESWIN" class="logo-svg">
+            <div class="logo-text">TRESWIN</div>
+        </a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="company.html">COMPANY</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>SERVICES</h1>
+            <p>事業内容</p>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="service-grid">
+            
+            <div class="service-card">
+                <h3>キャリア支援事業</h3>
+                <p>
+                    個人のキャリアビジョンに基づき、最適なステップアップを支援します。
+                    市場価値の向上から具体的なマッチングまで、伴走型のサポートを提供いたします。
+                </p>
+                <a href="service-career.html" class="service-btn">DETAILS</a>
+            </div>
+
+            <div class="service-card">
+                <h3>HP制作事業</h3>
+                <p>
+                    企業のブランドイメージを最大限に引き出すWebサイトを制作します。
+                    デザイン性だけでなく、成果に直結する導きと使いやすさを追求した設計を行います。
+                </p>
+                <a href="service-hp.html" class="service-btn">DETAILS</a>
+            </div>
+
+            <div class="service-card">
+                <h3>SNS制作事業</h3>
+                <p>
+                    現代のマーケティングに不可欠なSNS戦略を構築。
+                    クリエイティブなコンテンツ制作とデータ分析により、ブランドの認知拡大とエンゲージメント向上を実現します。
+                </p>
+                <a href="service-sns.html" class="service-btn">DETAILS</a>
+            </div>
+
+            <div class="service-card">
+                <h3>アドバイザリー事業</h3>
+                <p>
+                    豊富な経験と分析データに基づき、経営や事業運営に関する多角的なアドバイスを行います。
+                    パートナーとして、課題解決と持続的な成長を支援します。
+                </p>
+                <a href="service-advisory.html" class="service-btn">DETAILS</a>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="decoration-footer">
+        <div class="slanted-line"></div>
+        <div class="footer-content">
+            <span class="logo-text">TRESWIN</span>
+            <div class="copyright">&copy; 2026 TRESWIN. All Rights Reserved.</div>
+        </div>
+    </div>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => { hamburger.classList.toggle('active'); navMenu.classList.toggle('active'); });
+    </script>
+</body>
+</html>
