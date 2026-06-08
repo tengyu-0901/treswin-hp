@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRESWIN | トレスウィン 公式サイト</title>
+    <style>
+        /* 全体のリセットと基本設定 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.8;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ヘッダー（共通バナー） */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+        .logo-svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #dfd71c;
+        }
+
+        /* メインビジュアル（ロゴ＋コンタクトボタン） */
+        .hero {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding-top: 80px; /* ヘッダー分の余白 */
+        }
+        
+        .hero-logo-svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .hero h1 {
+            font-size: clamp(36px, 8vw, 56px);
+            letter-spacing: 8px;
+            color: #1d184a; /* 名刺のネイビー */
+            margin-left: 8px; /* letter-spacingによるズレの調整 */
+        }
+
+        /* トップページのコンタクトボタン */
+        .hero-contact-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 60px;
+            background-color: #1d184a;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+        .hero-contact-btn:hover {
+            background-color: #dfd71c;
+            color: #1d184a;
+        }
+
+        /* 下部装飾バナー（共通） */
+        .decoration-footer {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background-color: #1d184a;
+            margin-top: auto;
+            overflow: hidden;
+        }
+        .slanted-line {
+            position: absolute;
+            top: -50px;
+            left: -5%;
+            width: 110%;
+            height: 100px;
+            background-color: #ffffff;
+            transform: rotate(-3deg);
+            border-bottom: 12px solid #dfd71c;
+            z-index: 2;
+        }
+        .footer-content {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            z-index: 3;
+        }
+        .footer-content .logo-text { color: #fff; margin-bottom: 10px; display: block; }
+        .footer-content .copyright { font-size: 12px; color: #888; margin-top: 10px; }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-area">
+            <svg class="logo-svg" viewBox="0 0 100 100">
+                <polygon points="10,90 40,10 55,10 25,90" fill="#dfd71c" />
+                <polygon points="45,90 90,90 60,35" fill="#dfd71c" opacity="0.8" />
+            </svg>
+            <div class="logo-text">TRESWIN</div>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="company.html">COMPANY</a></li>
+                <li><a href="contact.html">CONTACT</a></li> </ul>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <svg class="hero-logo-svg" viewBox="0 0 100 100">
+            <polygon points="10,90 40,10 55,10 25,90" fill="#dfd71c" />
+            <polygon points="45,90 90,90 60,35" fill="#dfd71c" opacity="0.8" />
+        </svg>
+        <h1>TRESWIN</h1>
+        <a href="contact.html" class="hero-contact-btn">CONTACT</a>
+    </div>
+
+    <div class="decoration-footer">
+        <div class="slanted-line"></div>
+        <div class="footer-content">
+            <span class="logo-text">TRESWIN</span>
+            <div class="copyright">&copy; 2026 TRESWIN. All Rights Reserved.</div>
+        </div>
+    </div>
+
+</body>
+</html>

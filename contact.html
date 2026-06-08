@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | TRESWIN</title>
+    <style>
+        /* 全体のリセットと基本設定（共通） */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.8;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ヘッダー（共通バナー） */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+        .logo-svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        nav ul li {
+            margin-left: 30px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #dfd71c;
+        }
+
+        /* ページタイトル */
+        .page-title-section {
+            padding: 140px 5% 60px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            text-align: center;
+        }
+        .page-title-section h1 {
+            font-size: 36px;
+            letter-spacing: 4px;
+            color: #1d184a;
+            margin-bottom: 10px;
+        }
+        .page-title-section p {
+            font-size: 14px;
+            color: #888;
+            letter-spacing: 2px;
+        }
+
+        /* お問い合わせフォームエリア */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 5% 150px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .contact-form {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border-top: 5px solid #1d184a;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #1a1a1a;
+            font-size: 15px;
+        }
+
+        .form-group label .required {
+            background-color: #dfd71c;
+            color: #1d184a;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* 法人・個人のボタン式スタイル */
+        .radio-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .radio-buttons input[type="radio"] {
+            display: none; /* デフォルトの丸いボタンを隠す */
+        }
+        .radio-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: normal !important;
+            color: #666 !important;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+        .radio-btn:hover {
+            background-color: #eee;
+        }
+        /* 選択されている時のスタイル */
+        .radio-buttons input[type="radio"]:checked + .radio-btn {
+            background-color: #1d184a;
+            color: #ffffff !important;
+            border-color: #1d184a;
+            font-weight: bold !important;
+        }
+
+        /* 入力欄・プルダウン・テキストエリアの共通スタイル */
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1d184a;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 40px auto 0;
+            padding: 15px 0;
+            background-color: #1d184a;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #dfd71c;
+            color: #1d184a;
+        }
+
+        /* 下部装飾バナー（共通） */
+        .decoration-footer {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background-color: #1d184a;
+            margin-top: auto;
+            overflow: hidden;
+        }
+        .slanted-line {
+            position: absolute;
+            top: -50px;
+            left: -5%;
+            width: 110%;
+            height: 100px;
+            background-color: #ffffff;
+            transform: rotate(-3deg);
+            border-bottom: 12px solid #dfd71c;
+            z-index: 2;
+        }
+        .footer-content {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            z-index: 3;
+        }
+        .footer-content .logo-text { color: #fff; margin-bottom: 10px; display: block; }
+        .footer-content .copyright { font-size: 12px; color: #888; margin-top: 10px; }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .contact-form { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-area">
+            <svg class="logo-svg" viewBox="0 0 100 100">
+                <polygon points="10,90 40,10 55,10 25,90" fill="#dfd71c" />
+                <polygon points="45,90 90,90 60,35" fill="#dfd71c" opacity="0.8" />
+            </svg>
+            <div class="logo-text">TRESWIN</div>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="company.html">COMPANY</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="page-title-section">
+        <h1>CONTACT</h1>
+        <p>お問い合わせ</p>
+    </div>
+
+    <main class="main-content">
+        <div class="contact-form">
+            <form action="#" method="POST">
+                
+                <div class="form-group">
+                    <label>お問い合わせ区分 <span class="required">必須</span></label>
+                    <div class="radio-buttons">
+                        <input type="radio" id="type_corporate" name="customer_type" value="法人" checked>
+                        <label for="type_corporate" class="radio-btn">法人</label>
+                        
+                        <input type="radio" id="type_individual" name="customer_type" value="個人">
+                        <label for="type_individual" class="radio-btn">個人</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="company">会社名</label>
+                    <input type="text" id="company" name="company" placeholder="例：株式会社トレスウィン（個人の場合は空欄可）">
+                </div>
+
+                <div class="form-group">
+                    <label for="name">お名前 <span class="required">必須</span></label>
+                    <input type="text" id="name" name="name" placeholder="例：山田 太郎" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">メールアドレス <span class="required">必須</span></label>
+                    <input type="email" id="email" name="email" placeholder="例：info@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="inquiry_type">お問い合わせ種別 <span class="required">必須</span></label>
+                    <select id="inquiry_type" name="inquiry_type" required>
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="キャリア支援事業">キャリア支援事業</option>
+                        <option value="HP制作事業">HP制作事業</option>
+                        <option value="SNS制作事業">SNS制作事業</option>
+                        <option value="アドバイザリー事業">アドバイザリー事業</option>
+                        <option value="その他">その他</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">お問い合わせ内容詳細 <span class="required">必須</span></label>
+                    <textarea id="message" name="message" placeholder="お問い合わせ内容を具体的にご記入ください" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">送信する</button>
+
+            </form>
+        </div>
+    </main>
+
+    <div class="decoration-footer">
+        <div class="slanted-line"></div>
+        <div class="footer-content">
+            <span class="logo-text">TRESWIN</span>
+            <div class="copyright">&copy; 2026 TRESWIN. All Rights Reserved.</div>
+        </div>
+    </div>
+
+</body>
+</html>
