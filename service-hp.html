@@ -1047,20 +1047,8 @@
 
         // J-TADカード専用サムネイル
         const thumbInnerHTML = w.isJtad
-            ? `<div class="work-thumb-inner" style="background:${w.bg}; position:relative; overflow:hidden;">
-                <!-- ドット背景 -->
-                <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.15" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
-                    ${Array.from({length:120}, (_,k) => {
-                        const cx = (k % 20) * 22 + 11;
-                        const cy = Math.floor(k / 20) * 42 + 21;
-                        return `<circle cx="${cx}" cy="${cy}" r="1.5" fill="${w.accent}"/>`;
-                    }).join('')}
-                </svg>
-                <!-- ロゴテキスト -->
-                <div style="position:relative;z-index:2;text-align:center;">
-                    <div style="font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:0.15em;color:#fff;text-shadow:0 0 20px rgba(79,195,247,0.5);">J-TAD</div>
-                    <div style="font-family:'Space Grotesk',sans-serif;font-size:0.55rem;letter-spacing:0.2em;color:${w.accent};margin-top:0.2rem;">CORP. WEBSITE</div>
-                </div>
+            ? `<div class="work-thumb-inner" style="background:#0a0a1a; position:relative; overflow:hidden;">
+                <img src="jtad-thumb.jpg" alt="日本人材開発機構" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
                 <span class="work-thumb-label">${w.category}</span>
                 <div class="work-thumb-overlay"><div class="work-thumb-cta">詳細を見る</div></div>
               </div>`
@@ -1129,20 +1117,10 @@
         const heroImg = document.getElementById('modalHeroImg');
         if (w.isJtad) {
             heroImg.innerHTML = `
-                <div class="modal-hero-inner" style="background:${w.bg};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-                    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.12" viewBox="0 0 760 428" preserveAspectRatio="xMidYMid slice">
-                        ${Array.from({length:350}, (_,k) => {
-                            const cx = (k % 35) * 23 + 12;
-                            const cy = Math.floor(k / 35) * 43 + 22;
-                            return `<circle cx="${cx}" cy="${cy}" r="1.8" fill="${w.accent}"/>`;
-                        }).join('')}
-                    </svg>
-                    <div style="position:relative;z-index:2;text-align:center;">
-                        <div style="font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:700;letter-spacing:0.2em;color:#fff;text-shadow:0 0 30px rgba(79,195,247,0.6);">J-TAD</div>
-                        <div style="font-family:'Space Grotesk',sans-serif;font-size:0.75rem;letter-spacing:0.25em;color:${w.accent};margin-top:0.4rem;">CONNECTING TALENT WITH TOMORROW</div>
-                    </div>
+                <div class="modal-hero-inner" style="background:#0a0a1a;position:relative;overflow:hidden;">
+                    <img src="jtad-thumb.jpg" alt="日本人材開発機構" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
                     <div style="position:absolute;bottom:1.25rem;left:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
-                        ${w.tags.map(t=>`<span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(255,255,255,0.12);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px)">${t}</span>`).join('')}
+                        ${w.tags.map(t=>`<span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px)">${t}</span>`).join('')}
                     </div>
                 </div>`;
         } else {
