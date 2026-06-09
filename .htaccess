@@ -1,0 +1,35 @@
+# ──── セキュリティヘッダー ────
+<IfModule mod_headers.c>
+    # クリックジャッキング防止
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # MIMEスニッフィング防止
+    Header always set X-Content-Type-Options "nosniff"
+    # リファラー制御
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # HTTPS強制（HSTS）
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    # XSS保護（旧ブラウザ向け）
+    Header always set X-XSS-Protection "1; mode=block"
+    # フォーム送信先を自サイトのみに制限
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; form-action 'self'; frame-ancestors 'self';"
+    # 不要なブラウザ機能を無効化
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# ──── PHPエラーを非表示（本番環境） ────
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule>
+
+# ──── .claude/ ディレクトリへのアクセス禁止 ────
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^\.claude/ - [F,L]
+</IfModule>
+
+# ──── 機密ファイルへの直接アクセス禁止 ────
+<FilesMatch "\.(env|json|log|md|yml|yaml|git)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

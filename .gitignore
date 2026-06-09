@@ -1,0 +1,10 @@
+# Claude Code設定（トークン等を含む可能性があるため除外）
+.claude/
+
+# macOS
+.DS_Store
+.localized
+Drop Box/
+
+# ログ
+*.log
