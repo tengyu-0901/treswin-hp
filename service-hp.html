@@ -1162,13 +1162,34 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
     // ── CONTACT ──────────────────────────────────────────────────────
-    document.getElementById('contactForm').addEventListener('submit', e => {
+    document.getElementById('contactForm').addEventListener('submit', async e => {
         e.preventDefault();
-        const btn = e.target.querySelector('.btn-submit');
-        btn.textContent = '送信しました ✓';
-        btn.style.background = '#16a34a';
-        btn.style.cursor = 'default';
+        const form = e.target;
+        const btn = form.querySelector('.btn-submit');
+        btn.textContent = '送信中...';
         btn.disabled = true;
+
+        const data = new FormData(form);
+        data.append('ajax', '1');
+        data.append('source_page', 'service-hp.html');
+
+        try {
+            const res = await fetch('mail.php', { method: 'POST', body: data });
+            const json = await res.json();
+            if (json.success) {
+                btn.textContent = '送信しました ✓';
+                btn.style.background = '#16a34a';
+                form.reset();
+            } else {
+                btn.textContent = '送信する →';
+                btn.disabled = false;
+                alert((json.errors || ['送信に失敗しました。']).join('\n'));
+            }
+        } catch {
+            btn.textContent = '送信する →';
+            btn.disabled = false;
+            alert('送信に失敗しました。info@tres-win.com まで直接ご連絡ください。');
+        }
     });
     </script>
 </body>
