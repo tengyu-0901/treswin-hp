@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HP制作事業 — TRESWEB | TRESWIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg:      #FAFAF8;
+            --bg2:     #F3F3EF;
+            --bg3:     #EAEAE4;
+            --ink:     #111110;
+            --ink2:    #2A2A28;
+            --ink3:    #3F3F3C;
+            --mid:     #888884;
+            --ghost:   #B8B8B2;
+            --border:  rgba(0,0,0,0.08);
+            --border2: rgba(0,0,0,0.13);
+            --accent:  #1A1AF0;
+            --accent-bg: rgba(26,26,240,0.06);
+            --accent-border: rgba(26,26,240,0.18);
+            --white:   #FFFFFF;
+        }
+        html { font-size: 16px; }
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .grotesk { font-family: 'Space Grotesk', sans-serif; }
+
+        /* ── BACK LINK ── */
+        .back-bar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+            background: rgba(250,250,248,0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            height: 52px;
+            display: flex; align-items: center; padding: 0 5vw;
+            gap: 1rem;
+        }
+        .back-bar a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem; font-weight: 600;
+            color: var(--mid); text-decoration: none;
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            transition: color 0.2s;
+        }
+        .back-bar a:hover { color: var(--ink); }
+        .back-bar a::before { content: '←'; }
+        .back-sep { color: var(--ghost); font-size: 0.75rem; }
+        .back-current { font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem; color: var(--ink3); font-weight: 500; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 52px; left: 0; right: 0; z-index: 200;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 5vw; height: 60px;
+            background: rgba(250,250,248,0.88);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo {
+            text-decoration: none;
+            display: flex; align-items: center;
+            line-height: 1;
+        }
+        .nav-logo svg { display: block; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-links a {
+            color: var(--mid); text-decoration: none; font-size: 0.85rem;
+            font-weight: 500; transition: color 0.2s; letter-spacing: 0.01em;
+        }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-cta {
+            background: var(--ink) !important;
+            color: #fff !important;
+            padding: 0.45rem 1.1rem;
+            border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600 !important; font-size: 0.82rem;
+            transition: opacity 0.15s !important;
+        }
+        .nav-cta:hover { opacity: 0.75; }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh; padding-top: 112px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center;
+            padding-left: 5vw; padding-right: 5vw;
+            padding-bottom: 6vh; padding-top: calc(112px + 6vh);
+            position: relative; overflow: hidden;
+            background: var(--bg);
+        }
+        .hero-grid-bg {
+            position: absolute; inset: 0; pointer-events: none;
+            background-image:
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 40%, transparent 100%);
+        }
+        .hero-bg-mark {
+            position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%, -52%);
+            width: clamp(260px, 36vw, 480px);
+            opacity: 0.055;
+            user-select: none; pointer-events: none;
+        }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em;
+            color: var(--accent); text-transform: uppercase;
+            margin-bottom: 1.75rem; position: relative; z-index: 1;
+        }
+        .hero-eyebrow::before,
+        .hero-eyebrow::after {
+            content: ''; width: 20px; height: 1px; background: var(--accent);
+        }
+        .hero-h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8.5vw, 8rem);
+            font-weight: 700; line-height: 1.0; letter-spacing: -0.035em;
+            color: var(--ink);
+            position: relative; z-index: 1;
+        }
+        .hero-h1 .h1-lg {
+            display: block;
+            font-size: clamp(3.8rem, 11vw, 10rem);
+            line-height: 0.92;
+            letter-spacing: -0.045em;
+        }
+        .hero-h1 .h1-sm {
+            display: block;
+            font-size: clamp(1.4rem, 3.2vw, 3rem);
+            font-weight: 400;
+            color: var(--mid);
+            letter-spacing: -0.01em;
+            margin-top: 0.35em;
+        }
+        .hero-sub {
+            margin-top: 2rem; font-size: 1.05rem; color: var(--mid);
+            max-width: 36ch; line-height: 1.9; position: relative; z-index: 1;
+        }
+        .hero-actions {
+            display: flex; align-items: center; justify-content: center; gap: 1.25rem;
+            margin-top: 2.75rem; position: relative; z-index: 1;
+        }
+        .btn-primary {
+            background: var(--ink); color: #fff;
+            padding: 0.95rem 2.25rem; border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600; font-size: 0.95rem; text-decoration: none;
+            display: inline-block; transition: opacity 0.15s;
+        }
+        .btn-primary:hover { opacity: 0.75; }
+        .btn-ghost {
+            color: var(--mid); font-size: 0.9rem; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            transition: color 0.2s;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .btn-ghost:hover { color: var(--ink); }
+        .btn-ghost::after { content: '→'; transition: transform 0.2s; }
+        .btn-ghost:hover::after { transform: translateX(4px); }
+
+        /* ── MARQUEE ── */
+        .marquee-strip {
+            overflow: hidden; border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 0.85rem 0; background: var(--bg2);
+        }
+        .marquee-inner {
+            display: flex; gap: 2.5rem; width: max-content;
+            animation: marquee 28s linear infinite;
+        }
+        .marquee-item {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+            color: var(--ghost); text-transform: uppercase; white-space: nowrap;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .marquee-item::after { content: '✦'; color: var(--accent); font-size: 0.5rem; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* ── COMMON SECTION ── */
+        section { padding: 7rem 5vw; }
+        .section-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em;
+            color: var(--accent); text-transform: uppercase;
+            display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.85rem;
+        }
+        .section-label::before { content: ''; width: 18px; height: 1px; background: var(--accent); }
+        .section-h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.7rem, 3vw, 2.6rem);
+            font-weight: 700; line-height: 1.15; letter-spacing: -0.015em; color: var(--ink);
+        }
+        .section-h2 em { font-style: normal; color: var(--accent); }
+
+        /* ── ABOUT / WHY ── */
+        #about { background: var(--white); border-top: 1px solid var(--border); }
+        .about-layout {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 5rem; align-items: center; margin-top: 3.5rem;
+        }
+        .reason-list { display: flex; flex-direction: column; }
+        .reason-item {
+            display: flex; gap: 1.5rem; align-items: flex-start;
+            padding: 1.75rem 0; border-bottom: 1px solid var(--border);
+        }
+        .reason-item:first-child { border-top: 1px solid var(--border); }
+        .reason-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.68rem; font-weight: 700; color: var(--accent);
+            letter-spacing: 0.07em; padding-top: 0.25rem; min-width: 26px;
+        }
+        .reason-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem;
+        }
+        .reason-desc { font-size: 0.875rem; color: var(--mid); line-height: 1.85; }
+
+        /* mock browser */
+        .mock-browser {
+            border: 1px solid var(--border2); border-radius: 12px; overflow: hidden;
+            background: var(--white); box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+        }
+        .mock-titlebar {
+            background: var(--bg2); border-bottom: 1px solid var(--border);
+            padding: 0.7rem 1rem; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .mock-url {
+            flex: 1; background: var(--bg); border: 1px solid var(--border);
+            border-radius: 4px; padding: 0.25rem 0.6rem;
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; color: var(--mid);
+            margin: 0 0.5rem;
+        }
+        .mock-body { padding: 1.25rem; }
+        .m-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .m-logo { width: 60px; height: 8px; border-radius: 2px; background: var(--ink); }
+        .m-navs { display: flex; gap: 0.4rem; }
+        .m-nav { width: 30px; height: 6px; border-radius: 2px; background: var(--bg3); }
+        .m-hero { background: var(--ink); border-radius: 8px; padding: 1.25rem; margin-bottom: 0.75rem; }
+        .m-hl { height: 11px; border-radius: 2px; background: rgba(255,255,255,0.9); margin-bottom: 0.45rem; width: 70%; }
+        .m-hl.sm { width: 45%; background: rgba(255,255,255,0.4); height: 7px; }
+        .m-btn { width: 70px; height: 22px; border-radius: 100px; background: var(--accent); margin-top: 0.75rem; }
+        .m-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
+        .m-card { background: var(--bg2); border-radius: 6px; padding: 0.6rem; border: 1px solid var(--border); }
+        .m-card-icon { width: 16px; height: 16px; border-radius: 3px; background: var(--accent-bg); border: 1px solid var(--accent-border); margin-bottom: 0.35rem; }
+        .m-line { height: 5px; border-radius: 2px; background: var(--bg3); margin-top: 0.25rem; }
+        .m-line.w70 { width: 70%; } .m-line.w50 { width: 50%; }
+        .m-metrics { background: var(--bg2); border-radius: 6px; padding: 0.75rem; border: 1px solid var(--border); }
+        .m-metric-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+        .m-metric-row:last-child { margin-bottom: 0; }
+        .m-metric-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.6rem; color: var(--mid); width: 54px; }
+        .m-bar-wrap { flex: 1; height: 3px; background: var(--bg3); border-radius: 2px; }
+        .m-bar { height: 100%; border-radius: 2px; background: var(--accent); }
+        .m-metric-val { font-family: 'Space Grotesk', sans-serif; font-size: 0.6rem; color: var(--accent); font-weight: 600; width: 28px; text-align: right; }
+
+        /* ── WORKS (SLIDER) ── */
+        #works { background: var(--bg); border-top: 1px solid var(--border); }
+        .works-header {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            margin-bottom: 2.5rem; gap: 1rem;
+        }
+        .slider-controls { display: flex; gap: 0.5rem; }
+        .slider-btn {
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 1px solid var(--border2); background: var(--white);
+            cursor: pointer; font-size: 1rem; display: grid; place-items: center;
+            transition: background 0.15s, border-color 0.15s; color: var(--ink);
+        }
+        .slider-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+        .works-track-wrap { overflow: hidden; }
+        .works-track {
+            display: flex; gap: 1.25rem;
+            transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .work-card {
+            flex: 0 0 calc(33.333% - 0.84rem);
+            border: 1px solid var(--border2); border-radius: 12px; overflow: hidden;
+            background: var(--white); cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .work-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+        .work-thumb {
+            width: 100%; aspect-ratio: 16/10; overflow: hidden;
+            position: relative;
+        }
+        .work-thumb-inner {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .work-thumb-label {
+            position: absolute; top: 0.75rem; left: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
+            color: #fff; background: rgba(0,0,0,0.45);
+            padding: 0.2rem 0.55rem; border-radius: 100px; backdrop-filter: blur(4px);
+        }
+        .work-thumb-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0); display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: all 0.2s;
+        }
+        .work-card:hover .work-thumb-overlay { opacity: 1; background: rgba(0,0,0,0.3); }
+        .work-thumb-cta {
+            background: #fff; color: var(--ink);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem; font-weight: 600;
+            padding: 0.5rem 1.1rem; border-radius: 100px;
+            transform: translateY(6px); transition: transform 0.2s;
+        }
+        .work-card:hover .work-thumb-cta { transform: translateY(0); }
+        .work-info { padding: 1.1rem 1.25rem; }
+        .work-category {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.67rem; font-weight: 600; letter-spacing: 0.1em;
+            color: var(--accent); text-transform: uppercase; margin-bottom: 0.35rem;
+        }
+        .work-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem;
+        }
+        .work-desc { font-size: 0.8rem; color: var(--mid); line-height: 1.7; }
+        .work-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.75rem; }
+        .work-tag {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem; font-weight: 500;
+            color: var(--ink3); background: var(--bg2);
+            border: 1px solid var(--border); border-radius: 4px;
+            padding: 0.15rem 0.5rem;
+        }
+        .works-dots { display: flex; gap: 0.4rem; margin-top: 1.5rem; justify-content: center; }
+        .works-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--bg3); transition: background 0.2s, width 0.2s;
+        }
+        .works-dot.active { background: var(--ink); width: 20px; border-radius: 3px; }
+
+        /* ── MODAL ── */
+        .modal-backdrop {
+            position: fixed; inset: 0; z-index: 500;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center;
+            padding: 2rem;
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal {
+            background: var(--white); border-radius: 16px; max-width: 760px; width: 100%;
+            max-height: 90vh; overflow-y: auto; position: relative;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+        }
+        .modal-close {
+            position: sticky; top: 1rem; left: 100%; float: right;
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--bg2); border: 1px solid var(--border2);
+            cursor: pointer; font-size: 1.1rem; display: grid; place-items: center;
+            margin: 1rem 1rem 0 0; z-index: 10;
+        }
+        .modal-close:hover { background: var(--bg3); }
+        .modal-hero-img { width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+        .modal-hero-inner { width: 100%; height: 100%; }
+        .modal-content { padding: 2rem 2.5rem 2.5rem; }
+        .modal-category {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+            color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem;
+        }
+        .modal-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem; font-weight: 700; color: var(--ink);
+            line-height: 1.2; margin-bottom: 0.75rem;
+        }
+        .modal-desc { font-size: 0.9rem; color: var(--mid); line-height: 1.9; margin-bottom: 2rem; }
+        .modal-points-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem;
+        }
+        .modal-points { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
+        .modal-point {
+            display: flex; gap: 1rem; align-items: flex-start;
+            padding: 1rem 1.25rem; background: var(--bg); border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .modal-point-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--accent-bg); border: 1px solid var(--accent-border);
+            display: grid; place-items: center; font-size: 0.85rem; flex-shrink: 0;
+        }
+        .modal-point-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 0.25rem;
+        }
+        .modal-point-desc { font-size: 0.82rem; color: var(--mid); line-height: 1.75; }
+        .modal-meta {
+            display: flex; gap: 1.5rem; padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .modal-meta-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
+            color: var(--ghost); text-transform: uppercase; margin-bottom: 0.2rem;
+        }
+        .modal-meta-val {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem; font-weight: 600; color: var(--ink);
+        }
+        .modal-link {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: var(--ink); color: #fff;
+            padding: 0.7rem 1.5rem; border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem; font-weight: 600;
+            text-decoration: none; margin-top: 1.5rem;
+            transition: opacity 0.15s;
+        }
+        .modal-link:hover { opacity: 0.75; }
+
+        /* ── SERVICES ── */
+        #services { background: var(--white); border-top: 1px solid var(--border); }
+        .services-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; margin-top: 3.5rem;
+            border: 1px solid var(--border2); border-radius: 14px; overflow: hidden;
+        }
+        .service-card {
+            background: var(--white); padding: 2rem 1.75rem;
+            transition: background 0.2s; position: relative;
+        }
+        .service-card:hover { background: var(--bg); }
+        .service-card + .service-card { border-left: 1px solid var(--border2); }
+        .service-card:nth-child(4) { border-left: none; }
+        .service-card:nth-child(n+4) { border-top: 1px solid var(--border2); }
+        .service-icon {
+            width: 40px; height: 40px; border-radius: 9px;
+            background: var(--bg2); border: 1px solid var(--border2);
+            display: grid; place-items: center; font-size: 1rem; margin-bottom: 1.25rem;
+        }
+        .service-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem;
+        }
+        .service-desc { font-size: 0.83rem; color: var(--mid); line-height: 1.8; }
+        .service-tag {
+            display: inline-block; margin-top: 1.1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.68rem; font-weight: 600; letter-spacing: 0.07em;
+            color: var(--accent); background: var(--accent-bg);
+            border: 1px solid var(--accent-border);
+            padding: 0.2rem 0.6rem; border-radius: 100px;
+        }
+
+        /* ── PROCESS ── */
+        #process { background: var(--bg2); border-top: 1px solid var(--border); }
+        .process-steps { margin-top: 3.5rem; }
+        .process-step {
+            display: grid; grid-template-columns: 72px 1fr;
+            gap: 2rem; padding: 2.25rem 0;
+            border-bottom: 1px solid var(--border); align-items: start;
+        }
+        .process-step:last-child { border-bottom: none; }
+        .step-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem; font-weight: 700; line-height: 1;
+            color: var(--bg3); -webkit-text-stroke: 1px var(--border2);
+        }
+        .step-num.active { color: var(--accent); -webkit-text-stroke: none; }
+        .step-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem; font-weight: 600; color: var(--ink);
+            margin-bottom: 0.4rem; margin-top: 0.2rem;
+        }
+        .step-desc { font-size: 0.875rem; color: var(--mid); line-height: 1.85; max-width: 52ch; }
+        .step-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.9rem; }
+        .chip {
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.68rem; font-weight: 500;
+            color: var(--ink3); background: var(--white);
+            border: 1px solid var(--border2); padding: 0.18rem 0.55rem; border-radius: 4px;
+        }
+
+        /* ── CTA BAND ── */
+        .cta-band {
+            background: var(--ink); padding: 5.5rem 5vw; text-align: center;
+        }
+        .cta-band-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em;
+            text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 1rem;
+        }
+        .cta-band-h {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.7rem, 3.5vw, 2.8rem);
+            font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 0.75rem;
+        }
+        .cta-band-sub { font-size: 0.9rem; color: rgba(255,255,255,0.45); max-width: 38ch; margin: 0 auto 2.25rem; }
+        .btn-accent {
+            background: var(--accent); color: #fff;
+            padding: 1rem 2.25rem; border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600; font-size: 0.95rem;
+            text-decoration: none; display: inline-block;
+            transition: opacity 0.15s;
+        }
+        .btn-accent:hover { opacity: 0.8; }
+
+        /* ── CONTACT ── */
+        #contact { background: var(--white); border-top: 1px solid var(--border); }
+        .contact-layout {
+            display: grid; grid-template-columns: 1fr 1.4fr;
+            gap: 5rem; margin-top: 3.5rem; align-items: start;
+        }
+        .contact-info p { color: var(--mid); font-size: 0.9rem; line-height: 1.9; margin-top: 0.9rem; }
+        .contact-promise { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 2rem; }
+        .promise-item {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-size: 0.84rem; color: var(--ink3);
+        }
+        .promise-check {
+            width: 18px; height: 18px; border-radius: 50%;
+            background: var(--accent-bg); border: 1px solid var(--accent-border);
+            display: grid; place-items: center;
+            font-size: 0.58rem; color: var(--accent); flex-shrink: 0;
+        }
+        form { display: flex; flex-direction: column; gap: 1.1rem; }
+        .field-group { display: flex; flex-direction: column; gap: 0.35rem; }
+        label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+            color: var(--mid); text-transform: uppercase;
+        }
+        input, select, textarea {
+            background: var(--bg); border: 1px solid var(--border2);
+            border-radius: 8px; padding: 0.75rem 1rem;
+            color: var(--ink); font-size: 0.92rem;
+            font-family: 'Noto Sans JP', sans-serif;
+            transition: border-color 0.2s, background 0.2s;
+            width: 100%; outline: none; appearance: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent); background: #fff;
+            box-shadow: 0 0 0 3px var(--accent-bg);
+        }
+        input::placeholder, textarea::placeholder { color: var(--ghost); }
+        textarea { resize: vertical; min-height: 110px; }
+        select { cursor: pointer; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+        .btn-submit {
+            background: var(--ink); color: #fff;
+            padding: 0.9rem 2rem; border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            transition: opacity 0.15s;
+        }
+        .btn-submit:hover { opacity: 0.75; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--bg2); border-top: 1px solid var(--border);
+            padding: 2.5rem 5vw;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .footer-logo { display: flex; align-items: center; line-height: 1; }
+        .footer-copy { font-size: 0.77rem; color: var(--ghost); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 960px) {
+            .about-layout, .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+            .services-grid { grid-template-columns: 1fr 1fr; }
+            .work-card { flex: 0 0 calc(50% - 0.625rem); }
+        }
+        @media (max-width: 640px) {
+            .back-bar { padding: 0 4vw; }
+            nav { padding: 0 4vw; }
+            .nav-links a:not(.nav-cta) { display: none; }
+            section { padding: 4rem 5vw; }
+            .services-grid { grid-template-columns: 1fr; }
+            .service-card + .service-card { border-left: none; border-top: 1px solid var(--border2); }
+            .field-row { grid-template-columns: 1fr; }
+            .work-card { flex: 0 0 calc(80vw); }
+            .hero-bg-mark { display: none; }
+            footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+            .process-step { grid-template-columns: 1fr; gap: 0.5rem; }
+            .works-header { flex-direction: column; align-items: flex-start; }
+            .modal-content { padding: 1.25rem 1.25rem 2rem; }
+            .modal-meta { flex-wrap: wrap; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MODAL -->
+    <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
+        <div class="modal" id="modal">
+            <button class="modal-close" id="modalClose" aria-label="閉じる">✕</button>
+            <div class="modal-hero-img" id="modalHeroImg"></div>
+            <div class="modal-content">
+                <div class="modal-category" id="modalCategory"></div>
+                <div class="modal-title" id="modalTitle"></div>
+                <p class="modal-desc" id="modalDesc"></p>
+                <div class="modal-points-label">こだわりポイント</div>
+                <div class="modal-points" id="modalPoints"></div>
+                <div class="modal-meta" id="modalMeta"></div>
+                <a href="#" class="modal-link" id="modalLink" target="_blank" rel="noopener">
+                    サイトを見る →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACK BAR -->
+    <div class="back-bar">
+        <a href="services.html">SERVICES</a>
+        <span class="back-sep">/</span>
+        <span class="back-current">HP制作事業 — TRESWEB</span>
+    </div>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="nav-logo" aria-label="TRESWIN トップへ">
+            <svg width="148" height="40" viewBox="0 0 148 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="40" height="40" rx="8" fill="#111110"/>
+                <line x1="10" y1="30" x2="20" y2="11" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="20" y1="11" x2="30" y2="30" stroke="#1A1AF0" stroke-width="2.8" stroke-linecap="round"/>
+                <line x1="13" y1="30" x2="31" y2="30" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.28"/>
+                <circle cx="20" cy="11" r="2" fill="#1A1AF0"/>
+                <text x="52" y="22" font-family="'Space Grotesk', sans-serif" font-size="17" font-weight="700" fill="#111110" letter-spacing="-0.3">TRES</text>
+                <text x="53" y="35" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="500" fill="#888884" letter-spacing="4.2">WEB</text>
+                <line x1="52" y1="25.5" x2="142" y2="25.5" stroke="#E0E0D8" stroke-width="0.5"/>
+            </svg>
+        </a>
+        <div class="nav-links">
+            <a href="#about">TRESWEBとは</a>
+            <a href="#works">実績</a>
+            <a href="#services">サービス</a>
+            <a href="#process">制作の流れ</a>
+            <a href="#contact" class="nav-cta">相談する</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-grid-bg"></div>
+        <svg class="hero-bg-mark" aria-hidden="true" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="100,10 190,168 10,168" fill="none" stroke="#111110" stroke-width="6"/>
+            <polygon points="100,52 158,158 42,158" fill="none" stroke="#111110" stroke-width="3"/>
+            <polygon points="100,88 126,148 74,148" fill="none" stroke="#111110" stroke-width="1.5"/>
+        </svg>
+
+        <span class="hero-eyebrow">Web制作 × 成果設計</span>
+        <h1 class="hero-h1">
+            <span class="h1-sm">ビジネスを加速させる、</span>
+            <span class="h1-lg">勝てる<br/>サイトを。</span>
+        </h1>
+        <p class="hero-sub">
+            TRESWEBは、制作で終わらない。<br/>
+            戦略・設計・集客・改善まで、<br/>
+            あなたのビジネスに伴走します。
+        </p>
+        <div class="hero-actions">
+            <a href="#contact" class="btn-primary">無料で相談する</a>
+            <a href="#works" class="btn-ghost">実績を見る</a>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-strip">
+        <div class="marquee-inner">
+            <span class="marquee-item">LP制作</span>
+            <span class="marquee-item">コーポレートサイト</span>
+            <span class="marquee-item">SEO設計</span>
+            <span class="marquee-item">CMS構築</span>
+            <span class="marquee-item">リニューアル</span>
+            <span class="marquee-item">UI/UXデザイン</span>
+            <span class="marquee-item">アクセス解析</span>
+            <span class="marquee-item">LP制作</span>
+            <span class="marquee-item">コーポレートサイト</span>
+            <span class="marquee-item">SEO設計</span>
+            <span class="marquee-item">CMS構築</span>
+            <span class="marquee-item">リニューアル</span>
+            <span class="marquee-item">UI/UXデザイン</span>
+            <span class="marquee-item">アクセス解析</span>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="section-label">Why TRESWEB</div>
+        <h2 class="section-h2">選ばれる<em>3つ</em>の理由</h2>
+        <div class="about-layout">
+            <div class="reason-list">
+                <div class="reason-item">
+                    <span class="reason-num">01</span>
+                    <div>
+                        <div class="reason-title">徹底した戦略設計</div>
+                        <p class="reason-desc">ビジネスの課題を起点に、ターゲットとKPIを明確化。「なんとなく綺麗」ではなく、数字で語れるサイトを設計します。</p>
+                    </div>
+                </div>
+                <div class="reason-item">
+                    <span class="reason-num">02</span>
+                    <div>
+                        <div class="reason-title">SEO・集客に強い構造</div>
+                        <p class="reason-desc">自然流入の増加と問い合わせ率向上を同時に実現。技術面と設計面の両輪で「見つかる」「動かす」サイトを構築。</p>
+                    </div>
+                </div>
+                <div class="reason-item">
+                    <span class="reason-num">03</span>
+                    <div>
+                        <div class="reason-title">作って終わらない伴走支援</div>
+                        <p class="reason-desc">公開後の分析・改善サイクルまで一貫してサポート。データをもとにPDCAを回し、長期的な成果を追求します。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mock-browser">
+                <div class="mock-titlebar">
+                    <div class="mock-dot" style="background:#ff5f57"></div>
+                    <div class="mock-dot" style="background:#ffbd2e"></div>
+                    <div class="mock-dot" style="background:#28ca41"></div>
+                    <div class="mock-url">tresweb-client.jp</div>
+                </div>
+                <div class="mock-body">
+                    <div class="m-header">
+                        <div class="m-logo"></div>
+                        <div class="m-navs">
+                            <div class="m-nav"></div><div class="m-nav"></div><div class="m-nav"></div>
+                        </div>
+                    </div>
+                    <div class="m-hero">
+                        <div class="m-hl"></div>
+                        <div class="m-hl sm"></div>
+                        <div class="m-btn"></div>
+                    </div>
+                    <div class="m-cards">
+                        <div class="m-card"><div class="m-card-icon"></div><div class="m-line w70"></div><div class="m-line w50"></div></div>
+                        <div class="m-card"><div class="m-card-icon"></div><div class="m-line w70"></div><div class="m-line w50"></div></div>
+                        <div class="m-card"><div class="m-card-icon"></div><div class="m-line w70"></div><div class="m-line w50"></div></div>
+                    </div>
+                    <div class="m-metrics" style="margin-top:0.75rem">
+                        <div style="font-family:'Space Grotesk',sans-serif;font-size:0.62rem;color:var(--mid);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.6rem;">Performance</div>
+                        <div class="m-metric-row"><span class="m-metric-label">PageSpeed</span><div class="m-bar-wrap"><div class="m-bar" style="width:95%"></div></div><span class="m-metric-val">95</span></div>
+                        <div class="m-metric-row"><span class="m-metric-label">SEOスコア</span><div class="m-bar-wrap"><div class="m-bar" style="width:98%"></div></div><span class="m-metric-val">98</span></div>
+                        <div class="m-metric-row"><span class="m-metric-label">CVR改善</span><div class="m-bar-wrap"><div class="m-bar" style="width:82%"></div></div><span class="m-metric-val">+82%</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKS -->
+    <section id="works">
+        <div class="works-header">
+            <div>
+                <div class="section-label">Works</div>
+                <h2 class="section-h2">制作<em>実績</em></h2>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn" id="slidePrev" aria-label="前へ">←</button>
+                <button class="slider-btn" id="slideNext" aria-label="次へ">→</button>
+            </div>
+        </div>
+        <div class="works-track-wrap">
+            <div class="works-track" id="worksTrack"></div>
+        </div>
+        <div class="works-dots" id="worksDots"></div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+        <div class="section-label">Services</div>
+        <h2 class="section-h2">提供する<em>サービス</em></h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🎯</div>
+                <div class="service-title">LP・ランディングページ制作</div>
+                <p class="service-desc">CVR最大化のため、ターゲット心理とUI設計を組み合わせた高転換率LPを制作。広告費用対効果を劇的に改善します。</p>
+                <span class="service-tag">最短2週間〜</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🏢</div>
+                <div class="service-title">コーポレートサイト構築</div>
+                <p class="service-desc">採用・営業・信頼獲得の3軸を同時に強化する、戦略的コーポレートサイトを設計から公開まで一貫して担当。</p>
+                <span class="service-tag">戦略設計込み</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📈</div>
+                <div class="service-title">既存サイトのリニューアル</div>
+                <p class="service-desc">アクセス解析データをもとに課題を特定。デザインと構造を刷新し、問い合わせ数・滞在時間・検索順位を改善します。</p>
+                <span class="service-tag">データ分析付き</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔍</div>
+                <div class="service-title">SEO内部対策・コンテンツ設計</div>
+                <p class="service-desc">技術的SEOと検索意図に沿ったコンテンツ設計で、自然流入を継続的に増加させる基盤を構築します。</p>
+                <span class="service-tag">継続支援あり</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">⚡</div>
+                <div class="service-title">サイト高速化・Core Web Vitals改善</div>
+                <p class="service-desc">PageSpeedスコアの大幅改善と離脱率の低下を実現。Googleの評価アルゴリズムにも対応した表示速度最適化。</p>
+                <span class="service-tag">即効性あり</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔄</div>
+                <div class="service-title">運用・改善の伴走サポート</div>
+                <p class="service-desc">月次レポートとA/Bテストを通じた継続的な改善提案。PDCAサイクルを回し続け、サイトの成果を成長させます。</p>
+                <span class="service-tag">月次契約</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process">
+        <div class="section-label">Process</div>
+        <h2 class="section-h2">制作の<em>流れ</em></h2>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-num active">01</div>
+                <div>
+                    <div class="step-title">ヒアリング・戦略設計</div>
+                    <p class="step-desc">ビジネスの課題・ターゲット・競合を徹底的にヒアリング。KPIと情報設計の方向性をここで確定します。</p>
+                    <div class="step-chips"><span class="chip">ヒアリングシート</span><span class="chip">競合分析</span><span class="chip">ペルソナ設定</span></div>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">02</div>
+                <div>
+                    <div class="step-title">設計・ワイヤーフレーム</div>
+                    <p class="step-desc">情報の優先順位とユーザー導線を設計。ページ構造とCTA配置を可視化し、認識を合わせてから制作へ。</p>
+                    <div class="step-chips"><span class="chip">サイトマップ</span><span class="chip">ワイヤーフレーム</span><span class="chip">導線設計</span></div>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">03</div>
+                <div>
+                    <div class="step-title">デザイン・コーディング</div>
+                    <p class="step-desc">ブランドに合ったビジュアルを設計し、高品質なコードで実装。スマホ対応・表示速度・アクセシビリティも標準装備。</p>
+                    <div class="step-chips"><span class="chip">UI/UXデザイン</span><span class="chip">レスポンシブ対応</span><span class="chip">高速実装</span></div>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">04</div>
+                <div>
+                    <div class="step-title">公開・運用・改善</div>
+                    <p class="step-desc">公開後もアクセス解析・ヒートマップ分析・改善提案を継続。サイトを「生きた資産」として育てていきます。</p>
+                    <div class="step-chips"><span class="chip">GA4設定</span><span class="chip">月次レポート</span><span class="chip">A/Bテスト</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BAND -->
+    <div class="cta-band">
+        <div class="cta-band-label">First Step</div>
+        <div class="cta-band-h">まずは、無料相談から。</div>
+        <p class="cta-band-sub">お気軽にお問い合わせください。現状のサイトの課題整理だけでもご相談いただけます。</p>
+        <a href="#contact" class="btn-accent">無料相談を申し込む →</a>
+    </div>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="section-label">Contact</div>
+        <h2 class="section-h2">お問い合わせ</h2>
+        <div class="contact-layout">
+            <div class="contact-info">
+                <p>サービス内容・料金・スケジュールなど、どんなことでもご相談ください。まずは現状のお悩みをお聞かせいただくだけでも構いません。</p>
+                <div class="contact-promise">
+                    <div class="promise-item"><div class="promise-check">✓</div><span>3営業日以内にご返信します</span></div>
+                    <div class="promise-item"><div class="promise-check">✓</div><span>初回相談は完全無料・事前準備不要</span></div>
+                    <div class="promise-item"><div class="promise-check">✓</div><span>しつこい営業は一切行いません</span></div>
+                </div>
+            </div>
+            <form id="contactForm">
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="name">お名前</label>
+                        <input type="text" id="name" placeholder="山田 太郎" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="company">会社名・屋号</label>
+                        <input type="text" id="company" placeholder="株式会社〇〇（任意）">
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
+                </div>
+                <div class="field-group">
+                    <label for="ctype">ご相談内容</label>
+                    <select id="ctype">
+                        <option value="" disabled selected>選択してください</option>
+                        <option>新規サイト制作</option>
+                        <option>サイトリニューアル</option>
+                        <option>LP・広告ページ制作</option>
+                        <option>SEO・集客改善</option>
+                        <option>月次運用サポート</option>
+                        <option>その他・まず相談したい</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label for="message">ご要望・現状の課題（任意）</label>
+                    <textarea id="message" placeholder="現在のサイトのお悩みや、実現したいことを教えていただけると、より的確なご提案ができます。"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">送信する →</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">
+            <svg width="126" height="34" viewBox="0 0 148 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="40" height="40" rx="8" fill="#111110"/>
+                <line x1="10" y1="30" x2="20" y2="11" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="20" y1="11" x2="30" y2="30" stroke="#1A1AF0" stroke-width="2.8" stroke-linecap="round"/>
+                <line x1="13" y1="30" x2="31" y2="30" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.28"/>
+                <circle cx="20" cy="11" r="2" fill="#1A1AF0"/>
+                <text x="52" y="22" font-family="'Space Grotesk', sans-serif" font-size="17" font-weight="700" fill="#111110" letter-spacing="-0.3">TRES</text>
+                <text x="53" y="35" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="500" fill="#888884" letter-spacing="4.2">WEB</text>
+                <line x1="52" y1="25.5" x2="142" y2="25.5" stroke="#E0E0D8" stroke-width="0.5"/>
+            </svg>
+        </div>
+        <div class="footer-copy">&copy; 2026 TRESWEB / TRESWIN All Rights Reserved.</div>
+    </footer>
+
+    <script>
+    // ── WORKS DATA ──────────────────────────────────────────────────
+    const works = [
+        {
+            id: 1,
+            category: "コーポレートサイト",
+            title: "J-TAD株式会社",
+            desc: "キャリア支援・人材エコシステムを展開するJ-TAD社のコーポレートサイト。ドットマップ・パーティクルアニメーションを活用した没入感のある世界観と、ミッション・サービス・採用情報を一体化した設計。",
+            tags: ["コーポレートサイト", "アニメーション", "採用強化"],
+            result: "ブランド認知度向上",
+            period: "2026年4月",
+            url: "jtad-corp.html",
+            bg: "linear-gradient(135deg, #0a0a1a 0%, #1a1a4a 50%, #0a1a3a 100%)",
+            accent: "#4fc3f7",
+            emoji: null,
+            isJtad: true,
+            points: [
+                { icon: "🌐", title: "ドットマップ×パーティクルによる没入型ビジュアル", desc: "インタラクティブなSVGドットマップと動的パーティクルアニメーションをヒーローセクションに実装。テクノロジー×人材というブランドコンセプトを視覚的に表現し、初見でのブランド印象を大幅に強化。" },
+                { icon: "🎯", title: "ミッション・サービス・採用を一体化した導線設計", desc: "「なぜ存在するか（ミッション）」→「何をするか（サービス）」→「一緒にやらないか（採用）」という自然な読み進め設計で、企業理解から行動までのCVRを最大化。スクロール連動のアニメーションで離脱を防止。" },
+                { icon: "💎", title: "ダークトーン×ゴールドアクセントの高品位ブランディング", desc: "深いネイビー・チャコールを基調に、ゴールドのアクセントカラーを戦略的に配置。「信頼と挑戦」を体現するカラーパレットで、競合との差別化と高級感を両立したビジュアルブランディングを実現。" }
+            ],
+            meta: [
+                { label: "制作期間", val: "8週間" },
+                { label: "ページ数", val: "全7P" },
+                { label: "主な対応", val: "新規制作" }
+            ]
+        },
+        {
+            id: 2,
+            category: "コーポレートサイト",
+            title: "株式会社グリーンフォワード",
+            desc: "環境コンサルティング企業のコーポレートサイトリニューアル。信頼感と専門性を軸にしつつ、問い合わせまでの導線を整理しました。",
+            tags: ["リニューアル", "WordPress", "SEO対策"],
+            result: "導線の整理・SEO改善",
+            period: "2025年11月",
+            url: "#",
+            bg: "#D4EDD4",
+            accent: "#2D7A2D",
+            emoji: "🌿",
+            points: [
+                { icon: "🎨", title: "カラーシステムの整理", desc: "旧サイトで混在していた複数の緑系カラーを1つのブランドカラーに統一。テキストのコントラスト比をWCAG AAに準拠させ、読みやすさと信頼感を両立しました。" },
+                { icon: "📐", title: "サービスページの情報構造を再設計", desc: "「何をやっている会社か」がファーストビューで伝わるよう、情報の優先順位を整理。サービス概要・実績・問い合わせへの流れをシンプルに組み直しました。" },
+                { icon: "📱", title: "モバイルでの問い合わせ導線を改善", desc: "スマホユーザーが多いにもかかわらず、旧サイトはPC前提の設計でした。タップしやすいCTAボタンの配置と、必要項目のみに絞ったフォームに改修しました。" }
+            ],
+            meta: [
+                { label: "制作期間", val: "6週間" },
+                { label: "ページ数", val: "18P" },
+                { label: "主な対応", val: "リニューアル" }
+            ]
+        },
+        {
+            id: 3,
+            category: "LP制作",
+            title: "オンラインスクール向け広告LP",
+            desc: "プログラミングスクールの新規受講者獲得を目的としたLP。ターゲット層の不安を整理し、申し込みまでの流れを設計しました。",
+            tags: ["LP", "広告連携"],
+            result: "申し込みフローの整理",
+            period: "2025年9月",
+            url: "#",
+            bg: "#E8E0FF",
+            accent: "#5B21B6",
+            emoji: "💻",
+            points: [
+                { icon: "🧠", title: "ターゲットの疑問を先回りしたFAQ設計", desc: "「未経験でも大丈夫？」「本当に転職できる？」といった離脱につながりやすい疑問を洗い出し、それぞれに答えるセクションをページ内に配置しました。" },
+                { icon: "📋", title: "申し込みフォームの入力ステップを分割", desc: "一画面に多くの項目を並べると離脱につながるため、3ステップに分割して入力の心理的負担を軽減。各ステップで進捗を見せる設計にしました。" },
+                { icon: "📱", title: "広告ランディングを意識した構成", desc: "広告からの流入を想定し、ファーストビューでメッセージが完結するよう設計。スクロールするたびに次の行動が自然に促される情報の順序を意識しました。" }
+            ],
+            meta: [
+                { label: "制作期間", val: "3週間" },
+                { label: "ページ数", val: "1LP" },
+                { label: "主な対応", val: "新規制作" }
+            ]
+        },
+        {
+            id: 4,
+            category: "飲食・ブランディング",
+            title: "スペシャルティコーヒー『KINOKO ROAST』",
+            desc: "自家焙煎コーヒーブランドのリブランディングサイト。素材・産地・焙煎への真摯なこだわりを、読ませるデザインで丁寧に伝えるサイト設計。",
+            tags: ["ブランディング", "EC連携", "コンテンツ設計"],
+            result: "オンライン売上 +180%",
+            period: "2025年1月",
+            url: "#",
+            bg: "#FDF0E0",
+            accent: "#92400E",
+            emoji: "☕",
+            points: [
+                { icon: "📝", title: "「読ませる」コンテンツ設計", desc: "産地・農家・焙煎プロセスを丁寧に語るロングフォームページを設計。単なる商品説明ではなく、ブランドの哲学に共感させるコンテンツで、1セッション当たりの閲覧ページ数が3.8倍に。" },
+                { icon: "🎨", title: "焙煎度をビジュアルで伝えるUI", desc: "ライト・ミディアム・ダークの焙煎度合いを、コーヒービーンのグラデーション図で直感的に表現。文字に頼らない視覚的な商品選択UIで、商品ページの迷い時間を大幅短縮。" },
+                { icon: "🔁", title: "定期購入への誘導フロー最適化", desc: "単品購入ページに定期購入の比較表を組み込み、LTV向上を狙った設計。カートに入れた後の「定期購入への切り替え」ステップを簡略化し、サブスク転換率が22%に到達。" }
+            ],
+            meta: [
+                { label: "制作期間", val: "7週間" },
+                { label: "商品数", val: "28SKU" },
+                { label: "売上改善", val: "+180%" }
+            ]
+        }
+    ];
+
+    // ── RENDER WORK CARDS ────────────────────────────────────────────
+    const track = document.getElementById('worksTrack');
+    const dotsEl = document.getElementById('worksDots');
+    let currentSlide = 0;
+    const visibleCount = () => window.innerWidth < 640 ? 1 : window.innerWidth < 960 ? 2 : 3;
+    const maxSlide = () => Math.max(0, works.length - visibleCount());
+
+    works.forEach((w, i) => {
+        const card = document.createElement('div');
+        card.className = 'work-card';
+
+        // J-TADカード専用サムネイル
+        const thumbInnerHTML = w.isJtad
+            ? `<div class="work-thumb-inner" style="background:${w.bg}; position:relative; overflow:hidden;">
+                <!-- ドット背景 -->
+                <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.15" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+                    ${Array.from({length:120}, (_,k) => {
+                        const cx = (k % 20) * 22 + 11;
+                        const cy = Math.floor(k / 20) * 42 + 21;
+                        return `<circle cx="${cx}" cy="${cy}" r="1.5" fill="${w.accent}"/>`;
+                    }).join('')}
+                </svg>
+                <!-- ロゴテキスト -->
+                <div style="position:relative;z-index:2;text-align:center;">
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:0.15em;color:#fff;text-shadow:0 0 20px rgba(79,195,247,0.5);">J-TAD</div>
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:0.55rem;letter-spacing:0.2em;color:${w.accent};margin-top:0.2rem;">CORP. WEBSITE</div>
+                </div>
+                <span class="work-thumb-label">${w.category}</span>
+                <div class="work-thumb-overlay"><div class="work-thumb-cta">詳細を見る</div></div>
+              </div>`
+            : `<div class="work-thumb-inner" style="background:${w.bg}">
+                <span style="font-size:3.5rem;opacity:0.6;">${w.emoji}</span>
+                <span class="work-thumb-label">${w.category}</span>
+                <div class="work-thumb-overlay"><div class="work-thumb-cta">詳細を見る</div></div>
+              </div>`;
+
+        card.innerHTML = `
+            <div class="work-thumb">${thumbInnerHTML}</div>
+            <div class="work-info">
+                <div class="work-category">${w.category}</div>
+                <div class="work-title">${w.title}</div>
+                <p class="work-desc">${w.desc.slice(0,50)}…</p>
+                <div class="work-tags">${w.tags.map(t=>`<span class="work-tag">${t}</span>`).join('')}
+                    <span class="work-tag" style="background:${w.isJtad ? 'rgba(79,195,247,0.1)' : w.bg};color:${w.accent};border-color:${w.accent}40;">${w.result}</span>
+                </div>
+            </div>`;
+        card.addEventListener('click', () => openModal(w));
+        track.appendChild(card);
+
+        const dot = document.createElement('div');
+        dot.className = 'works-dot' + (i === 0 ? ' active' : '');
+        dotsEl.appendChild(dot);
+    });
+
+    function updateSlider() {
+        const gap = 20;
+        const vc = visibleCount();
+        const cardW = track.parentElement.clientWidth / vc - gap * (vc - 1) / vc;
+        const offset = currentSlide * (cardW + gap);
+        track.style.transform = `translateX(-${offset}px)`;
+        document.querySelectorAll('.works-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === currentSlide);
+        });
+    }
+
+    document.getElementById('slideNext').addEventListener('click', () => {
+        currentSlide = Math.min(currentSlide + 1, maxSlide());
+        updateSlider();
+    });
+    document.getElementById('slidePrev').addEventListener('click', () => {
+        currentSlide = Math.max(currentSlide - 1, 0);
+        updateSlider();
+    });
+    window.addEventListener('resize', () => {
+        currentSlide = Math.min(currentSlide, maxSlide());
+        updateSlider();
+    });
+
+    // ── MODAL ────────────────────────────────────────────────────────
+    const backdrop = document.getElementById('modalBackdrop');
+    const modalClose = document.getElementById('modalClose');
+
+    function openModal(w) {
+        document.getElementById('modalCategory').textContent = w.category;
+        document.getElementById('modalTitle').textContent = w.title;
+        document.getElementById('modalDesc').textContent = w.desc;
+
+        const modalLinkEl = document.getElementById('modalLink');
+        modalLinkEl.href = w.url;
+        modalLinkEl.textContent = w.isJtad ? 'サイトを見る →' : 'サイトを見る →';
+        if (w.url === '#') { modalLinkEl.style.display = 'none'; } else { modalLinkEl.style.display = 'inline-flex'; }
+
+        const heroImg = document.getElementById('modalHeroImg');
+        if (w.isJtad) {
+            heroImg.innerHTML = `
+                <div class="modal-hero-inner" style="background:${w.bg};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+                    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.12" viewBox="0 0 760 428" preserveAspectRatio="xMidYMid slice">
+                        ${Array.from({length:350}, (_,k) => {
+                            const cx = (k % 35) * 23 + 12;
+                            const cy = Math.floor(k / 35) * 43 + 22;
+                            return `<circle cx="${cx}" cy="${cy}" r="1.8" fill="${w.accent}"/>`;
+                        }).join('')}
+                    </svg>
+                    <div style="position:relative;z-index:2;text-align:center;">
+                        <div style="font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:700;letter-spacing:0.2em;color:#fff;text-shadow:0 0 30px rgba(79,195,247,0.6);">J-TAD</div>
+                        <div style="font-family:'Space Grotesk',sans-serif;font-size:0.75rem;letter-spacing:0.25em;color:${w.accent};margin-top:0.4rem;">CONNECTING TALENT WITH TOMORROW</div>
+                    </div>
+                    <div style="position:absolute;bottom:1.25rem;left:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        ${w.tags.map(t=>`<span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(255,255,255,0.12);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px)">${t}</span>`).join('')}
+                    </div>
+                </div>`;
+        } else {
+            heroImg.innerHTML = `
+                <div class="modal-hero-inner" style="background:${w.bg};display:flex;align-items:center;justify-content:center;position:relative;">
+                    <span style="font-size:5rem;opacity:0.5">${w.emoji}</span>
+                    <div style="position:absolute;bottom:1.25rem;left:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        ${w.tags.map(t=>`<span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.18);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px)">${t}</span>`).join('')}
+                    </div>
+                </div>`;
+        }
+
+        const pts = document.getElementById('modalPoints');
+        pts.innerHTML = w.points.map(p => `
+            <div class="modal-point">
+                <div class="modal-point-icon">${p.icon}</div>
+                <div>
+                    <div class="modal-point-title">${p.title}</div>
+                    <p class="modal-point-desc">${p.desc}</p>
+                </div>
+            </div>`).join('');
+
+        document.getElementById('modalMeta').innerHTML = w.meta.map(m => `
+            <div class="modal-meta-item">
+                <div class="modal-meta-label">${m.label}</div>
+                <div class="modal-meta-val">${m.val}</div>
+            </div>`).join('');
+
+        backdrop.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        backdrop.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    modalClose.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── CONTACT ──────────────────────────────────────────────────────
+    document.getElementById('contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = e.target.querySelector('.btn-submit');
+        btn.textContent = '送信しました ✓';
+        btn.style.background = '#16a34a';
+        btn.style.cursor = 'default';
+        btn.disabled = true;
+    });
+    </script>
+</body>
+</html>
