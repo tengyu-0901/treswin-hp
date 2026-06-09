@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>調査・白書 | 日本人材開発機構 J-TAD</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.report-grid {
+  display: grid; grid-template-columns: repeat(2,1fr); gap: 3px; margin-top: 8px;
+}
+@media(max-width:640px){ .report-grid{grid-template-columns:1fr;} }
+
+.report-card {
+  background: var(--white); border: 1px solid var(--rule);
+  padding: 32px 28px; position: relative; overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.report-card:hover {
+  border-color: var(--gold); transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(11,31,58,0.09);
+}
+.report-card.featured {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+  background: var(--navy3); border-color: transparent;
+}
+@media(max-width:640px){ .report-card.featured{grid-template-columns:1fr;} }
+.report-card.featured::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-ll), var(--gold));
+}
+.report-vol {
+  font-family: var(--mono); font-size: 10px; color: var(--gold);
+  letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 10px;
+}
+.report-title {
+  font-family: var(--serif); font-size: 20px; font-weight: 700;
+  color: var(--navy); line-height: 1.4; margin-bottom: 10px;
+}
+.report-card.featured .report-title { color: var(--white); font-size: 24px; }
+.report-date { font-family: var(--mono); font-size: 10px; color: var(--light); letter-spacing: 0.08em; margin-bottom: 14px; }
+.report-card.featured .report-date { color: rgba(255,255,255,0.35); }
+.report-summary { font-size: 13px; color: var(--mid); line-height: 1.85; margin-bottom: 20px; }
+.report-card.featured .report-summary { color: rgba(255,255,255,0.5); }
+.report-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+.report-tag {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 1px;
+  background: rgba(154,123,60,0.08); color: var(--gold); border: 1px solid rgba(154,123,60,0.2);
+}
+.report-card.featured .report-tag {
+  background: rgba(201,168,92,0.12); color: var(--gold-l); border-color: rgba(201,168,92,0.25);
+}
+.report-dl {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 11px; color: var(--navy);
+  text-decoration: none; letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(11,31,58,0.25); padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.report-dl:hover { color: var(--gold); border-color: var(--gold); }
+.report-card.featured .report-dl { color: var(--gold-l); border-color: rgba(201,168,92,0.4); }
+
+/* mock cover */
+.report-cover {
+  background: var(--navy2);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 32px 24px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.cover-year { font-family: var(--mono); font-size: 11px; color: var(--gold-l); letter-spacing: 0.14em; }
+.cover-title-main { font-family: var(--serif); font-size: 20px; font-weight: 900; color: var(--white); line-height: 1.4; }
+.cover-subtitle { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.7; }
+.cover-bar { height: 1px; background: rgba(201,168,92,0.25); }
+.cover-stats { display: flex; gap: 24px; }
+.cover-stat-num { font-family: var(--mono); font-size: 22px; color: var(--gold-l); line-height: 1; }
+.cover-stat-num em { font-style:normal; font-size:11px; margin-left:2px; }
+.cover-stat-label { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 3px; }
+
+.research-areas {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; margin-top: 8px;
+}
+@media(max-width:600px){ .research-areas{grid-template-columns:1fr;} }
+.area-card {
+  background: var(--off); padding: 24px 20px; border: 1px solid var(--rule);
+}
+.area-icon { font-size: 24px; margin-bottom: 10px; }
+.area-title { font-family: var(--serif); font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.area-body { font-size: 12px; color: var(--mid); line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="breadcrumb">
+  <a href="jtad-corp.html">J-TAD</a>
+  <span class="breadcrumb-sep">›</span>
+  <span>調査・白書</span>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-kicker">
+      <div class="page-hero-kicker-line"></div>
+      <span class="page-hero-kicker-text">Research &amp; Whitepaper</span>
+    </div>
+    <h1 class="page-hero-title">調査・白書</h1>
+    <p class="page-hero-sub">ハレマの匿名・集計データをもとに、日本の労働市場の「見えていない実態」を定期的に発表します。政策立案・企業の人事戦略・学術研究にご活用ください。</p>
+  </div>
+</div>
+
+<!-- レポート一覧 -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="sec-kicker reveal"><div class="sec-kicker-line"></div><span class="sec-kicker-text">Publications</span></div>
+    <h2 class="sec-title reveal d1">発行レポート</h2>
+
+    <div class="report-grid" style="margin-top:40px;">
+
+      <!-- featured -->
+      <div class="report-card featured reveal">
+        <div>
+          <div class="report-vol">Vol.01 — 最新号</div>
+          <div class="report-title">2025年 日本の労働不満白書</div>
+          <div class="report-date">2025年11月発行</div>
+          <p class="report-summary">全国2,847名の就業者データをもとに、「言語化できない不満」の実態を分析。地方・中小企業・低収入層における支援空白の構造を初めて定量化した報告書。</p>
+          <div class="report-tags">
+            <span class="report-tag">労働不満</span>
+            <span class="report-tag">地方格差</span>
+            <span class="report-tag">キャリア自律</span>
+          </div>
+          <a href="#" class="report-dl">PDF を無料ダウンロード (2.4MB) →</a>
+        </div>
+        <div class="report-cover">
+          <div class="cover-year">J-TAD Research — 2025</div>
+          <div class="cover-title-main">日本の労働不満白書<br>第1号</div>
+          <div class="cover-subtitle">「言語化できない不満」の構造と、支援の空白に関する実態調査</div>
+          <div class="cover-bar"></div>
+          <div class="cover-stats">
+            <div>
+              <div class="cover-stat-num">2,847<em>名</em></div>
+              <div class="cover-stat-label">調査対象者数</div>
+            </div>
+            <div>
+              <div class="cover-stat-num">47<em>都道府県</em></div>
+              <div class="cover-stat-label">調査範囲</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- others -->
+      <div class="report-card reveal d1">
+        <div class="report-vol">Research Note 01</div>
+        <div class="report-title">地方在住者のキャリア支援空白に関する調査報告書</div>
+        <div class="report-date">2025年8月発行</div>
+        <p class="report-summary">三大都市圏以外に居住する就業者640名への深層インタビューと定量調査。「首都圏との支援格差」を初めてスコア化。</p>
+        <div class="report-tags">
+          <span class="report-tag">地方</span>
+          <span class="report-tag">格差</span>
+        </div>
+        <a href="#" class="report-dl">PDF を無料ダウンロード →</a>
+      </div>
+
+      <div class="report-card reveal d2">
+        <div class="report-vol">Research Note 02</div>
+        <div class="report-title">「転職意向スコア」と実際の行動変容の乖離に関する研究</div>
+        <div class="report-date">2025年9月発行</div>
+        <p class="report-summary">「転職したい」と答えながら動けない層の実態分析。意向と行動の間に存在する「感情的摩擦」の種類と解消要因を明らかにした。</p>
+        <div class="report-tags">
+          <span class="report-tag">行動科学</span>
+          <span class="report-tag">転職意向</span>
+        </div>
+        <a href="#" class="report-dl">PDF を無料ダウンロード →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 研究領域 -->
+<section class="sec sec-alt">
+  <div class="sec-inner">
+    <div class="sec-kicker reveal"><div class="sec-kicker-line"></div><span class="sec-kicker-text">Research Areas</span></div>
+    <h2 class="sec-title reveal d1">J-TADの研究領域</h2>
+    <div class="research-areas" style="margin-top:40px;">
+      <div class="area-card reveal d1">
+        <div class="area-icon">📊</div>
+        <div class="area-title">労働不満の構造分析</div>
+        <p class="area-body">「言語化できない不満」の類型化と、その背景にある組織・社会構造の解明。</p>
+      </div>
+      <div class="area-card reveal d2">
+        <div class="area-icon">🗾</div>
+        <div class="area-title">地域間キャリア格差</div>
+        <p class="area-body">都市・地方・離島間における、キャリア支援アクセスの格差の実態と解消要因の研究。</p>
+      </div>
+      <div class="area-card reveal d3">
+        <div class="area-icon">🤖</div>
+        <div class="area-title">AIと感情支援の倫理</div>
+        <p class="area-body">感情を扱うAIシステムの設計倫理・バイアス・安全性に関する研究。J-TAD独自の指針を策定中。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 利用・連携 -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="sec-kicker reveal"><div class="sec-kicker-line"></div><span class="sec-kicker-text">Data Usage</span></div>
+    <h2 class="sec-title reveal d1">データの利用・研究連携について</h2>
+    <div class="prose reveal d2">
+      <p>J-TADの調査レポートは、すべて<strong>匿名・集計データ</strong>のみを使用しています。個人が特定できる情報は一切含まれません。</p>
+      <h3>ご利用いただける方</h3>
+      <ul>
+        <li>報道機関・ジャーナリストの方（出典明記の上、自由にご利用いただけます）</li>
+        <li>研究者・大学機関の方（共同研究のご提案を歓迎します）</li>
+        <li>政策立案・行政機関の方（詳細データのご提供について相談可）</li>
+        <li>企業の人事・経営企画部門の方（法人向けレポートのご案内が可能です）</li>
+      </ul>
+      <h3>研究連携のお問い合わせ</h3>
+      <p>学術機関・シンクタンクとの共同研究を積極的に推進しています。ご関心のある方は <a href="mailto:research@j-tad.jp">research@j-tad.jp</a> までご連絡ください。</p>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="shared.js"></script>
+</body>
+</html>

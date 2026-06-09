@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本人材開発機構 J-TAD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white:   #FFFFFF;
+  --off:     #F4F2EE;
+  --rule:    #D6D1C8;
+  --navy:    #0B1F3A;
+  --navy2:   #162D50;
+  --navy3:   #0a1628;
+  --gold:    #9A7B3C;
+  --gold-l:  #C9A85C;
+  --gold-ll: #E8C97A;
+  --ink:     #1A1F2E;
+  --mid:     #4A5568;
+  --light:   #8A9099;
+  --serif:   'Noto Serif JP', serif;
+  --sans:    'Noto Sans JP', sans-serif;
+  --mono:    'DM Mono', monospace;
+  --max:     1080px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+/* ── UTILS ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.75s ease, transform 0.75s ease; }
+.reveal.vis { opacity: 1; transform: none; }
+.d1{transition-delay:.10s}.d2{transition-delay:.20s}.d3{transition-delay:.30s}.d4{transition-delay:.40s}
+
+/* ══════════════════════════════════
+   GOV BAND
+══════════════════════════════════ */
+.gov-band {
+  background: var(--navy3);
+  height: 34px; padding: 0 5vw;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(201,168,92,0.4);
+}
+.gov-band-left {
+  font-family: var(--mono); font-size: 10px;
+  color: rgba(255,255,255,0.38); letter-spacing: 0.15em; text-transform: uppercase;
+}
+.gov-band-right { display: flex; gap: 18px; }
+.gov-band-right a {
+  font-size: 10px; color: rgba(255,255,255,0.32);
+  text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s;
+}
+.gov-band-right a:hover { color: var(--gold-l); }
+
+/* ══════════════════════════════════
+   NAV
+══════════════════════════════════ */
+nav {
+  position: sticky; top: 0; z-index: 300;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule);
+  box-shadow: 0 1px 12px rgba(11,31,58,0.07);
+}
+.nav-inner {
+  max-width: var(--max); margin: 0 auto; padding: 0 5vw;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.nav-brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
+.nav-emblem { width: 38px; height: 38px; flex-shrink: 0; }
+.nav-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.nav-brand-ja { font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--navy); letter-spacing: 0.05em; }
+.nav-brand-en { font-family: var(--mono); font-size: 9px; color: var(--gold); letter-spacing: 0.22em; text-transform: uppercase; }
+.nav-sep { width: 1px; height: 26px; background: var(--rule); }
+.nav-links { display: flex; list-style: none; }
+.nav-links a {
+  display: block; padding: 0 15px; height: 64px; line-height: 64px;
+  font-size: 12.5px; font-weight: 500; color: var(--mid);
+  text-decoration: none; letter-spacing: 0.03em;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s; white-space: nowrap;
+}
+.nav-links a:hover { color: var(--navy); border-bottom-color: var(--gold-l); }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--navy); color: var(--white);
+  border: none; border-radius: 2px; padding: 9px 18px;
+  font-size: 12px; font-weight: 700; font-family: var(--sans);
+  text-decoration: none; letter-spacing: 0.04em; white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.nav-cta:hover { background: var(--navy2); box-shadow: 0 4px 16px rgba(11,31,58,0.25); }
+.nav-burger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+.nav-burger span { display:block; width:22px; height:1.5px; background:var(--navy); }
+@media(max-width:768px){ .nav-links,.nav-cta,.nav-sep{display:none} .nav-burger{display:flex} }
+
+/* ══════════════════════════════════
+   HERO — full-bleed photo
+══════════════════════════════════ */
+#hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?w=1600&q=80&fit=crop');
+  background-size: cover; background-position: center 30%;
+  transform: scale(1.04);
+  transition: transform 8s ease;
+}
+#hero.loaded .hero-bg { transform: scale(1); }
+/* layered overlays for depth */
+.hero-overlay-1 {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(10,22,40,0.88) 0%, rgba(10,22,40,0.55) 55%, rgba(10,22,40,0.25) 100%);
+}
+.hero-overlay-2 {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(10,22,40,0.95) 0%, transparent 50%);
+}
+/* gold shimmer line */
+.hero-shimmer {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold-l) 30%, var(--gold-ll) 50%, var(--gold-l) 70%, transparent 100%);
+  animation: shimmer 4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%,100%{opacity:0.6} 50%{opacity:1}
+}
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: var(--max); width: 100%;
+  margin: 0 auto; padding: 0 5vw 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end;
+}
+@media(max-width:860px){ .hero-content{grid-template-columns:1fr; padding-bottom:60px;} }
+
+.hero-kicker {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 24px;
+}
+.hero-kicker-line { width: 36px; height: 1px; background: var(--gold-l); }
+.hero-kicker-text {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--gold-l); letter-spacing: 0.22em; text-transform: uppercase;
+}
+.hero-headline {
+  font-family: var(--serif);
+  font-size: clamp(32px, 5vw, 58px);
+  font-weight: 900; line-height: 1.25;
+  letter-spacing: 0.02em; color: var(--white);
+  margin-bottom: 24px;
+}
+.hero-headline .gold-word {
+  color: var(--gold-ll);
+  position: relative;
+}
+.hero-headline .gold-word::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-l), var(--gold-ll));
+}
+.hero-sub {
+  font-size: 14px; color: rgba(255,255,255,0.68);
+  line-height: 2; margin-bottom: 40px; max-width: 420px;
+  border-left: 2px solid var(--gold-l); padding-left: 16px;
+}
+.hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-l) 100%);
+  color: var(--white); border: none; border-radius: 2px;
+  padding: 14px 28px; font-family: var(--sans);
+  font-size: 13px; font-weight: 700; letter-spacing: 0.04em;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(154,123,60,0.45);
+  transition: box-shadow 0.25s, transform 0.15s;
+}
+.btn-gold:hover { box-shadow: 0 6px 28px rgba(154,123,60,0.65); transform: translateY(-2px); }
+.btn-ghost-light {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid rgba(255,255,255,0.3); border-radius: 2px;
+  padding: 13px 22px; font-family: var(--sans);
+  font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85);
+  text-decoration: none; letter-spacing: 0.04em;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-ghost-light:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.08); }
+.hero-meta {
+  padding-top: 36px; margin-top: 36px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  display: flex; gap: 36px; flex-wrap: wrap;
+}
+.hero-meta-item {}
+.hero-meta-num {
+  font-family: var(--mono); font-size: 24px; font-weight: 500;
+  color: var(--white); line-height: 1;
+}
+.hero-meta-num em { font-style:normal; font-size:13px; color:var(--gold-l); margin-left:2px; }
+.hero-meta-label { font-size: 10px; color: rgba(255,255,255,0.35); margin-top:4px; letter-spacing:0.08em; }
+
+/* dot map on dark */
+.hero-right-panel { display: flex; align-items: center; justify-content: center; }
+#dot-map-canvas { width: 100%; max-width: 420px; height: auto; display: block; opacity: 0.9; }
+.map-caption {
+  font-family: var(--mono); font-size: 9px;
+  color: rgba(255,255,255,0.22); letter-spacing: 0.12em;
+  text-transform: uppercase; text-align: right; margin-top: 8px;
+}
+
+/* ══════════════════════════════════
+   SECTION FRAMEWORK
+══════════════════════════════════ */
+.sec { padding: clamp(72px,10vw,130px) 5vw; }
+.sec-inner { max-width: var(--max); margin: 0 auto; }
+.sec-header { margin-bottom: 52px; }
+.sec-kicker {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+}
+.sec-kicker-line { width: 28px; height: 1px; background: var(--gold); }
+.sec-kicker-num { font-family: var(--mono); font-size: 10px; color: var(--gold); letter-spacing: 0.16em; }
+.sec-kicker-text { font-family: var(--mono); font-size: 10px; color: var(--gold); letter-spacing: 0.18em; text-transform: uppercase; }
+.sec-title {
+  font-family: var(--serif);
+  font-size: clamp(24px, 3.2vw, 38px);
+  font-weight: 700; line-height: 1.4; color: var(--navy);
+}
+.sec-lead { margin-top: 14px; font-size: 14px; color: var(--mid); line-height: 2; max-width: 540px; }
+
+/* ══════════════════════════════════
+   MISSION — dark photo split
+══════════════════════════════════ */
+#mission { padding: 0; overflow: hidden; }
+.mission-split {
+  display: grid; grid-template-columns: 1fr 1fr; min-height: 600px;
+}
+@media(max-width:760px){ .mission-split{grid-template-columns:1fr;} }
+.mission-photo {
+  position: relative; overflow: hidden; min-height: 360px;
+}
+.mission-photo img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  filter: brightness(0.65) saturate(0.8);
+  transition: transform 8s ease;
+}
+.mission-photo:hover img { transform: scale(1.04); }
+.mission-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, transparent 60%, var(--navy3) 100%);
+}
+/* gold border accent */
+.mission-photo::after {
+  content: '';
+  position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+  background: linear-gradient(to bottom, var(--gold-l), var(--gold-ll), var(--gold-l));
+}
+.mission-text {
+  background: var(--navy3);
+  padding: clamp(48px,6vw,88px) clamp(32px,5vw,72px);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.mission-kicker {
+  display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.mission-kicker-line { width: 28px; height: 1px; background: rgba(201,168,92,0.5); }
+.mission-kicker-text { font-family: var(--mono); font-size: 10px; color: rgba(201,168,92,0.7); letter-spacing: 0.2em; text-transform: uppercase; }
+.mission-quote {
+  font-family: var(--serif);
+  font-size: clamp(18px, 2.5vw, 28px);
+  font-weight: 700; line-height: 1.65;
+  color: var(--white); margin-bottom: 28px;
+}
+.mission-quote .gline {
+  color: var(--gold-ll);
+  border-bottom: 1px solid rgba(232,201,122,0.4);
+  padding-bottom: 1px;
+}
+.mission-body {
+  font-size: 13px; color: rgba(255,255,255,0.5);
+  line-height: 2; margin-bottom: 36px;
+}
+.mvv-cells {
+  display: grid; grid-template-columns: 1fr;
+  gap: 0; border-top: 1px solid rgba(255,255,255,0.07);
+}
+.mvv-cell {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.mvv-cell-tag {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--gold-l); letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.mvv-cell-title {
+  font-family: var(--serif); font-size: 14px; font-weight: 700;
+  color: var(--white); margin-bottom: 5px;
+}
+.mvv-cell-body { font-size: 12px; color: rgba(255,255,255,0.42); line-height: 1.8; }
+
+/* ══════════════════════════════════
+   SERVICES — glass cards + flagship photo
+══════════════════════════════════ */
+#services { background: var(--off); }
+.flagship-photo-card {
+  position: relative; overflow: hidden; border-radius: 4px;
+  margin-bottom: 3px;
+  grid-column: 1 / -1;
+}
+.flagship-photo-card img {
+  width: 100%; height: 340px;
+  object-fit: cover; object-position: center 40%;
+  display: block;
+  filter: brightness(0.55) saturate(0.75);
+  transition: transform 6s ease;
+}
+.flagship-photo-card:hover img { transform: scale(1.03); }
+.flagship-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(10,22,40,0.88) 0%, rgba(10,22,40,0.4) 60%, transparent 100%);
+  padding: clamp(28px,4vw,52px) clamp(24px,4vw,52px);
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+/* gold top border */
+.flagship-photo-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 2;
+  background: linear-gradient(90deg, var(--gold), var(--gold-ll), var(--gold));
+}
+.fs-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 9px;
+  color: var(--gold-l); letter-spacing: 0.16em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.fs-badge::before { content:'●'; font-size:6px; }
+.fs-title {
+  font-family: var(--serif); font-size: clamp(22px,3vw,34px);
+  font-weight: 700; color: var(--white); line-height: 1.35; margin-bottom: 10px;
+}
+.fs-body { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.85; max-width: 520px; margin-bottom: 16px; }
+.fs-stats { display: flex; gap: 28px; flex-wrap: wrap; }
+.fs-stat-num { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--white); line-height: 1; }
+.fs-stat-num em { font-style:normal; font-size:11px; color:var(--gold-l); margin-left:2px; }
+.fs-stat-label { font-size: 10px; color: rgba(255,255,255,0.32); margin-top: 3px; }
+.fs-link {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 14px;
+  font-family: var(--mono); font-size: 11px; color: var(--gold-l);
+  text-decoration: none; letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(201,168,92,0.35);
+  padding-bottom: 1px; transition: border-color 0.2s;
+  align-self: flex-start;
+}
+.fs-link:hover { border-color: var(--gold-l); }
+
+.svc-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 3px;
+}
+@media(max-width:640px){ .svc-grid{grid-template-columns:1fr;} }
+.svc-card {
+  background: var(--white);
+  padding: 32px 28px;
+  transition: background 0.2s, transform 0.25s, box-shadow 0.25s;
+  border: 1px solid transparent;
+}
+.svc-card:hover {
+  background: var(--white); transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(11,31,58,0.10);
+  border-color: rgba(154,123,60,0.2);
+}
+.svc-num { font-family: var(--mono); font-size: 11px; color: var(--rule); margin-bottom: 14px; }
+.svc-icon { font-size: 26px; margin-bottom: 14px; }
+.svc-name { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 10px; line-height: 1.4; }
+.svc-badge {
+  display: inline-block; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 1px; margin-bottom: 12px;
+}
+.svc-badge.b2b { background: rgba(11,31,58,0.07); color: var(--navy2); border: 1px solid rgba(11,31,58,0.15); }
+.svc-badge.res { background: rgba(154,123,60,0.08); color: var(--gold); border: 1px solid rgba(154,123,60,0.2); }
+.svc-badge.edu { background: rgba(74,85,104,0.07); color: var(--mid); border: 1px solid rgba(74,85,104,0.15); }
+.svc-body { font-size: 13px; color: var(--mid); line-height: 1.85; }
+
+/* ══════════════════════════════════
+   VALUES — table on white
+══════════════════════════════════ */
+#values { background: var(--white); }
+.values-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.values-table thead tr { border-bottom: 2px solid var(--navy); }
+.values-table thead th {
+  padding: 12px 16px; font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--light); font-weight: 500; text-align: left;
+}
+.values-table tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.15s; }
+.values-table tbody tr:hover { background: var(--off); }
+.values-table td { padding: 22px 16px; vertical-align: top; }
+.val-code { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.1em; white-space: nowrap; }
+.val-title { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.4; }
+.val-body { font-size: 13px; color: var(--mid); line-height: 1.85; }
+@media(max-width:600px){
+  .values-table thead{display:none}
+  .values-table tbody tr{display:flex;flex-direction:column;padding:20px 0}
+  .values-table td{padding:4px 0;border:none}
+}
+
+/* ══════════════════════════════════
+   VISION — photo strip + data
+══════════════════════════════════ */
+#vision { padding: 0; overflow: hidden; }
+.vision-photo-strip {
+  position: relative; height: clamp(260px, 35vw, 440px); overflow: hidden;
+}
+.vision-photo-strip img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 55%;
+  filter: brightness(0.5) saturate(0.7);
+}
+.vision-photo-strip-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 20%, var(--navy3) 100%);
+}
+.vision-strip-text {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  max-width: var(--max); margin: 0 auto;
+  padding: 0 5vw 48px;
+}
+.vision-year {
+  font-family: var(--mono); font-size: clamp(56px,8vw,110px); font-weight: 500;
+  color: rgba(255,255,255,0.07); line-height: 1; margin-bottom: -16px;
+  user-select: none;
+}
+.vision-statement {
+  font-family: var(--serif);
+  font-size: clamp(20px,3vw,34px);
+  font-weight: 700; color: var(--white); line-height: 1.5;
+}
+
+.vision-data-sec {
+  background: var(--navy3);
+  padding: clamp(48px,6vw,80px) 5vw;
+}
+.vision-data-inner {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+}
+@media(max-width:760px){ .vision-data-inner{grid-template-columns:1fr;gap:48px;} }
+.vision-body-text {
+  font-size: 14px; color: rgba(255,255,255,0.5); line-height: 2; margin-top: 20px;
+}
+/* data panel */
+.data-panel { overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+.data-panel-head {
+  background: rgba(255,255,255,0.04);
+  padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.data-panel-title { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 0.14em; text-transform: uppercase; }
+.data-panel-tag { font-family: var(--mono); font-size: 9px; color: var(--gold-l); letter-spacing: 0.1em; }
+.data-row { display: grid; grid-template-columns: 1fr 64px; align-items: center; gap: 16px; padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.data-row:last-child { border-bottom: none; }
+.data-row-name { font-size: 12px; color: rgba(255,255,255,0.65); margin-bottom: 7px; font-weight: 500; }
+.data-bar-track { height: 3px; background: rgba(255,255,255,0.07); overflow: hidden; }
+.data-bar-fill { height: 100%; background: var(--gold-l); transform: scaleX(0); transform-origin: left; transition: transform 1.4s cubic-bezier(0.4,0,0.2,1); }
+.data-bar-fill.navy { background: rgba(201,168,92,0.45); }
+.data-row-val { font-family: var(--mono); font-size: 13px; color: var(--gold-l); font-weight: 500; text-align: right; white-space: nowrap; }
+
+/* ══════════════════════════════════
+   FOOTER
+══════════════════════════════════ */
+footer {
+  background: var(--navy3);
+  border-top: 3px solid;
+  border-image: linear-gradient(90deg, transparent, var(--gold-l) 20%, var(--gold-ll) 50%, var(--gold-l) 80%, transparent) 1;
+}
+.footer-inner {
+  max-width: var(--max); margin: 0 auto; padding: 52px 5vw;
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px;
+}
+@media(max-width:640px){ .footer-inner{grid-template-columns:1fr;gap:32px;} }
+.footer-logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.footer-name { font-family: var(--serif); font-size: 15px; font-weight: 700; color: var(--white); line-height: 1.2; }
+.footer-name-en { font-family: var(--mono); font-size: 9px; color: var(--gold-l); letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-top: 2px; }
+.footer-desc { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.9; max-width: 240px; }
+.footer-col-title { font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 12px; color: rgba(255,255,255,0.42); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--gold-l); }
+.footer-bottom {
+  max-width: var(--max); margin: 0 auto; padding: 16px 5vw;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.footer-copy { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.18); letter-spacing: 0.05em; }
+.footer-policy { display: flex; gap: 16px; }
+.footer-policy a { font-size: 10px; color: rgba(255,255,255,0.22); text-decoration: none; }
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- GOV BAND -->
+<div class="gov-band">
+  <span class="gov-band-left">Japan Talent &amp; Ability Development Organization</span>
+  <div class="gov-band-right">
+    <a href="#">English</a>
+    <a href="#">サイトマップ</a>
+    <a href="#">アクセシビリティ</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <svg class="nav-emblem" width="38" height="38" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" fill="#0B1F3A"/>
+        <rect x="6" y="6" width="12" height="12" rx="1" fill="#C9A85C"/>
+        <rect x="22" y="6" width="12" height="12" rx="1" fill="white" fill-opacity="0.88"/>
+        <rect x="6" y="22" width="12" height="12" rx="1" fill="white" fill-opacity="0.35"/>
+        <rect x="22" y="22" width="12" height="12" rx="1" fill="#C9A85C" fill-opacity="0.55"/>
+      </svg>
+      <div class="nav-brand-text">
+        <span class="nav-brand-ja">日本人材開発機構</span>
+        <span class="nav-brand-en">J-TAD</span>
+      </div>
+    </a>
+    <div class="nav-sep"></div>
+    <ul class="nav-links">
+      <li><a href="#mission">機構について</a></li>
+      <li><a href="#services">事業内容</a></li>
+      <li><a href="#values">行動原則</a></li>
+      <li><a href="#vision">ビジョン</a></li>
+    </ul>
+    <a href="mailto:info@j-tad.jp" class="nav-cta">お問い合わせ</a>
+    <button class="nav-burger" aria-label="メニュー"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay-1"></div>
+  <div class="hero-overlay-2"></div>
+  <div class="hero-shimmer"></div>
+
+  <div class="hero-content">
+    <div class="reveal">
+      <div class="hero-kicker">
+        <div class="hero-kicker-line"></div>
+        <span class="hero-kicker-text">設立宣言 — 2025</span>
+      </div>
+      <h1 class="hero-headline">
+        日本の「働く」を、<br>
+        構造から<span class="gold-word">変える。</span>
+      </h1>
+      <p class="hero-sub">
+        転職させるのでも、我慢させるのでもない。<br>
+        一人ひとりが、自分のキャリアを<br>
+        自分で選べる社会を目指して。
+      </p>
+      <div class="hero-btns">
+        <a href="#mission" class="btn-gold">機構について →</a>
+        <a href="#services" class="btn-ghost-light">事業内容を見る</a>
+      </div>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-num">2025<em>年</em></span>
+          <span class="hero-meta-label">設立</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-num">4<em>事業</em></span>
+          <span class="hero-meta-label">展開領域</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-num">47<em>都道府県</em></span>
+          <span class="hero-meta-label">対応目標</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right-panel reveal d2">
+      <div>
+        <canvas id="dot-map-canvas" width="420" height="460" aria-label="日本全域カバレッジ"></canvas>
+        <p class="map-caption">Target Coverage — All 47 Prefectures</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MISSION ══ -->
+<section id="mission">
+  <div class="mission-split">
+    <div class="mission-photo reveal">
+      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&q=80&fit=crop" alt="オフィスの朝、窓から差し込む光" loading="lazy">
+      <div class="mission-photo-overlay"></div>
+    </div>
+    <div class="mission-text">
+      <div class="mission-kicker reveal">
+        <div class="mission-kicker-line"></div>
+        <span class="mission-kicker-text">§ 01 — Mission</span>
+      </div>
+      <blockquote class="mission-quote reveal d1">
+        働くすべての人に、<br>
+        自分のキャリアを<span class="gline">自分で選ぶ権利</span>を。
+      </blockquote>
+      <p class="mission-body reveal d2">
+        日本の労働市場は長らく、「転職させる側」と「我慢させる側」の二項対立で動いてきた。どちらの側にも、個人の「納得」を守ろうとする存在がいなかった。J-TADは、その空白を埋めるために設立された。
+      </p>
+      <div class="mvv-cells reveal d3">
+        <div class="mvv-cell">
+          <div class="mvv-cell-tag">Mission</div>
+          <div class="mvv-cell-title">今、何をするために存在するか</div>
+          <p class="mvv-cell-body">AIと人間が並走し、一人ひとりが自分の言葉でキャリアを選べるようになるための伴走者であり続ける。</p>
+        </div>
+        <div class="mvv-cell">
+          <div class="mvv-cell-tag">Vision</div>
+          <div class="mvv-cell-title">2035年に実現する社会</div>
+          <p class="mvv-cell-body">日本のどこに住んでいても、どんな収入でも、キャリアの壁打ちができる存在がそばにいる社会。</p>
+        </div>
+        <div class="mvv-cell">
+          <div class="mvv-cell-tag">Position</div>
+          <div class="mvv-cell-title">誰のための機構か</div>
+          <p class="mvv-cell-body">地方・低収入層・中小企業従業員。これまで支援の届かなかった「空白」にいる人々のために。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SERVICES ══ -->
+<section id="services" class="sec">
+  <div class="sec-inner">
+    <div class="sec-header">
+      <div class="sec-kicker reveal">
+        <div class="sec-kicker-line"></div>
+        <span class="sec-kicker-num">§ 02</span>
+        <span class="sec-kicker-text">事業内容</span>
+      </div>
+      <h2 class="sec-title reveal d1">J-TADが展開する事業領域</h2>
+      <p class="sec-lead reveal d2">個人のキャリア支援から組織開発、政策提言まで。「労働市場の空白」に複数の角度からアプローチします。</p>
+    </div>
+
+    <!-- Flagship photo card -->
+    <div class="flagship-photo-card reveal">
+      <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&q=80&fit=crop" alt="ハレマ — AIキャリア伴走サービス" loading="lazy">
+      <div class="flagship-overlay">
+        <div class="fs-badge">旗艦プロダクト</div>
+        <div class="fs-title">キャリア伴走サービス「ハレマ」</div>
+        <p class="fs-body">転職を急かさない、中立のAIキャリア伴走サービス。個人が自分のモヤモヤを言語化し、納得のいくキャリア選択ができるよう、24時間365日AIが並走する。</p>
+        <div class="fs-stats">
+          <div>
+            <div class="fs-stat-num">24/7<em>対応</em></div>
+            <div class="fs-stat-label">AIによる常時伴走</div>
+          </div>
+          <div>
+            <div class="fs-stat-num">中立<em>設計</em></div>
+            <div class="fs-stat-label">転職を急かさない唯一のポジション</div>
+          </div>
+          <div>
+            <div class="fs-stat-num">無料<em>体験可</em></div>
+            <div class="fs-stat-label">トライアルから始められる</div>
+          </div>
+        </div>
+        <a href="harema-lp.html" class="fs-link">harema.jp を開く →</a>
+      </div>
+    </div>
+
+    <!-- 3 service cards -->
+    <div class="svc-grid">
+      <div class="svc-card reveal d1">
+        <div class="svc-num">02</div>
+        <div class="svc-icon">🏢</div>
+        <span class="svc-badge b2b">法人向け</span>
+        <div class="svc-name">HRソリューション</div>
+        <p class="svc-body">人的資本開示への対応、エンゲージメント向上、オフボーディング支援。AIと行動データで、人事部門の意思決定をデータドリブンに支援する。</p>
+      </div>
+      <div class="svc-card reveal d2">
+        <div class="svc-num">03</div>
+        <div class="svc-icon">📊</div>
+        <span class="svc-badge res">調査・研究</span>
+        <div class="svc-name">労働市場リサーチ &amp; 政策提言</div>
+        <p class="svc-body">匿名・集計データをもとに「日本の労働不満白書」を定期発行。地方・中小企業・低収入層の実態を可視化し、政策議論に貢献する。</p>
+      </div>
+      <div class="svc-card reveal d3">
+        <div class="svc-num">04</div>
+        <div class="svc-icon">🎓</div>
+        <span class="svc-badge edu">教育</span>
+        <div class="svc-name">キャリア自律教育プログラム</div>
+        <p class="svc-body">大学・専門学校向けのキャリア教育カリキュラム。就職活動より前の段階から、自分の価値観と向き合う力を育てる次世代型プログラム。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VALUES ══ -->
+<section id="values" class="sec">
+  <div class="sec-inner">
+    <div class="sec-header">
+      <div class="sec-kicker reveal">
+        <div class="sec-kicker-line"></div>
+        <span class="sec-kicker-num">§ 03</span>
+        <span class="sec-kicker-text">行動原則</span>
+      </div>
+      <h2 class="sec-title reveal d1">私たちが大切にする、5つの行動原則</h2>
+    </div>
+    <table class="values-table reveal">
+      <thead>
+        <tr>
+          <th style="width:80px">Code</th>
+          <th style="width:200px">原則</th>
+          <th>内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="val-code">V-01</span></td>
+          <td><span class="val-title">中立であり続ける</span></td>
+          <td><span class="val-body">「転職させること」「留まらせること」どちらにも加担しない。個人の納得だけを最優先にする。利益相反の排除は、機構の存在意義そのものである。</span></td>
+        </tr>
+        <tr>
+          <td><span class="val-code">V-02</span></td>
+          <td><span class="val-title">不満を資産にする</span></td>
+          <td><span class="val-body">モヤモヤや怒りは問題ではなく、自己理解の入口だと信じる。感情はデータであり、行動の羅針盤である。個人の感情を軽視しない。</span></td>
+        </tr>
+        <tr>
+          <td><span class="val-code">V-03</span></td>
+          <td><span class="val-title">AIは道具、伴走は人間的行為</span></td>
+          <td><span class="val-body">テクノロジーはアクセスの敷居を下げるために使う。しかし「寄り添う」という行為の本質は人間的でなければならない。AIと人間の役割を混同しない。</span></td>
+        </tr>
+        <tr>
+          <td><span class="val-code">V-04</span></td>
+          <td><span class="val-title">成長を見えるものにする</span></td>
+          <td><span class="val-body">「なんとなく良くなった気がする」で終わらせない。スコアと認定で個人の変化を社会に証明する。変化の不可視化は支援の失敗である。</span></td>
+        </tr>
+        <tr>
+          <td><span class="val-code">V-05</span></td>
+          <td><span class="val-title">届かない場所に届ける</span></td>
+          <td><span class="val-body">地方、低収入層、中小企業従業員。支援の空白にこそ、私たちがいる。インフラは、使えない人がいる時点で未完成である。</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ VISION ══ -->
+<section id="vision">
+  <!-- Full-bleed photo strip -->
+  <div class="vision-photo-strip reveal">
+    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1600&q=80&fit=crop" alt="日本の都市と働く人々" loading="lazy">
+    <div class="vision-photo-strip-overlay"></div>
+    <div class="vision-strip-text reveal d1">
+      <div class="vision-year">2035</div>
+      <h2 class="vision-statement">「仕事がしんどい」を、<br>一人で抱える社会を終わらせる。</h2>
+    </div>
+  </div>
+
+  <!-- Data section on dark -->
+  <div class="vision-data-sec">
+    <div class="vision-data-inner">
+      <div class="reveal">
+        <div class="sec-kicker" style="margin-bottom:14px;">
+          <div class="sec-kicker-line"></div>
+          <span class="sec-kicker-num" style="color:var(--gold-l)">§ 04</span>
+          <span class="sec-kicker-text" style="color:var(--gold-l)">Vision 2035</span>
+        </div>
+        <h2 class="sec-title" style="color:var(--white);">支援の空白を、<br>なくしていく。</h2>
+        <p class="vision-body-text">日本のどこに住んでいても、どんな収入でも、自分のキャリアについて壁打ちできる存在がそばにいる社会。J-TADはその社会インフラとなることを目指し、すべての事業を展開する。</p>
+      </div>
+      <div class="data-panel reveal d2" id="data-board">
+        <div class="data-panel-head">
+          <span class="data-panel-title">支援対象カバレッジ目標</span>
+          <span class="data-panel-tag">Target 2035</span>
+        </div>
+        <div>
+          <div class="data-row">
+            <div><div class="data-row-name">三大都市圏 就業者</div><div class="data-bar-track"><div class="data-bar-fill" data-pct="0.78"></div></div></div>
+            <span class="data-row-val">78%</span>
+          </div>
+          <div class="data-row">
+            <div><div class="data-row-name">地方都市 就業者</div><div class="data-bar-track"><div class="data-bar-fill navy" data-pct="0.60"></div></div></div>
+            <span class="data-row-val">60%</span>
+          </div>
+          <div class="data-row">
+            <div><div class="data-row-name">中小企業従業員（300名以下）</div><div class="data-bar-track"><div class="data-bar-fill" data-pct="0.65"></div></div></div>
+            <span class="data-row-val">65%</span>
+          </div>
+          <div class="data-row">
+            <div><div class="data-row-name">年収300万円以下 層</div><div class="data-bar-track"><div class="data-bar-fill navy" data-pct="0.45"></div></div></div>
+            <span class="data-row-val">45%</span>
+          </div>
+          <div class="data-row">
+            <div><div class="data-row-name">女性就業者</div><div class="data-bar-track"><div class="data-bar-fill" data-pct="0.72"></div></div></div>
+            <span class="data-row-val">72%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo-row">
+        <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" fill="#162D50"/>
+          <rect x="6" y="6" width="12" height="12" rx="1" fill="#C9A85C"/>
+          <rect x="22" y="6" width="12" height="12" rx="1" fill="white" fill-opacity="0.75"/>
+          <rect x="6" y="22" width="12" height="12" rx="1" fill="white" fill-opacity="0.28"/>
+          <rect x="22" y="22" width="12" height="12" rx="1" fill="#C9A85C" fill-opacity="0.5"/>
+        </svg>
+        <div>
+          <div class="footer-name">
+            日本人材開発機構
+            <span class="footer-name-en">J-TAD</span>
+          </div>
+        </div>
+      </div>
+      <p class="footer-desc">働くすべての人に、自分のキャリアを自分で選ぶ権利を。2025年設立。</p>
+    </div>
+    <div>
+      <div class="footer-col-title">事業・組織</div>
+      <ul class="footer-links">
+        <li><a href="#mission">機構について</a></li>
+        <li><a href="#services">事業内容</a></li>
+        <li><a href="#values">行動原則</a></li>
+        <li><a href="#vision">ビジョン2035</a></li>
+        <li><a href="careers.html">採用情報</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">関連リンク</div>
+      <ul class="footer-links">
+        <li><a href="harema-lp.html">ハレマ（toC）</a></li>
+        <li><a href="whitepaper.html">調査・白書</a></li>
+        <li><a href="presskit.html">プレスキット</a></li>
+        <li><a href="mailto:info@j-tad.jp">お問い合わせ</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Japan Talent &amp; Ability Development Organization (J-TAD). All rights reserved.</span>
+    <div class="footer-policy">
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="tokusho.html">特定商取引法</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── reveal on scroll ── */
+const revs = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('vis'); ro.unobserve(e.target); }});
+},{threshold:0.07});
+revs.forEach(el=>ro.observe(el));
+
+/* ── hero parallax + load ── */
+const heroBg = document.querySelector('.hero-bg');
+document.getElementById('hero').classList.add('loaded');
+window.addEventListener('scroll',()=>{
+  const y = window.scrollY;
+  if(heroBg && y < window.innerHeight){
+    heroBg.style.transform = `scale(1) translateY(${y*0.25}px)`;
+  }
+},{passive:true});
+
+/* ── dot map ── */
+(function(){
+  const cv = document.getElementById('dot-map-canvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=420, H=460;
+  const regions=[
+    [[0.38,0.10],[0.47,0.06],[0.60,0.08],[0.70,0.14],[0.80,0.20],[0.86,0.26],[0.88,0.32],
+     [0.82,0.37],[0.76,0.43],[0.70,0.49],[0.65,0.55],[0.60,0.61],[0.57,0.67],[0.54,0.71],
+     [0.50,0.68],[0.47,0.63],[0.44,0.57],[0.40,0.52],[0.35,0.46],[0.29,0.42],[0.24,0.37],
+     [0.21,0.30],[0.23,0.22],[0.27,0.16],[0.32,0.12]],
+    [[0.52,0.04],[0.64,0.01],[0.76,0.04],[0.82,0.10],[0.76,0.16],[0.66,0.18],[0.55,0.15],[0.50,0.09]],
+    [[0.27,0.72],[0.35,0.68],[0.42,0.71],[0.45,0.78],[0.42,0.84],[0.35,0.87],[0.28,0.84],[0.24,0.77]],
+    [[0.43,0.60],[0.50,0.57],[0.56,0.61],[0.53,0.67],[0.46,0.68],[0.40,0.65]],
+  ];
+  function pip(px,py,poly){
+    let ins=false;
+    for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+      const xi=poly[i][0],yi=poly[i][1],xj=poly[j][0],yj=poly[j][1];
+      if(((yi>py)!==(yj>py))&&(px<(xj-xi)*(py-yi)/(yj-yi)+xi)) ins=!ins;
+    }
+    return ins;
+  }
+  const STEP=13, dots=[];
+  for(let x=STEP/2;x<W;x+=STEP) for(let y=STEP/2;y<H;y+=STEP){
+    const nx=x/W,ny=y/H;
+    let land=false;
+    for(const r of regions) if(pip(nx,ny,r)){land=true;break;}
+    if(land){
+      const hotspots=[{cx:0.54,cy:0.50,r:0.07},{cx:0.48,cy:0.57,r:0.05},{cx:0.30,cy:0.42,r:0.04},{cx:0.35,cy:0.72,r:0.04},{cx:0.62,cy:0.08,r:0.04}];
+      let hot=false;
+      hotspots.forEach(h=>{const dx=nx-h.cx,dy=ny-h.cy;if(dx*dx+dy*dy<h.r*h.r)hot=true;});
+      dots.push({x,y,alpha:0,target:Math.random()*0.22+0.06,phase:Math.random()*Math.PI*2,hot});
+    }
+  }
+  let t=0;
+  (function draw(){
+    ctx.clearRect(0,0,W,H); t++;
+    dots.forEach(d=>{
+      d.alpha+=(d.target-d.alpha)*0.03;
+      const pulse=Math.sin(t*0.012+d.phase)*0.07;
+      if(d.hot){
+        ctx.fillStyle=`rgba(201,168,92,${Math.min(1,d.alpha*3+pulse+0.3)})`;
+        ctx.beginPath(); ctx.arc(d.x,d.y,3.0,0,Math.PI*2); ctx.fill();
+        // glow
+        ctx.fillStyle=`rgba(232,201,122,${(d.alpha+pulse)*0.3})`;
+        ctx.beginPath(); ctx.arc(d.x,d.y,5.5,0,Math.PI*2); ctx.fill();
+      } else {
+        ctx.fillStyle=`rgba(255,255,255,${d.alpha+pulse})`;
+        ctx.beginPath(); ctx.arc(d.x,d.y,1.6,0,Math.PI*2); ctx.fill();
+      }
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ── data bars ── */
+const dbObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.data-bar-fill').forEach(b=>{
+        b.style.transform=`scaleX(${parseFloat(b.dataset.pct||0)})`;
+      });
+      dbObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+const db=document.getElementById('data-board');
+if(db) dbObs.observe(db);
+
+/* ── responsive ── */
+function fixLayout(){
+  const hi=document.querySelector('.hero-content');
+  if(hi) hi.style.gridTemplateColumns=window.innerWidth<=860?'1fr':'1fr 1fr';
+}
+fixLayout(); window.addEventListener('resize',fixLayout);
+</script>
+</body>
+</html>

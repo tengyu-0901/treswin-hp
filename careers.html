@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>採用情報 | 日本人材開発機構 J-TAD</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.position-list { display: flex; flex-direction: column; gap: 3px; margin-top: 8px; }
+.position-card {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  padding: 28px 32px;
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 24px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  text-decoration: none; color: inherit;
+}
+.position-card:hover {
+  border-color: var(--gold); transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(11,31,58,0.08);
+}
+.pos-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.pos-tag {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 1px;
+}
+.pos-tag.full  { background: rgba(11,31,58,0.07); color: var(--navy); border: 1px solid rgba(11,31,58,0.15); }
+.pos-tag.part  { background: rgba(154,123,60,0.08); color: var(--gold); border: 1px solid rgba(154,123,60,0.2); }
+.pos-tag.remote{ background: rgba(58,130,98,0.08); color: #2d7a5a; border: 1px solid rgba(58,130,98,0.2); }
+.pos-dept { font-family: var(--mono); font-size: 10px; color: var(--light); letter-spacing: 0.08em; }
+.pos-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.pos-desc { font-size: 13px; color: var(--mid); line-height: 1.75; }
+.pos-arrow { font-size: 20px; color: var(--rule); transition: color 0.2s; flex-shrink: 0; }
+.position-card:hover .pos-arrow { color: var(--gold); }
+
+.culture-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;
+  margin-top: 8px;
+}
+@media(max-width:640px){ .culture-grid{grid-template-columns:1fr;} }
+.culture-card {
+  background: var(--white); padding: 28px 24px;
+  border: 1px solid var(--rule);
+}
+.culture-icon { font-size: 28px; margin-bottom: 14px; }
+.culture-title { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.culture-body { font-size: 13px; color: var(--mid); line-height: 1.85; }
+
+.process-steps {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 0;
+  border: 1px solid var(--rule); margin-top: 8px;
+}
+@media(max-width:640px){ .process-steps{grid-template-columns:1fr 1fr;} }
+.process-step {
+  padding: 24px 20px; border-right: 1px solid var(--rule); position: relative;
+}
+.process-step:last-child { border-right: none; }
+.process-num { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 8px; }
+.process-name { font-family: var(--serif); font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.process-desc { font-size: 12px; color: var(--mid); line-height: 1.75; }
+
+.cta-box {
+  background: var(--navy3); padding: 52px 5vw; margin-top: 0; text-align: center;
+  border-top: 3px solid;
+  border-image: linear-gradient(90deg, transparent, var(--gold-l) 30%, var(--gold-ll) 50%, var(--gold-l) 70%, transparent) 1;
+}
+.cta-box-title { font-family: var(--serif); font-size: clamp(20px,3vw,30px); font-weight: 700; color: var(--white); margin-bottom: 12px; }
+.cta-box-sub { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 28px; }
+</style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="breadcrumb">
+  <a href="jtad-corp.html">J-TAD</a>
+  <span class="breadcrumb-sep">›</span>
+  <span>採用情報</span>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-kicker">
+      <div class="page-hero-kicker-line"></div>
+      <span class="page-hero-kicker-text">Careers</span>
+    </div>
+    <h1 class="page-hero-title">採用情報</h1>
+    <p class="page-hero-sub">「届かない場所に届ける」ために、一緒に働く仲間を探しています。J-TADは、日本の労働市場の構造を変えることに本気で向き合うチームです。</p>
+  </div>
+</div>
+
+<!-- 募集職種 -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="sec-kicker reveal"><div class="sec-kicker-line"></div><span class="sec-kicker-text">Open Positions</span></div>
+    <h2 class="sec-title reveal d1">現在の募集職種</h2>
+    <p class="sec-lead reveal d2">すべてのポジションで、「なぜこの仕事をするのか」を大切にしています。スキルよりも、問いに向き合う姿勢を重視します。</p>
+
+    <div class="position-list" style="margin-top:40px;">
+      <a class="position-card reveal" href="mailto:recruit@j-tad.jp?subject=【応募】プロダクトマネージャー">
+        <div>
+          <div class="pos-meta">
+            <span class="pos-tag full">正社員</span>
+            <span class="pos-tag remote">リモート可</span>
+            <span class="pos-dept">Product</span>
+          </div>
+          <div class="pos-title">プロダクトマネージャー（ハレマ）</div>
+          <p class="pos-desc">AIキャリア伴走サービス「ハレマ」のプロダクト戦略・ロードマップを牽引。ユーザーインタビューからKPI設計まで、プロダクトの全体を担う。</p>
+        </div>
+        <span class="pos-arrow">→</span>
+      </a>
+      <a class="position-card reveal d1" href="mailto:recruit@j-tad.jp?subject=【応募】AIエンジニア">
+        <div>
+          <div class="pos-meta">
+            <span class="pos-tag full">正社員</span>
+            <span class="pos-tag remote">リモート可</span>
+            <span class="pos-dept">Engineering</span>
+          </div>
+          <div class="pos-title">AIエンジニア / LLMアプリケーション開発</div>
+          <p class="pos-desc">J-TAD AgentのLLM設計・プロンプトエンジニアリング・RAG実装を担う。「感情を扱うAI」の倫理的設計にも向き合える方を求む。</p>
+        </div>
+        <span class="pos-arrow">→</span>
+      </a>
+      <a class="position-card reveal d2" href="mailto:recruit@j-tad.jp?subject=【応募】キャリアアドバイザー">
+        <div>
+          <div class="pos-meta">
+            <span class="pos-tag part">業務委託</span>
+            <span class="pos-tag remote">リモート可</span>
+            <span class="pos-dept">Career Support</span>
+          </div>
+          <div class="pos-title">キャリアアドバイザー（業務委託）</div>
+          <p class="pos-desc">ハレマユーザーへの月次キャリア相談を担当。「転職を急かさない」中立の伴走者として、個人の納得を最優先に支援する。週5〜10時間から相談可。</p>
+        </div>
+        <span class="pos-arrow">→</span>
+      </a>
+      <a class="position-card reveal d3" href="mailto:recruit@j-tad.jp?subject=【応募】リサーチャー">
+        <div>
+          <div class="pos-meta">
+            <span class="pos-tag full">正社員</span>
+            <span class="pos-tag remote">リモート可</span>
+            <span class="pos-dept">Research</span>
+          </div>
+          <div class="pos-title">労働市場リサーチャー</div>
+          <p class="pos-desc">「日本の労働不満白書」の調査設計・執筆・発表を担う。定量・定性両方のアプローチで、見えていない実態を可視化する仕事。</p>
+        </div>
+        <span class="pos-arrow">→</span>
+      </a>
+      <a class="position-card reveal d4" href="mailto:recruit@j-tad.jp?subject=【応募】法人営業">
+        <div>
+          <div class="pos-meta">
+            <span class="pos-tag full">正社員</span>
+            <span class="pos-tag remote">一部リモート</span>
+            <span class="pos-dept">Business Development</span>
+          </div>
+          <div class="pos-title">法人営業 / HRソリューション</div>
+          <p class="pos-desc">人事担当者・CHRO層へのソリューション提案。「売ること」より「組織の課題を解くこと」を誇りに思える方を求む。</p>
+        </div>
+        <span class="pos-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- カルチャー -->
+<section class="sec sec-alt">
+  <div class="sec-inner">
+    <div class="sec-kicker reveal"><div class="sec-kicker-line"></div><span class="sec-kicker-text">Culture</span></div>
+    <h2 class="sec-title reveal d1">J-TADで働くということ</h2>
+    <div class="culture-grid" style="margin-top:40px;">
+      <div class="culture-card reveal d1">
+        <div class="culture-icon">🧭</div>
+        <div class="culture-title">ミッションドリブン</div>
+        <p class="culture-body">「なぜこれをやるのか」が全ての意思決定の起点。KPIの前に、パーパスがある。</p>
+      </div>
+      <div class="culture-card reveal d2">
+        <div class="culture-icon">🌏</div>
+        <div class="culture-title">フルリモート対応</div>
+        <p class="culture-body">日本全国・海外からの参加を歓迎。「どこに住むか」でキャリアが制限されない組織を自分たちが体現する。</p>
+      </div>
+      <div class="culture-card reveal d3">
+        <div class="culture-icon">📖</div>
+        <div class="culture-title">学習支援制度</div>
+        <p class="culture-body">月3万円の学習費用補助。書籍・カンファレンス・資格取得に使える。「成長を見えるものにする」は自分たちにも適用される。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 選考フロー -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="sec-kicker reveal"><div class="sec-kicker-line"></div><span class="sec-kicker-text">Process</span></div>
+    <h2 class="sec-title reveal d1">選考フロー</h2>
+    <div class="process-steps reveal d2">
+      <div class="process-step">
+        <div class="process-num">STEP 01</div>
+        <div class="process-name">書類選考</div>
+        <p class="process-desc">履歴書・職務経歴書。形式より、あなたがなぜこの仕事に向き合いたいかを重視。</p>
+      </div>
+      <div class="process-step">
+        <div class="process-num">STEP 02</div>
+        <div class="process-name">カジュアル面談</div>
+        <p class="process-desc">まず話しましょう。J-TADのことを知ってもらい、あなたのことを教えてください。</p>
+      </div>
+      <div class="process-step">
+        <div class="process-num">STEP 03</div>
+        <div class="process-name">課題 / 面接</div>
+        <p class="process-desc">ポジションに応じた小課題と、代表・担当者との面接（1〜2回）。</p>
+      </div>
+      <div class="process-step">
+        <div class="process-num">STEP 04</div>
+        <div class="process-name">オファー</div>
+        <p class="process-desc">条件のすり合わせ。納得した上で、一緒に始めましょう。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-box">
+  <h2 class="cta-box-title">まずは話しましょう。</h2>
+  <p class="cta-box-sub">ポジションに迷っても大丈夫です。興味があれば、メールでご連絡ください。</p>
+  <a href="mailto:recruit@j-tad.jp" class="btn-gold">recruit@j-tad.jp に連絡する →</a>
+</div>
+
+<div id="footer-placeholder"></div>
+<script src="shared.js"></script>
+</body>
+</html>
