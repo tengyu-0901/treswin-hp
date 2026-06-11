@@ -105,7 +105,35 @@ nav {
 .nav-cta:hover { background: var(--navy2); box-shadow: 0 4px 16px rgba(11,31,58,0.25); }
 .nav-burger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
 .nav-burger span { display:block; width:22px; height:1.5px; background:var(--navy); }
-@media(max-width:768px){ .nav-links,.nav-cta,.nav-sep{display:none} .nav-burger{display:flex} }
+@media(max-width:768px){
+  .nav-links, .nav-cta, .nav-sep { display: none; }
+  .nav-burger { display: flex; }
+
+  /* メニューが開いた状態 */
+  nav.menu-open .nav-links {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 64px; left: 0; right: 0;
+    background: rgba(255,255,255,0.98);
+    border-bottom: 1px solid var(--rule);
+    box-shadow: 0 8px 24px rgba(11,31,58,0.10);
+    padding: 8px 0 16px;
+    z-index: 299;
+  }
+  nav.menu-open .nav-links a {
+    height: auto;
+    line-height: 1;
+    padding: 14px 5vw;
+    border-bottom: none;
+    font-size: 14px;
+  }
+  nav.menu-open .nav-cta {
+    display: inline-flex;
+    margin: 8px 5vw 0;
+    justify-content: center;
+  }
+}
 
 /* ══════════════════════════════════
    HERO — full-bleed photo
@@ -512,6 +540,52 @@ footer {
 .footer-policy { display: flex; gap: 16px; }
 .footer-policy a { font-size: 10px; color: rgba(255,255,255,0.22); text-decoration: none; }
 
+/* ══════════════════════════════════
+   CLOSING CTA
+══════════════════════════════════ */
+#closing-cta {
+  background: var(--navy);
+  padding: clamp(64px, 9vw, 110px) 5vw;
+  text-align: center;
+}
+.closing-cta-inner { max-width: var(--max); margin: 0 auto; }
+.closing-cta-kicker {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; justify-content: center;
+}
+.closing-cta-kicker-line { width: 28px; height: 1px; background: var(--gold-l); }
+.closing-cta-kicker-text {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--gold-l); letter-spacing: 0.2em; text-transform: uppercase;
+}
+.closing-cta-headline {
+  font-family: var(--serif);
+  font-size: clamp(24px, 4vw, 42px);
+  font-weight: 700; line-height: 1.45;
+  color: var(--white); margin-bottom: 16px;
+}
+.closing-cta-sub {
+  font-size: 14px; color: rgba(255,255,255,0.52);
+  line-height: 1.9; margin-bottom: 44px;
+  max-width: 480px; margin-left: auto; margin-right: auto;
+}
+.closing-cta-btns {
+  display: flex; flex-wrap: wrap;
+  justify-content: center; gap: 14px;
+}
+.btn-outline-gold {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid rgba(201,168,92,0.5); border-radius: 2px;
+  padding: 13px 22px; font-family: var(--sans);
+  font-size: 13px; font-weight: 700; color: var(--gold-l);
+  text-decoration: none; letter-spacing: 0.04em;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-outline-gold:hover {
+  border-color: var(--gold-l);
+  background: rgba(201,168,92,0.08);
+}
+
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
@@ -560,7 +634,7 @@ footer {
       <li><a href="#vision">ビジョン</a></li>
     </ul>
     <a href="mailto:info@j-tad.jp" class="nav-cta">お問い合わせ</a>
-    <button class="nav-burger" aria-label="メニュー"><span></span><span></span><span></span></button>
+    <button class="nav-burger" aria-label="メニュー" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -587,8 +661,8 @@ footer {
         自分で選べる社会を目指して。
       </p>
       <div class="hero-btns">
-        <a href="#mission" class="btn-gold">機構について →</a>
-        <a href="#services" class="btn-ghost-light">事業内容を見る</a>
+        <a href="harema-lp.html" class="btn-gold">ハレマを無料で試してみる →</a>
+        <a href="#mission" class="btn-ghost-light">機構について</a>
       </div>
       <div class="hero-meta">
         <div class="hero-meta-item">
@@ -600,8 +674,8 @@ footer {
           <span class="hero-meta-label">展開領域</span>
         </div>
         <div class="hero-meta-item">
-          <span class="hero-meta-num">47<em>都道府県</em></span>
-          <span class="hero-meta-label">対応目標</span>
+          <span class="hero-meta-num">2035<em>年</em></span>
+          <span class="hero-meta-label">ビジョン目標年</span>
         </div>
       </div>
     </div>
@@ -826,6 +900,29 @@ footer {
   </div>
 </section>
 
+<!-- ══ CLOSING CTA ══ -->
+<section id="closing-cta">
+  <div class="closing-cta-inner">
+    <div class="closing-cta-kicker reveal">
+      <div class="closing-cta-kicker-line"></div>
+      <span class="closing-cta-kicker-text">Next Step</span>
+      <div class="closing-cta-kicker-line"></div>
+    </div>
+    <h2 class="closing-cta-headline reveal d1">
+      あなたのキャリアの壁打ちを、<br>今日から始めよう。
+    </h2>
+    <p class="closing-cta-sub reveal d2">
+      転職を急かさない、中立のAIキャリア伴走サービス「ハレマ」は無料で体験できます。<br>
+      法人・メディアの方は、お問い合わせからご連絡ください。
+    </p>
+    <div class="closing-cta-btns reveal d3">
+      <a href="harema-lp.html" class="btn-gold">ハレマを無料で試してみる →</a>
+      <a href="whitepaper.html" class="btn-outline-gold">白書をダウンロード</a>
+      <a href="mailto:info@j-tad.jp" class="btn-outline-gold">法人・メディアの方はこちら</a>
+    </div>
+  </div>
+</section>
+
 <!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-inner">
@@ -963,6 +1060,21 @@ const dbObs=new IntersectionObserver(es=>{
 },{threshold:0.2});
 const db=document.getElementById('data-board');
 if(db) dbObs.observe(db);
+
+/* ── hamburger menu ── */
+const burger = document.querySelector('.nav-burger');
+const navEl  = document.querySelector('nav');
+if (burger && navEl) {
+  burger.addEventListener('click', () => {
+    navEl.classList.toggle('menu-open');
+    const isOpen = navEl.classList.contains('menu-open');
+    burger.setAttribute('aria-expanded', isOpen);
+  });
+  // ナビリンクをタップしたら閉じる
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => navEl.classList.remove('menu-open'));
+  });
+}
 
 /* ── responsive ── */
 function fixLayout(){
