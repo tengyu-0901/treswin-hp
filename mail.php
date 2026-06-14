@@ -31,7 +31,7 @@ define('TO_EMAIL', 'info@tres-win.com');
 define('SITE_NAME', 'TRESWIN');
 
 // ──── source_page ホワイトリスト（オープンリダイレクト対策） ────
-$allowed_pages = ['contact.html', 'service-hp.html', 'services.html'];
+$allowed_pages = ['contact.html', 'service-hp.html', 'services.html', 'service-advisory.html'];
 $raw_source    = trim($_POST['source_page'] ?? 'contact.html');
 $source_page   = in_array($raw_source, $allowed_pages) ? $raw_source : 'contact.html';
 
