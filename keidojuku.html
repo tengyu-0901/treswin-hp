@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700&family=Noto+Serif+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none !important;
+      }
+      .nav-cta {
+        padding: 7px 13px !important;
+        font-size: 12px !important;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+      }
+      .hero-photo {
+        display: none !important;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+      .stats-grid > div:nth-child(1) {
+        border-right: 1px solid #E2DBCA;
+        border-bottom: 1px solid #E2DBCA;
+        padding-bottom: 20px !important;
+      }
+      .stats-grid > div:nth-child(2) {
+        border-right: none !important;
+        border-bottom: 1px solid #E2DBCA;
+        padding-bottom: 20px !important;
+      }
+      .stats-grid > div:nth-child(3) {
+        border-right: 1px solid #E2DBCA;
+        padding-top: 20px !important;
+      }
+      .stats-grid > div:nth-child(4) {
+        border-right: none !important;
+        padding-left: 16px !important;
+        padding-top: 20px !important;
+      }
+      .compare-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .pricing-row {
+        grid-template-columns: 56px 1fr !important;
+      }
+      .pricing-row .pricing-period {
+        display: none !important;
+      }
+      .pricing-row .pricing-price {
+        grid-column: 2 !important;
+        text-align: left !important;
+        font-size: 14px !important;
+        margin-top: 6px !important;
+      }
+      .pricing-header {
+        display: none !important;
+      }
+      .process-step {
+        padding: 16px 14px !important;
+      }
+      .about-grid {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+      }
+    }
+  </style>
+</helmet>
+
+<div style="background:#F4F1E8;font-family:'Noto Sans JP',sans-serif;color:#23201A;min-height:100vh;">
+
+  <!-- ════ ナビ ════ -->
+  <div style="position:sticky;top:0;z-index:20;background:rgba(244,241,232,0.92);backdrop-filter:blur(10px);border-bottom:1px solid #DBD4C3;">
+    <div style="max-width:1080px;margin:0 auto;padding:0 32px;height:66px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:32px;height:32px;border-radius:3px;background:#9E3B2E;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.16);"><span style="writing-mode:vertical-rl;font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:9px;letter-spacing:1px;color:#F4EFE2;line-height:1.05;">啓道塾</span></div>
+        <div style="display:flex;align-items:baseline;gap:9px;"><span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:19px;color:#23201A;letter-spacing:0.12em;">啓道塾</span><span style="font-size:9.5px;letter-spacing:0.28em;color:#9b9381;">KEIDŌ JUKU</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:28px;">
+        <div class="nav-links" style="display:flex;align-items:center;gap:28px;">
+          <a href="#services" style="font-size:13px;color:#4a463c;text-decoration:none;">支援内容</a>
+          <a href="#services" style="font-size:13px;color:#4a463c;text-decoration:none;">料金</a>
+          <a href="#process" style="font-size:13px;color:#4a463c;text-decoration:none;">ご支援の流れ</a>
+          <a href="#about" style="font-size:13px;color:#4a463c;text-decoration:none;">会社情報</a>
+        </div>
+        <a href="#contact" class="nav-cta" style="padding:9px 18px;background:#1B3A5B;color:#F4F1E8;font-size:13px;border-radius:3px;letter-spacing:0.04em;text-decoration:none;cursor:pointer;">無料相談</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ ヒーロー ════ -->
+  <div style="max-width:1080px;margin:0 auto;padding:78px 32px 0;">
+    <div class="hero-grid" style="display:grid;grid-template-columns:1.18fr 0.82fr;gap:56px;align-items:center;">
+      <div>
+        <p style="font-size:12.5px;letter-spacing:0.2em;color:#1B3A5B;margin:0 0 22px;">経営アドバイザリー｜啓道塾</p>
+        <h1 style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:45px;line-height:1.5;letter-spacing:0.02em;color:#1F1C16;margin:0 0 26px;">計画を、動かす。<br>売上１〜30億円の中小企業に<br>伴走する経営アドバイザリー。</h1>
+        <p style="font-family:'Noto Serif JP',serif;font-size:15.5px;line-height:2;color:#605a4e;margin:0 0 34px;max-width:480px;">大手ファームの対象から外れ、個人コンサルには委ねきれない。売上1〜30億円規模の経営に、担当チームが深く入り込み、計画を"動く状態"まで持っていきます。</p>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+          <a href="#contact" style="padding:14px 30px;background:#1B3A5B;color:#F4F1E8;font-size:14.5px;border-radius:3px;letter-spacing:0.04em;text-decoration:none;cursor:pointer;">無料相談を申し込む</a>
+          <a href="#services" style="padding:14px 24px;border:1px solid #C3BBA6;color:#3a362d;font-size:14.5px;border-radius:3px;text-decoration:none;cursor:pointer;">支援内容と料金を見る</a>
+        </div>
+        <p style="font-size:12px;color:#8a8270;margin:22px 0 0;">初回相談 60分・無料　／　NDA締結　／　翌営業日に返信</p>
+      </div>
+      <!-- 写真プレースホルダー -->
+      <div class="hero-photo" style="position:relative;aspect-ratio:4/5;background:#ECE6D6;border:1px solid #C9BFA6;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;">
+        <div style="width:48px;height:1px;background:#1B3A5B;margin-bottom:20px;"></div>
+        <span style="font-family:'Shippori Mincho B1',serif;font-size:13.5px;letter-spacing:0.1em;color:#7a7264;line-height:2.2;">[ 代表者・チームの写真を配置 ]</span>
+        <div style="width:48px;height:1px;background:#1B3A5B;margin-top:20px;"></div>
+      </div>
+    </div>
+
+    <!-- 事実帯 -->
+    <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr);margin-top:64px;border-top:1px solid #D3CBB8;border-bottom:1px solid #D3CBB8;">
+      <div style="padding:24px 26px 24px 0;border-right:1px solid #E2DBCA;">
+        <p style="font-size:11px;letter-spacing:0.14em;color:#9b9381;margin:0 0 8px;">対象</p>
+        <p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0;line-height:1.6;">売上 1〜30億円<br>の中小企業</p>
+      </div>
+      <div style="padding:24px 26px;border-right:1px solid #E2DBCA;">
+        <p style="font-size:11px;letter-spacing:0.14em;color:#9b9381;margin:0 0 8px;">支援実績</p>
+        <p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0;line-height:1.6;">47社</p>
+      </div>
+      <div style="padding:24px 26px;border-right:1px solid #E2DBCA;">
+        <p style="font-size:11px;letter-spacing:0.14em;color:#9b9381;margin:0 0 8px;">顧客継続率</p>
+        <p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0;line-height:1.6;">91%</p>
+      </div>
+      <div style="padding:24px 0 24px 26px;">
+        <p style="font-size:11px;letter-spacing:0.14em;color:#9b9381;margin:0 0 8px;">拠点</p>
+        <p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0;line-height:1.6;">大阪・全国<br>（オンライン）</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 01 第三の選択肢 ════ -->
+  <div style="background:#EFE9DB;border-top:1px solid #E2DBCA;margin-top:88px;">
+    <div style="max-width:1080px;margin:0 auto;padding:84px 32px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:30px;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-size:14px;color:#1B3A5B;">01</span>
+        <span style="font-size:11px;letter-spacing:0.22em;color:#9b9381;">WHY KEIDŌ JUKU</span>
+        <span style="flex:1;height:1px;background:#D3CBB8;"></span>
+      </div>
+      <h2 style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:29px;line-height:1.5;color:#1F1C16;margin:0 0 12px;letter-spacing:0.02em;">大手でも、個人でもない。第三の選択肢として。</h2>
+      <p style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:1.95;color:#605a4e;margin:0 0 40px;max-width:600px;">「相談相手がいない」のではなく、「規模に合う相談相手がいない」。その空白を、組織としての品質と、実行への責任で埋めます。</p>
+
+      <div class="compare-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+        <!-- 大手 -->
+        <div style="background:#FBF8F1;border:1px solid #DED7C6;border-radius:4px;padding:26px 24px;">
+          <p style="font-size:13px;color:#8a8270;margin:0 0 18px;letter-spacing:0.04em;">大手ファーム</p>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <p style="font-size:13.5px;line-height:1.6;color:#605a4e;margin:0;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:#b5ad99;">—</span>高単価で、中小は対象外になりやすい</p>
+            <p style="font-size:13.5px;line-height:1.6;color:#605a4e;margin:0;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:#b5ad99;">—</span>案件が終われば関係も終わる</p>
+            <p style="font-size:13.5px;line-height:1.6;color:#605a4e;margin:0;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:#b5ad99;">—</span>提案書の提出で完結しがち</p>
+          </div>
+        </div>
+        <!-- 個人 -->
+        <div style="background:#FBF8F1;border:1px solid #DED7C6;border-radius:4px;padding:26px 24px;">
+          <p style="font-size:13px;color:#8a8270;margin:0 0 18px;letter-spacing:0.04em;">個人コンサル</p>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <p style="font-size:13.5px;line-height:1.6;color:#605a4e;margin:0;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:#b5ad99;">—</span>品質が人に依存し、ばらつく</p>
+            <p style="font-size:13.5px;line-height:1.6;color:#605a4e;margin:0;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:#b5ad99;">—</span>担当不在のリスクを負う</p>
+            <p style="font-size:13.5px;line-height:1.6;color:#605a4e;margin:0;padding-left:16px;position:relative;"><span style="position:absolute;left:0;color:#b5ad99;">—</span>専門外の論点は手薄になる</p>
+          </div>
+        </div>
+        <!-- 啓道塾 -->
+        <div style="background:#FCFAF4;border:1px solid #C9BFA6;border-top:2px solid #1B3A5B;border-radius:4px;padding:25px 24px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;"><span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:14px;color:#1F1C16;letter-spacing:0.1em;">啓道塾</span><span style="width:18px;height:18px;border-radius:2px;background:#9E3B2E;display:flex;align-items:center;justify-content:center;"><span style="writing-mode:vertical-rl;font-family:'Shippori Mincho B1',serif;font-size:6px;color:#F4EFE2;letter-spacing:0.5px;">啓道</span></span></div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <p style="font-size:13.5px;line-height:1.6;color:#2c281f;margin:0;padding-left:18px;position:relative;"><span style="position:absolute;left:0;color:#1B3A5B;font-weight:700;">✓</span>中小企業専用・適正価格</p>
+            <p style="font-size:13.5px;line-height:1.6;color:#2c281f;margin:0;padding-left:18px;position:relative;"><span style="position:absolute;left:0;color:#1B3A5B;font-weight:700;">✓</span>担当固定＋ダブルチェック制</p>
+            <p style="font-size:13.5px;line-height:1.6;color:#2c281f;margin:0;padding-left:18px;position:relative;"><span style="position:absolute;left:0;color:#1B3A5B;font-weight:700;">✓</span>実行まで、チームで伴走する</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 02 サービスと料金 ════ -->
+  <div id="services" style="max-width:1080px;margin:0 auto;padding:84px 32px;">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:30px;">
+      <span style="font-family:'Shippori Mincho B1',serif;font-size:14px;color:#1B3A5B;">02</span>
+      <span style="font-size:11px;letter-spacing:0.22em;color:#9b9381;">SERVICES & FEES</span>
+      <span style="flex:1;height:1px;background:#D3CBB8;"></span>
+    </div>
+    <h2 style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:29px;line-height:1.5;color:#1F1C16;margin:0 0 26px;letter-spacing:0.02em;">フェーズで選べる、6つの支援。</h2>
+
+    <!-- フェーズ -->
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:34px;font-size:13px;color:#605a4e;">
+      <span>診断</span><span style="color:#bdb49f;">→</span><span>戦略</span><span style="color:#bdb49f;">→</span><span>計画</span><span style="color:#bdb49f;">→</span><span>実行</span><span style="color:#bdb49f;">→</span><span>改善</span>
+    </div>
+
+    <!-- 料金表 -->
+    <div style="border:1px solid #D3CBB8;border-radius:5px;overflow:hidden;background:#FCFAF4;">
+      <!-- ヘッダ -->
+      <div class="pricing-header" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:14px 26px;background:#EFE9DB;border-bottom:1px solid #D3CBB8;font-size:11px;letter-spacing:0.12em;color:#9b9381;">
+        <span></span><span>サービス内容</span><span>期間</span><span style="text-align:right;">料金（税別）</span>
+      </div>
+      <!-- 行 -->
+      <div class="pricing-row" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:22px 26px;border-bottom:1px solid #E5DECD;align-items:center;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:15px;color:#1B3A5B;">S-1</span>
+        <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 4px;">経営診断・現状分析</p><p style="font-size:12.5px;color:#8a8270;margin:0;">財務・組織・市場を多面的に可視化　<span style="color:#1B3A5B;">診断</span></p></div>
+        <span class="pricing-period" style="font-size:13.5px;color:#605a4e;">2〜3週間</span>
+        <span class="pricing-price" style="text-align:right;font-family:'Shippori Mincho B1',serif;font-size:17px;color:#1F1C16;">¥150,000〜</span>
+      </div>
+      <div class="pricing-row" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:22px 26px;border-bottom:1px solid #E5DECD;align-items:center;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:15px;color:#1B3A5B;">S-2</span>
+        <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 4px;">中期経営戦略の立案</p><p style="font-size:12.5px;color:#8a8270;margin:0;">3〜5年の方向と打ち手を構造化　<span style="color:#1B3A5B;">戦略</span></p></div>
+        <span class="pricing-period" style="font-size:13.5px;color:#605a4e;">4〜8週間</span>
+        <span class="pricing-price" style="text-align:right;font-family:'Shippori Mincho B1',serif;font-size:17px;color:#1F1C16;">¥600,000〜</span>
+      </div>
+      <div class="pricing-row" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:22px 26px;border-bottom:1px solid #E5DECD;align-items:center;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:15px;color:#1B3A5B;">S-3</span>
+        <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 4px;">単年度事業計画の策定</p><p style="font-size:12.5px;color:#8a8270;margin:0;">数値計画・KPI・ロードマップ　<span style="color:#1B3A5B;">計画</span></p></div>
+        <span class="pricing-period" style="font-size:13.5px;color:#605a4e;">3〜5週間</span>
+        <span class="pricing-price" style="text-align:right;font-family:'Shippori Mincho B1',serif;font-size:17px;color:#1F1C16;">¥400,000〜</span>
+      </div>
+      <div class="pricing-row" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:22px 26px;border-bottom:1px solid #E5DECD;align-items:center;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:15px;color:#1B3A5B;">S-4</span>
+        <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 4px;">新規事業の開発支援</p><p style="font-size:12.5px;color:#8a8270;margin:0;">市場調査・PoC設計・事業化まで　<span style="color:#1B3A5B;">実行</span></p></div>
+        <span class="pricing-period" style="font-size:13.5px;color:#605a4e;">3〜6ヶ月</span>
+        <span class="pricing-price" style="text-align:right;font-family:'Shippori Mincho B1',serif;font-size:15px;color:#605a4e;">要相談</span>
+      </div>
+      <div class="pricing-row" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:22px 26px;border-bottom:1px solid #E5DECD;align-items:center;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:15px;color:#1B3A5B;">S-5</span>
+        <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 4px;">月次顧問アドバイザリー</p><p style="font-size:12.5px;color:#8a8270;margin:0;">毎月の経営会議に同席し実行を定着　<span style="color:#1B3A5B;">改善</span></p></div>
+        <span class="pricing-period" style="font-size:13.5px;color:#605a4e;">継続</span>
+        <span class="pricing-price" style="text-align:right;font-family:'Shippori Mincho B1',serif;font-size:17px;color:#1F1C16;">¥80,000〜<span style="font-size:12px;color:#8a8270;">/月</span></span>
+      </div>
+      <div class="pricing-row" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:22px 26px;align-items:center;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:15px;color:#1B3A5B;">S-6</span>
+        <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 4px;">事業承継戦略の支援</p><p style="font-size:12.5px;color:#8a8270;margin:0;">暗黙知の言語化と承継計画の策定　<span style="color:#1B3A5B;">戦略</span></p></div>
+        <span class="pricing-period" style="font-size:13.5px;color:#605a4e;">3〜6ヶ月</span>
+        <span class="pricing-price" style="text-align:right;font-family:'Shippori Mincho B1',serif;font-size:15px;color:#605a4e;">要相談</span>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#8a8270;margin:14px 0 0;">※ 料金は規模・範囲により変動します。初回相談で要件を確認のうえ、お見積もりを提示します。</p>
+  </div>
+
+  <!-- ════ 03 ご支援の流れ ════ -->
+  <div id="process" style="background:#EFE9DB;border-top:1px solid #E2DBCA;">
+    <div style="max-width:1080px;margin:0 auto;padding:84px 32px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:30px;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-size:14px;color:#1B3A5B;">03</span>
+        <span style="font-size:11px;letter-spacing:0.22em;color:#9b9381;">PROCESS</span>
+        <span style="flex:1;height:1px;background:#D3CBB8;"></span>
+      </div>
+      <h2 style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:29px;line-height:1.5;color:#1F1C16;margin:0 0 40px;letter-spacing:0.02em;">相談から、伴走まで。</h2>
+
+      <div style="display:flex;flex-direction:column;">
+        <!-- Step 0 highlight -->
+        <div class="process-step" style="display:grid;grid-template-columns:54px 1fr 90px;gap:24px;align-items:start;background:#FCFAF4;border:1px solid #C9BFA6;border-left:2px solid #1B3A5B;border-radius:4px;padding:22px 24px;margin-bottom:14px;">
+          <span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:22px;color:#1B3A5B;">00</span>
+          <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16.5px;color:#1F1C16;margin:0 0 5px;">無料相談</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">オンラインで60分。現状の課題を一緒に整理します。費用も義務も一切ありません。</p></div>
+          <span style="font-size:12.5px;color:#8a8270;text-align:right;">〜1週間</span>
+        </div>
+        <!-- steps 1-5 -->
+        <div class="process-step" style="display:grid;grid-template-columns:54px 1fr 90px;gap:24px;align-items:start;padding:20px 24px;border-bottom:1px solid #DED7C6;">
+          <span style="font-family:'Shippori Mincho B1',serif;font-size:20px;color:#b0a78f;">01</span>
+          <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 5px;">情報収集・ヒアリング</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">資料の精査と、深掘りのヒアリングを実施します。</p></div>
+          <span style="font-size:12.5px;color:#8a8270;text-align:right;">1〜2週間</span>
+        </div>
+        <div class="process-step" style="display:grid;grid-template-columns:54px 1fr 90px;gap:24px;align-items:start;padding:20px 24px;border-bottom:1px solid #DED7C6;">
+          <span style="font-family:'Shippori Mincho B1',serif;font-size:20px;color:#b0a78f;">02</span>
+          <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 5px;">診断・提案</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">現状分析と改善案をまとめた提案書をご提示します。</p></div>
+          <span style="font-size:12.5px;color:#8a8270;text-align:right;">1〜2週間</span>
+        </div>
+        <div class="process-step" style="display:grid;grid-template-columns:54px 1fr 90px;gap:24px;align-items:start;padding:20px 24px;border-bottom:1px solid #DED7C6;">
+          <span style="font-family:'Shippori Mincho B1',serif;font-size:20px;color:#b0a78f;">03</span>
+          <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 5px;">戦略立案</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">ワークショップ形式で、中期戦略の骨子を策定します。</p></div>
+          <span style="font-size:12.5px;color:#8a8270;text-align:right;">2〜6週間</span>
+        </div>
+        <div class="process-step" style="display:grid;grid-template-columns:54px 1fr 90px;gap:24px;align-items:start;padding:20px 24px;border-bottom:1px solid #DED7C6;">
+          <span style="font-family:'Shippori Mincho B1',serif;font-size:20px;color:#b0a78f;">04</span>
+          <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 5px;">計画策定</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">数値計画・KPI・ロードマップに落とし込みます。</p></div>
+          <span style="font-size:12.5px;color:#8a8270;text-align:right;">2〜4週間</span>
+        </div>
+        <div class="process-step" style="display:grid;grid-template-columns:54px 1fr 90px;gap:24px;align-items:start;padding:20px 24px;">
+          <span style="font-family:'Shippori Mincho B1',serif;font-size:20px;color:#b0a78f;">05</span>
+          <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 5px;">伴走支援</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">月次の経営会議に同席し、実行の定着まで支援します。</p></div>
+          <span style="font-size:12.5px;color:#8a8270;text-align:right;">継続</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ 04 啓道塾について ════ -->
+  <div id="about" style="background:#EFE9DB;border-top:1px solid #E2DBCA;">
+    <div style="max-width:1080px;margin:0 auto;padding:84px 32px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:30px;">
+        <span style="font-family:'Shippori Mincho B1',serif;font-size:14px;color:#1B3A5B;">04</span>
+        <span style="font-size:11px;letter-spacing:0.22em;color:#9b9381;">ABOUT</span>
+        <span style="flex:1;height:1px;background:#D3CBB8;"></span>
+      </div>
+      <h2 style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:29px;line-height:1.5;color:#1F1C16;margin:0 0 40px;letter-spacing:0.02em;">啓道塾について</h2>
+
+      <div class="about-grid" style="display:grid;grid-template-columns:0.7fr 1fr;gap:52px;align-items:start;">
+        <!-- 写真プレースホルダー -->
+        <div style="aspect-ratio:3/4;background:#E3DDC9;border:1px solid #C9BFA6;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;">
+          <div style="width:40px;height:1px;background:#1B3A5B;margin-bottom:18px;"></div>
+          <span style="font-family:'Shippori Mincho B1',serif;font-size:12.5px;letter-spacing:0.1em;color:#7a7264;line-height:2.2;">[ 代表者の写真を配置 ]</span>
+          <div style="width:40px;height:1px;background:#1B3A5B;margin-top:18px;"></div>
+        </div>
+        <!-- プロフィール -->
+        <div>
+          <p style="font-family:'Shippori Mincho B1',serif;font-size:18px;font-weight:700;color:#1F1C16;margin:0 0 22px;letter-spacing:0.05em;">代表　[氏名]</p>
+          <p style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:2;color:#605a4e;margin:0 0 30px;">大手コンサルティングファームにて10年以上、中小・中堅企業の経営改善・事業再生を担当。その後、独立し啓道塾を設立。「規模に関わらず、本物の経営支援を届ける」という理念のもと、経営者に寄り添う支援を続けています。</p>
+          <blockquote style="border-left:2px solid #1B3A5B;margin:0;padding:16px 22px;background:#FCFAF4;border-radius:0 4px 4px 0;">
+            <p style="font-family:'Shippori Mincho B1',serif;font-size:16px;line-height:1.8;color:#1F1C16;margin:0;letter-spacing:0.04em;">「相談相手のいない経営者が、一人でも少なくなるように。」</p>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ CTA ════ -->
+  <div id="contact" style="background:#1F1C16;">
+    <div style="max-width:1080px;margin:0 auto;padding:78px 32px;text-align:center;">
+      <h2 style="font-family:'Shippori Mincho B1',serif;font-weight:600;font-size:28px;line-height:1.6;color:#F1ECDF;margin:0 0 14px;letter-spacing:0.03em;">まずは60分、現状を整理するところから。</h2>
+      <p style="font-family:'Noto Serif JP',serif;font-size:14.5px;line-height:1.9;color:#a9a290;margin:0 0 34px;">費用も義務もありません。課題が漠然としていて構いません。</p>
+      <div style="display:flex;gap:14px;justify-content:center;">
+        <a href="#contact" style="padding:15px 34px;background:#F1ECDF;color:#1F1C16;font-size:14.5px;border-radius:3px;letter-spacing:0.04em;text-decoration:none;cursor:pointer;">無料相談を申し込む（60分・無料）</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ フッター ════ -->
+  <div style="background:#17150F;">
+    <div style="max-width:1080px;margin:0 auto;padding:46px 32px 36px;display:flex;flex-direction:column;gap:20px;">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <div style="width:30px;height:30px;border-radius:3px;background:#9E3B2E;display:flex;align-items:center;justify-content:center;"><span style="writing-mode:vertical-rl;font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:8px;letter-spacing:1px;color:#F4EFE2;line-height:1.05;">啓道塾</span></div>
+        <span style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:18px;color:#E6E0D0;letter-spacing:0.12em;">啓道塾</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px 26px;">
+        <a href="#" style="font-size:12.5px;color:#8b8472;text-decoration:none;">HOME</a>
+        <a href="#services" style="font-size:12.5px;color:#8b8472;text-decoration:none;">支援内容</a>
+        <a href="#services" style="font-size:12.5px;color:#8b8472;text-decoration:none;">料金</a>
+        <a href="#process" style="font-size:12.5px;color:#8b8472;text-decoration:none;">ご支援の流れ</a>
+        <a href="#about" style="font-size:12.5px;color:#8b8472;text-decoration:none;">会社概要</a>
+        <a href="#contact" style="font-size:12.5px;color:#8b8472;text-decoration:none;">お問い合わせ</a>
+      </div>
+      <p style="font-size:11.5px;color:#6e6857;margin:0;">© 2026 啓道塾（けいどうじゅく）. All Rights Reserved.</p>
+    </div>
+  </div>
+
+  <!-- sections-end -->
+</div>
+</x-dc>
+</body>
+</html>
