@@ -12,18 +12,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700&family=Noto+Serif+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* ── Responsive ── */
     @media (max-width: 768px) {
       .nav-links {
         display: none !important;
       }
       .nav-cta {
         padding: 7px 13px !important;
-        font-size: 12px !important;
+        font-size: 11px !important;
       }
       .hero-grid {
         grid-template-columns: 1fr !important;
-        gap: 32px !important;
+        gap: 24px !important;
       }
       .hero-photo {
         display: none !important;
@@ -31,24 +30,12 @@
       .stats-grid {
         grid-template-columns: repeat(2, 1fr) !important;
       }
-      .stats-grid > div:nth-child(1) {
-        border-right: 1px solid #E2DBCA;
-        border-bottom: 1px solid #E2DBCA;
-        padding-bottom: 20px !important;
-      }
       .stats-grid > div:nth-child(2) {
         border-right: none !important;
+      }
+      .stats-grid > div:nth-child(1),
+      .stats-grid > div:nth-child(2) {
         border-bottom: 1px solid #E2DBCA;
-        padding-bottom: 20px !important;
-      }
-      .stats-grid > div:nth-child(3) {
-        border-right: 1px solid #E2DBCA;
-        padding-top: 20px !important;
-      }
-      .stats-grid > div:nth-child(4) {
-        border-right: none !important;
-        padding-left: 16px !important;
-        padding-top: 20px !important;
       }
       .compare-grid {
         grid-template-columns: 1fr !important;
@@ -63,9 +50,14 @@
         grid-column: 2 !important;
         text-align: left !important;
         font-size: 14px !important;
-        margin-top: 6px !important;
       }
       .pricing-header {
+        grid-template-columns: 56px 1fr !important;
+      }
+      .pricing-header .pricing-period-header {
+        display: none !important;
+      }
+      .pricing-header .pricing-price-header {
         display: none !important;
       }
       .process-step {
@@ -74,6 +66,10 @@
       .about-grid {
         grid-template-columns: 1fr !important;
         gap: 28px !important;
+      }
+      .about-photo {
+        max-width: 260px !important;
+        margin: 0 auto !important;
       }
     }
   </style>
@@ -95,7 +91,7 @@
           <a href="#process" style="font-size:13px;color:#4a463c;text-decoration:none;">ご支援の流れ</a>
           <a href="#about" style="font-size:13px;color:#4a463c;text-decoration:none;">会社情報</a>
         </div>
-        <a href="#contact" class="nav-cta" style="padding:9px 18px;background:#1B3A5B;color:#F4F1E8;font-size:13px;border-radius:3px;letter-spacing:0.04em;text-decoration:none;cursor:pointer;">無料相談</a>
+        <a href="#contact" class="nav-cta" style="padding:9px 18px;background:#1B3A5B;color:#F4F1E8;font-size:13px;border-radius:3px;letter-spacing:0.04em;text-decoration:none;">無料相談</a>
       </div>
     </div>
   </div>
@@ -114,10 +110,12 @@
         <p style="font-size:12px;color:#8a8270;margin:22px 0 0;">初回相談 60分・無料　／　NDA締結　／　翌営業日に返信</p>
       </div>
       <!-- 写真プレースホルダー -->
-      <div class="hero-photo" style="position:relative;aspect-ratio:4/5;background:#ECE6D6;border:1px solid #C9BFA6;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;">
-        <div style="width:48px;height:1px;background:#1B3A5B;margin-bottom:20px;"></div>
-        <span style="font-family:'Shippori Mincho B1',serif;font-size:13.5px;letter-spacing:0.1em;color:#7a7264;line-height:2.2;">[ 代表者・チームの写真を配置 ]</span>
-        <div style="width:48px;height:1px;background:#1B3A5B;margin-top:20px;"></div>
+      <div class="hero-photo" style="position:relative;aspect-ratio:4/5;background:#ECE6D6;border:1px solid #C3BBA6;display:flex;align-items:center;justify-content:center;border-radius:4px;">
+        <div style="text-align:center;padding:24px;">
+          <div style="width:48px;height:1px;background:#1B3A5B;margin:0 auto 20px;"></div>
+          <span style="font-family:'Noto Serif JP',serif;font-size:13px;letter-spacing:0.08em;color:#6b6255;line-height:2;display:block;">[ 代表者・チームの写真を配置 ]</span>
+          <div style="width:48px;height:1px;background:#1B3A5B;margin:20px auto 0;"></div>
+        </div>
       </div>
     </div>
 
@@ -203,7 +201,7 @@
     <div style="border:1px solid #D3CBB8;border-radius:5px;overflow:hidden;background:#FCFAF4;">
       <!-- ヘッダ -->
       <div class="pricing-header" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:14px 26px;background:#EFE9DB;border-bottom:1px solid #D3CBB8;font-size:11px;letter-spacing:0.12em;color:#9b9381;">
-        <span></span><span>サービス内容</span><span>期間</span><span style="text-align:right;">料金（税別）</span>
+        <span></span><span>サービス内容</span><span class="pricing-period-header">期間</span><span class="pricing-price-header" style="text-align:right;">料金（税別）</span>
       </div>
       <!-- 行 -->
       <div class="pricing-row" style="display:grid;grid-template-columns:64px 1fr 110px 140px;gap:20px;padding:22px 26px;border-bottom:1px solid #E5DECD;align-items:center;">
@@ -263,12 +261,13 @@
           <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16.5px;color:#1F1C16;margin:0 0 5px;">無料相談</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">オンラインで60分。現状の課題を一緒に整理します。費用も義務も一切ありません。</p></div>
           <span style="font-size:12.5px;color:#8a8270;text-align:right;">〜1週間</span>
         </div>
-        <!-- steps 1-5 -->
+        <!-- Step 01: 情報収集・ヒアリング (was 02) -->
         <div class="process-step" style="display:grid;grid-template-columns:54px 1fr 90px;gap:24px;align-items:start;padding:20px 24px;border-bottom:1px solid #DED7C6;">
           <span style="font-family:'Shippori Mincho B1',serif;font-size:20px;color:#b0a78f;">01</span>
           <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 5px;">情報収集・ヒアリング</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">資料の精査と、深掘りのヒアリングを実施します。</p></div>
           <span style="font-size:12.5px;color:#8a8270;text-align:right;">1〜2週間</span>
         </div>
+        <!-- Step 02: 診断・提案 (was 01) -->
         <div class="process-step" style="display:grid;grid-template-columns:54px 1fr 90px;gap:24px;align-items:start;padding:20px 24px;border-bottom:1px solid #DED7C6;">
           <span style="font-family:'Shippori Mincho B1',serif;font-size:20px;color:#b0a78f;">02</span>
           <div><p style="font-family:'Shippori Mincho B1',serif;font-size:16px;color:#1F1C16;margin:0 0 5px;">診断・提案</p><p style="font-size:13.5px;line-height:1.8;color:#605a4e;margin:0;">現状分析と改善案をまとめた提案書をご提示します。</p></div>
@@ -303,18 +302,20 @@
       </div>
       <h2 style="font-family:'Shippori Mincho B1',serif;font-weight:700;font-size:29px;line-height:1.5;color:#1F1C16;margin:0 0 40px;letter-spacing:0.02em;">啓道塾について</h2>
 
-      <div class="about-grid" style="display:grid;grid-template-columns:0.7fr 1fr;gap:52px;align-items:start;">
+      <div class="about-grid" style="display:grid;grid-template-columns:0.7fr 1.3fr;gap:56px;align-items:start;">
         <!-- 写真プレースホルダー -->
-        <div style="aspect-ratio:3/4;background:#E3DDC9;border:1px solid #C9BFA6;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;">
-          <div style="width:40px;height:1px;background:#1B3A5B;margin-bottom:18px;"></div>
-          <span style="font-family:'Shippori Mincho B1',serif;font-size:12.5px;letter-spacing:0.1em;color:#7a7264;line-height:2.2;">[ 代表者の写真を配置 ]</span>
-          <div style="width:40px;height:1px;background:#1B3A5B;margin-top:18px;"></div>
+        <div class="about-photo" style="aspect-ratio:3/4;background:#ECE6D6;border:1px solid #C3BBA6;border-radius:4px;display:flex;align-items:center;justify-content:center;">
+          <div style="text-align:center;padding:20px;">
+            <div style="width:36px;height:1px;background:#1B3A5B;margin:0 auto 16px;"></div>
+            <span style="font-family:'Noto Serif JP',serif;font-size:12px;letter-spacing:0.06em;color:#6b6255;line-height:2;display:block;">[ 代表者の<br>写真を配置 ]</span>
+            <div style="width:36px;height:1px;background:#1B3A5B;margin:16px auto 0;"></div>
+          </div>
         </div>
-        <!-- プロフィール -->
+        <!-- プロフィールテキスト -->
         <div>
-          <p style="font-family:'Shippori Mincho B1',serif;font-size:18px;font-weight:700;color:#1F1C16;margin:0 0 22px;letter-spacing:0.05em;">代表　[氏名]</p>
-          <p style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:2;color:#605a4e;margin:0 0 30px;">大手コンサルティングファームにて10年以上、中小・中堅企業の経営改善・事業再生を担当。その後、独立し啓道塾を設立。「規模に関わらず、本物の経営支援を届ける」という理念のもと、経営者に寄り添う支援を続けています。</p>
-          <blockquote style="border-left:2px solid #1B3A5B;margin:0;padding:16px 22px;background:#FCFAF4;border-radius:0 4px 4px 0;">
+          <p style="font-family:'Shippori Mincho B1',serif;font-size:18px;font-weight:700;color:#1F1C16;margin:0 0 20px;letter-spacing:0.06em;">代表　[氏名]</p>
+          <p style="font-family:'Noto Serif JP',serif;font-size:15px;line-height:2;color:#605a4e;margin:0 0 32px;">大手コンサルティングファームにて10年以上、中小・中堅企業の経営改善・事業再生を担当。その後、独立し啓道塾を設立。「規模に関わらず、本物の経営支援を届ける」という理念のもと、経営者に寄り添う支援を続けています。</p>
+          <blockquote style="border-left:2px solid #1B3A5B;margin:0;padding:18px 24px;background:#FCFAF4;border-radius:0 4px 4px 0;">
             <p style="font-family:'Shippori Mincho B1',serif;font-size:16px;line-height:1.8;color:#1F1C16;margin:0;letter-spacing:0.04em;">「相談相手のいない経営者が、一人でも少なくなるように。」</p>
           </blockquote>
         </div>
@@ -327,7 +328,7 @@
     <div style="max-width:1080px;margin:0 auto;padding:78px 32px;text-align:center;">
       <h2 style="font-family:'Shippori Mincho B1',serif;font-weight:600;font-size:28px;line-height:1.6;color:#F1ECDF;margin:0 0 14px;letter-spacing:0.03em;">まずは60分、現状を整理するところから。</h2>
       <p style="font-family:'Noto Serif JP',serif;font-size:14.5px;line-height:1.9;color:#a9a290;margin:0 0 34px;">費用も義務もありません。課題が漠然としていて構いません。</p>
-      <div style="display:flex;gap:14px;justify-content:center;">
+      <div style="display:flex;justify-content:center;">
         <a href="#contact" style="padding:15px 34px;background:#F1ECDF;color:#1F1C16;font-size:14.5px;border-radius:3px;letter-spacing:0.04em;text-decoration:none;cursor:pointer;">無料相談を申し込む（60分・無料）</a>
       </div>
     </div>
