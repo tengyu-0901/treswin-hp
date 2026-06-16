@@ -7,7 +7,6 @@
   <meta name="description" content="TRESWINの経営アドバイザリー事業。売上1〜30億円の中小企業向けに、戦略立案・事業計画・実行伴走を一貫支援します。初回相談60分・完全無料。大手に頼めない、個人には任せられないという経営者の第三の選択肢。">
   <meta name="keywords" content="TRESWIN,経営コンサルティング 大阪,中小企業 経営支援,事業計画書 作成,経営戦略 立案,事業承継 コンサル,月次顧問,梅田 経営相談">
   <link rel="canonical" href="https://tres-win.com/service-advisory.html">
-  <!-- OGP -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="TRESWIN（トレスウィン）">
   <meta property="og:title" content="経営アドバイザリー事業｜TRESWIN（トレスウィン）">
@@ -22,132 +21,117 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;600&family=Noto+Sans+JP:wght@400;500&family=Inter:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700&family=Noto+Serif+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ══ デザイントークン ══ */
     :root {
-      --color-primary:       #0F2A4A;
-      --color-accent:        #185FA5;
-      --color-accent-hover:  #0C447C;
-      --color-accent-tint:   #E6F1FB;
-      --color-surface:       #F4F6F9;
-      --color-base:          #FFFFFF;
-      --color-text-primary:  #1A1A2E;
-      --color-text-secondary:#5C6B7A;
-      --color-border:        #DDE3EB;
-      --font-serif: 'Noto Serif JP', Georgia, serif;
-      --font-sans:  'Noto Sans JP', sans-serif;
-      --font-data:  'Inter', sans-serif;
-      --section-padding-pc: 96px;
-      --section-padding-sp: 64px;
-      --content-max-width:  1100px;
-      --card-padding:       24px 28px;
-      --btn-padding:        14px 32px;
-      --radius-card:   8px;
-      --radius-btn:    6px;
-      --radius-badge:  999px;
+      --color-bg:       #F4F1E8;
+      --color-bg-alt:   #EFE9DB;
+      --color-bg-dark:  #1F1C16;
+      --color-footer:   #17150F;
+      --color-navy:     #1B3A5B;
+      --color-red:      #9E3B2E;
+      --color-text:     #23201A;
+      --color-text-2:   #1F1C16;
+      --color-text-mid: #605a4e;
+      --color-text-sub: #8a8270;
+      --color-text-muted: #9b9381;
+      --color-border:   #D3CBB8;
+      --color-border-2: #E2DBCA;
+      --color-card:     #FCFAF4;
+      --color-card-2:   #FBF8F1;
+      --font-serif:     'Shippori Mincho B1', 'Noto Serif JP', Georgia, serif;
+      --font-noto-serif:'Noto Serif JP', serif;
+      --font-sans:      'Noto Sans JP', sans-serif;
     }
 
     html { scroll-behavior: smooth; }
     body {
       font-family: var(--font-sans);
-      color: var(--color-text-primary);
-      background: var(--color-base);
+      color: var(--color-text);
+      background: var(--color-bg);
       line-height: 1.8;
       overflow-x: hidden;
     }
 
-    /* ══ TRESWIN 戻るバー ══ */
-    .back-bar {
+    /* ══ ナビ ══ */
+    .site-nav {
       position: sticky;
       top: 0;
-      z-index: 200;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 24px;
-      background: rgba(244,246,249,0.95);
-      backdrop-filter: blur(20px);
+      z-index: 20;
+      background: rgba(244,241,232,0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--color-border);
-      font-size: 12px;
     }
-    .back-bar a {
-      color: var(--color-accent);
-      text-decoration: none;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: color 0.2s;
-    }
-    .back-bar a:hover { color: var(--color-primary); }
-    .back-sep { color: var(--color-border); font-size: 11px; }
-    .back-current { color: var(--color-text-secondary); font-weight: 500; }
-
-    /* ══ ヘッダー ══ */
-    .site-header {
-      position: sticky;
-      top: 36px;
-      z-index: 100;
-      background: var(--color-base);
-      border-bottom: 1px solid var(--color-border);
-      transition: background 0.2s, box-shadow 0.2s;
-    }
-    .site-header.scrolled {
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 1px 0 var(--color-border);
-    }
-    .header-inner {
-      max-width: var(--content-max-width);
+    .nav-inner {
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 0 24px;
-      height: 64px;
+      padding: 0 32px;
+      height: 66px;
       display: flex;
       align-items: center;
-      gap: 32px;
+      justify-content: space-between;
     }
-    .site-logo {
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .nav-logo__mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 3px;
+      background: var(--color-navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.16);
+    }
+    .nav-logo__mark img { width: 22px; height: 22px; object-fit: contain; filter: brightness(10); }
+    .nav-logo__text {
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+    }
+    .nav-logo__name {
       font-family: var(--font-serif);
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--color-primary);
-      text-decoration: none;
-      flex-shrink: 0;
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--color-text-2);
+      letter-spacing: 0.12em;
+    }
+    .nav-logo__en {
+      font-size: 9.5px;
+      letter-spacing: 0.28em;
+      color: var(--color-text-muted);
+    }
+    .nav-links {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 28px;
     }
-    .site-logo img { width: 32px; height: 32px; object-fit: contain; }
-    .global-nav { margin-right: auto; }
-    .global-nav ul { display: flex; gap: 28px; list-style: none; }
-    .global-nav a {
-      font-size: 14px;
-      color: var(--color-text-primary);
+    .nav-links a {
+      font-size: 13px;
+      color: #4a463c;
       text-decoration: none;
-      font-family: var(--font-sans);
       transition: color 0.15s;
     }
-    .global-nav a:hover { color: var(--color-accent); }
-    .btn-cta-nav {
-      padding: 10px 20px;
-      background: var(--color-accent);
-      color: #fff;
-      border-radius: var(--radius-btn);
+    .nav-links a:hover { color: var(--color-navy); }
+    .nav-cta {
+      padding: 9px 18px;
+      background: var(--color-navy);
+      color: var(--color-bg);
       font-size: 13px;
-      font-family: var(--font-sans);
-      font-weight: 500;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
       text-decoration: none;
-      white-space: nowrap;
-      transition: background 0.15s;
+      transition: opacity 0.15s;
     }
-    .btn-cta-nav:hover { background: var(--color-accent-hover); }
+    .nav-cta:hover { opacity: 0.85; }
     .hamburger {
       display: none;
       flex-direction: column;
@@ -157,13 +141,13 @@
       cursor: pointer;
       padding: 4px;
     }
-    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--color-primary); transition: all 0.3s; }
+    .hamburger span { display: block; width: 22px; height: 1.5px; background: var(--color-text-2); transition: all 0.3s; }
 
     /* ══ SPメニュー ══ */
     #sp-menu {
       position: fixed;
-      inset: 100px 0 0 0;
-      background: var(--color-base);
+      inset: 66px 0 0 0;
+      background: var(--color-bg);
       z-index: 99;
       padding: 32px 24px;
       display: none;
@@ -173,511 +157,577 @@
     #sp-menu[aria-hidden="false"] { display: flex; }
     #sp-menu a {
       font-size: 16px;
-      color: var(--color-text-primary);
+      color: var(--color-text);
       text-decoration: none;
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px solid var(--color-border);
     }
-    #sp-menu .btn-cta-sp {
-      margin-top: auto;
+    #sp-menu .sp-cta {
+      margin-top: 8px;
       display: block;
       text-align: center;
       padding: 16px;
-      background: var(--color-accent);
-      color: #fff;
-      border-radius: var(--radius-btn);
+      background: var(--color-navy);
+      color: var(--color-bg);
+      border-radius: 3px;
       text-decoration: none;
-      font-weight: 500;
+      font-size: 15px;
     }
 
     /* ══ セクション共通 ══ */
-    .section { padding: var(--section-padding-pc) 0; }
-    .section--surface { background: var(--color-surface); }
-    .section--base    { background: var(--color-base); }
-    .section--navy    { background: var(--color-primary); }
-    .section__inner {
-      max-width: var(--content-max-width);
+    .wrap {
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 32px;
     }
-    .section__heading {
-      font-family: var(--font-serif);
-      font-size: 32px;
-      font-weight: 500;
-      color: var(--color-primary);
-      line-height: 1.4;
-      margin-bottom: 40px;
-    }
-
-    /* ══ Section 1：ヒーロー ══ */
-    .section--hero {
-      background: var(--color-base);
-      padding: 80px 0 0;
-    }
-    .hero__inner { text-align: center; }
-    .hero__eyebrow {
-      display: inline-block;
-      padding: 4px 16px;
-      background: var(--color-accent-tint);
-      color: var(--color-accent);
-      font-size: 12px;
-      font-weight: 500;
-      border-radius: var(--radius-badge);
-      letter-spacing: 0.06em;
-      margin-bottom: 20px;
-    }
-    .hero__heading {
-      font-family: var(--font-serif);
-      font-size: 48px;
-      font-weight: 600;
-      color: var(--color-primary);
-      line-height: 1.3;
-      margin-bottom: 24px;
-    }
-    .hero__sub {
-      font-size: 18px;
-      color: var(--color-text-secondary);
-      line-height: 1.8;
-      max-width: 640px;
-      margin: 0 auto 40px;
-      font-family: var(--font-sans);
-    }
-    .navigator { margin-bottom: 32px; }
-    .navigator__label {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      margin-bottom: 16px;
-      font-family: var(--font-sans);
-    }
-    .navigator__buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .navigator__btn {
-      padding: 12px 20px;
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-btn);
-      background: var(--color-base);
-      color: var(--color-text-primary);
-      font-size: 14px;
-      font-family: var(--font-sans);
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s, color 0.15s;
-    }
-    .navigator__btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
-    .navigator__btn.active,
-    .navigator__btn[aria-pressed="true"] {
-      border-color: var(--color-accent);
-      background: var(--color-accent-tint);
-      color: var(--color-accent);
-      font-weight: 500;
-    }
-    .trust-badges {
-      display: flex;
-      gap: 24px;
-      justify-content: center;
-      list-style: none;
-      flex-wrap: wrap;
-      padding: 32px 0;
-      border-top: 1px solid var(--color-border);
-      margin-top: 40px;
-    }
-    .trust-badges__item {
-      font-size: 13px;
-      color: var(--color-text-secondary);
-      font-family: var(--font-sans);
+    .section-header {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 14px;
+      margin-bottom: 30px;
     }
-    .trust-badges__item::before { content: "✓"; color: var(--color-accent); font-weight: 600; }
-
-    /* ══ Section 2：課題別コンテンツ ══ */
-    .persona-block { opacity: 1; transition: opacity 0.3s ease; }
-    .persona-block[hidden] { display: none; }
-    .persona-block.fade-out { opacity: 0; }
-    .persona-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 32px;
+    .section-num {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--color-navy);
     }
-    .persona-card {
-      background: var(--color-base);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-card);
-      padding: var(--card-padding);
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: var(--color-text-muted);
     }
-    .persona-card--solution { border-left: 3px solid var(--color-accent); }
-    .persona-card__head {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 12px;
-      font-family: var(--font-sans);
+    .section-rule { flex: 1; height: 1px; background: var(--color-border); }
+    .section-title {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 29px;
+      line-height: 1.5;
+      color: var(--color-text-2);
+      margin: 0 0 12px;
+      letter-spacing: 0.02em;
     }
-    .persona-card--solution .persona-card__head { color: var(--color-accent); }
-    .persona-card__body {
+    .section-lead {
+      font-family: var(--font-noto-serif);
       font-size: 15px;
-      color: var(--color-text-primary);
-      line-height: 1.8;
-      font-family: var(--font-sans);
+      line-height: 1.95;
+      color: var(--color-text-mid);
+      margin: 0 0 40px;
+      max-width: 600px;
     }
 
-    /* ══ Section 3：選ばれる理由 ══ */
+    /* ══ ヒーロー ══ */
+    .hero { padding: 78px 0 0; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-size: 12.5px;
+      letter-spacing: 0.2em;
+      color: var(--color-navy);
+      margin: 0 0 22px;
+    }
+    .hero-heading {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 45px;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      color: var(--color-text-2);
+      margin: 0 0 26px;
+    }
+    .hero-sub {
+      font-family: var(--font-noto-serif);
+      font-size: 15.5px;
+      line-height: 2;
+      color: var(--color-text-mid);
+      margin: 0 0 34px;
+      max-width: 480px;
+    }
+    .hero-buttons { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 14px 30px;
+      background: var(--color-navy);
+      color: var(--color-bg);
+      font-size: 14.5px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: opacity 0.15s;
+      display: inline-block;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-outline {
+      padding: 14px 24px;
+      border: 1px solid var(--color-border);
+      color: #3a362d;
+      font-size: 14.5px;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: border-color 0.15s;
+      display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--color-navy); }
+    .hero-note { font-size: 12px; color: var(--color-text-sub); margin: 22px 0 0; }
+    .hero-photo {
+      position: relative;
+      aspect-ratio: 4/5;
+      background: #ECE6D6;
+      background-image: repeating-linear-gradient(135deg, rgba(31,28,22,0.045) 0 2px, transparent 2px 13px);
+      border: 1px solid var(--color-border);
+      display: flex;
+      align-items: flex-end;
+      padding: 22px;
+    }
+    .hero-photo::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      width: 1px;
+      height: 34px;
+      background: var(--color-navy);
+    }
+    .hero-photo__cap {
+      font-family: ui-monospace, 'SFMono-Regular', monospace;
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      color: var(--color-text-sub);
+      line-height: 1.7;
+    }
+
+    /* 事実帯 */
+    .facts-belt {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 64px;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .fact-item {
+      padding: 24px 26px 24px 0;
+      border-right: 1px solid #E2DBCA;
+    }
+    .fact-item:last-child { border-right: none; padding-left: 26px; padding-right: 0; }
+    .fact-item:not(:first-child) { padding-left: 26px; }
+    .fact-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--color-text-muted);
+      margin: 0 0 8px;
+    }
+    .fact-value {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--color-text-2);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ══ 01 WHY ══ */
+    .why-section {
+      background: var(--color-bg-alt);
+      border-top: 1px solid var(--color-border-2);
+      margin-top: 88px;
+      padding: 84px 0;
+    }
     .compare-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      gap: 18px;
     }
     .compare-card {
-      background: var(--color-base);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-card);
-      padding: var(--card-padding);
+      background: var(--color-card-2);
+      border: 1px solid #DED7C6;
+      border-radius: 4px;
+      padding: 26px 24px;
     }
-    .compare-card--featured { border: 2px solid var(--color-accent); }
+    .compare-card--featured {
+      background: var(--color-card);
+      border: 1px solid #C9BFA6;
+      border-top: 2px solid var(--color-navy);
+    }
     .compare-card__label {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      margin-bottom: 16px;
-      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--color-text-sub);
+      margin: 0 0 18px;
+      letter-spacing: 0.04em;
     }
-    .compare-card--featured .compare-card__label { color: var(--color-accent); }
+    .compare-card__logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .compare-card__logo-name {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--color-text-2);
+      letter-spacing: 0.1em;
+    }
     .compare-card__list {
-      list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      list-style: none;
     }
     .compare-card__list li {
-      font-size: 14px;
-      color: var(--color-text-primary);
-      font-family: var(--font-sans);
+      font-size: 13.5px;
       line-height: 1.6;
-      padding-left: 14px;
+      color: var(--color-text-mid);
+      padding-left: 16px;
       position: relative;
     }
-    .compare-card__list li::before { content: "·"; position: absolute; left: 0; color: var(--color-text-secondary); }
-    .compare-card__list--accent li { color: var(--color-accent); font-weight: 500; }
-    .compare-card__list--accent li::before { color: var(--color-accent); content: "✓"; }
-
-    /* ══ Section 4：サービスラインアップ ══ */
-    .phase-stepper {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 32px;
-      flex-wrap: wrap;
-    }
-    .phase-step {
-      padding: 4px 14px;
-      border-radius: var(--radius-badge);
-      background: var(--color-accent-tint);
-      color: var(--color-accent);
-      font-size: 13px;
-      font-weight: 500;
-      font-family: var(--font-sans);
-    }
-    .phase-step__arrow { color: var(--color-border); font-size: 12px; }
-    .service-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    .service-card {
-      background: var(--color-base);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-card);
-      padding: var(--card-padding);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: border-color 0.15s;
-    }
-    .service-card:hover { border-color: var(--color-accent); }
-    .service-card__num { font-family: var(--font-data); font-size: 12px; font-weight: 600; color: var(--color-accent); }
-    .service-card__name { font-size: 16px; font-weight: 500; color: var(--color-primary); font-family: var(--font-sans); line-height: 1.4; }
-    .service-card__tag {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: var(--radius-badge);
-      background: var(--color-accent-tint);
-      color: var(--color-accent);
-      font-size: 11px;
-      font-family: var(--font-sans);
-      width: fit-content;
-    }
-    .service-card__meta { font-size: 13px; color: var(--color-text-secondary); font-family: var(--font-sans); }
-    .service-card__price { font-family: var(--font-data); font-size: 15px; font-weight: 600; color: var(--color-primary); margin-top: auto; }
-
-    /* ══ Section 5：ご支援の流れ ══ */
-    .flow-steps {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .flow-steps::before {
-      content: '';
+    .compare-card__list li::before {
+      content: "—";
       position: absolute;
-      left: 20px;
-      top: 40px;
-      bottom: 40px;
-      width: 1px;
-      background: var(--color-border);
+      left: 0;
+      color: #b5ad99;
     }
-    .flow-step { display: flex; gap: 20px; padding: 20px 0; position: relative; }
-    .flow-step__num {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--color-base);
+    .compare-card__list--accent li { color: #2c281f; }
+    .compare-card__list--accent li::before {
+      content: "✓";
+      color: var(--color-navy);
+      font-weight: 700;
+    }
+    .compare-card__list--accent li { padding-left: 18px; }
+
+    /* ══ 02 サービス ══ */
+    .services-section { padding: 84px 0; }
+    .phase-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 34px;
+      font-size: 13px;
+      color: var(--color-text-mid);
+    }
+    .phase-arrow { color: #bdb49f; }
+    .fee-table {
       border: 1px solid var(--color-border);
-      display: flex;
+      border-radius: 5px;
+      overflow: hidden;
+      background: var(--color-card);
+    }
+    .fee-table__head {
+      display: grid;
+      grid-template-columns: 64px 1fr 110px 140px;
+      gap: 20px;
+      padding: 14px 26px;
+      background: var(--color-bg-alt);
+      border-bottom: 1px solid var(--color-border);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--color-text-muted);
+    }
+    .fee-table__head span:last-child { text-align: right; }
+    .fee-row {
+      display: grid;
+      grid-template-columns: 64px 1fr 110px 140px;
+      gap: 20px;
+      padding: 22px 26px;
+      border-bottom: 1px solid #E5DECD;
       align-items: center;
-      justify-content: center;
-      font-family: var(--font-data);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--color-text-secondary);
-      flex-shrink: 0;
-      position: relative;
-      z-index: 1;
     }
-    .flow-step--highlight {
-      background: var(--color-accent-tint);
-      border: 1.5px solid var(--color-accent);
-      border-radius: var(--radius-card);
-      padding: 20px;
-      margin-bottom: 12px;
-    }
-    .flow-step--highlight .flow-step__num {
-      background: var(--color-accent);
-      border-color: var(--color-accent);
-      color: #fff;
-    }
-    .flow-step__content { flex: 1; }
-    .flow-step__label { font-size: 15px; font-weight: 500; color: var(--color-primary); margin-bottom: 4px; font-family: var(--font-sans); }
-    .flow-step--highlight .flow-step__label { color: var(--color-accent); }
-    .flow-step__body { font-size: 14px; color: var(--color-text-primary); line-height: 1.7; font-family: var(--font-sans); }
-    .flow-step__duration { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; font-family: var(--font-data); }
-
-    /* ══ Section 7：FAQ ══ */
-    .faq-list { display: flex; flex-direction: column; border-top: 1px solid var(--color-border); }
-    .faq-item { border-bottom: 1px solid var(--color-border); }
-    .faq-btn {
-      width: 100%;
-      text-align: left;
-      padding: 20px 0;
-      background: none;
-      border: none;
-      font-size: 15px;
-      font-family: var(--font-sans);
-      color: var(--color-text-primary);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-    .faq-btn::after { content: "+"; font-size: 20px; color: var(--color-accent); flex-shrink: 0; font-weight: 300; transition: transform 0.2s; }
-    .faq-btn[aria-expanded="true"]::after { content: "−"; }
-    .faq-ans { padding: 0 0 20px; font-size: 14px; color: var(--color-text-secondary); line-height: 1.8; font-family: var(--font-sans); }
-
-    /* ══ Section 8：CTA ══ */
-    .cta-section__inner { text-align: center; }
-    .cta-section__heading {
+    .fee-row:last-child { border-bottom: none; }
+    .fee-row__code {
       font-family: var(--font-serif);
-      font-size: 32px;
-      font-weight: 500;
-      color: #fff;
-      margin-bottom: 16px;
-    }
-    .cta-section__sub {
-      font-size: 16px;
-      color: rgba(255,255,255,0.75);
-      line-height: 1.8;
-      margin-bottom: 40px;
-      font-family: var(--font-sans);
-    }
-    .cta-section__buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-
-    /* ══ ボタン共通 ══ */
-    .btn-cta {
-      padding: var(--btn-padding);
-      border-radius: var(--radius-btn);
+      font-weight: 700;
       font-size: 15px;
-      font-family: var(--font-sans);
-      font-weight: 500;
+      color: var(--color-navy);
+    }
+    .fee-row__name {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--color-text-2);
+      margin: 0 0 4px;
+    }
+    .fee-row__meta {
+      font-size: 12.5px;
+      color: var(--color-text-sub);
+      margin: 0;
+    }
+    .fee-row__meta span { color: var(--color-navy); }
+    .fee-row__period { font-size: 13.5px; color: var(--color-text-mid); }
+    .fee-row__price {
+      text-align: right;
+      font-family: var(--font-serif);
+      font-size: 17px;
+      color: var(--color-text-2);
+    }
+    .fee-row__price--ask { font-size: 15px; color: var(--color-text-mid); }
+    .fee-note { font-size: 12px; color: var(--color-text-sub); margin: 14px 0 0; }
+
+    /* ══ 03 流れ ══ */
+    .flow-section {
+      background: var(--color-bg-alt);
+      border-top: 1px solid var(--color-border-2);
+      padding: 84px 0;
+    }
+    .flow-list { display: flex; flex-direction: column; }
+    .flow-step {
+      display: grid;
+      grid-template-columns: 54px 1fr 90px;
+      gap: 24px;
+      align-items: start;
+      padding: 20px 24px;
+      border-bottom: 1px solid #DED7C6;
+    }
+    .flow-step:last-child { border-bottom: none; }
+    .flow-step--highlight {
+      background: var(--color-card);
+      border: 1px solid #C9BFA6;
+      border-left: 2px solid var(--color-navy);
+      border-radius: 4px;
+      padding: 22px 24px;
+      margin-bottom: 14px;
+    }
+    .flow-step__num {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--color-navy);
+    }
+    .flow-step--highlight ~ .flow-step .flow-step__num {
+      font-weight: 400;
+      font-size: 20px;
+      color: #b0a78f;
+    }
+    .flow-step__num--muted {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: #b0a78f;
+    }
+    .flow-step__title {
+      font-family: var(--font-serif);
+      font-size: 16.5px;
+      color: var(--color-text-2);
+      margin: 0 0 5px;
+    }
+    .flow-step--highlight .flow-step__title { font-size: 16.5px; }
+    .flow-step__body { font-size: 13.5px; line-height: 1.8; color: var(--color-text-mid); margin: 0; }
+    .flow-step__period { font-size: 12.5px; color: var(--color-text-sub); text-align: right; }
+
+    /* ══ CTA ══ */
+    .cta-section { background: var(--color-bg-dark); padding: 78px 0; }
+    .cta-section__inner { text-align: center; }
+    .cta-heading {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 1.6;
+      color: #F1ECDF;
+      margin: 0 0 14px;
+      letter-spacing: 0.03em;
+    }
+    .cta-sub {
+      font-family: var(--font-noto-serif);
+      font-size: 14.5px;
+      line-height: 1.9;
+      color: #a9a290;
+      margin: 0 0 34px;
+    }
+    .cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-cta-light {
+      padding: 15px 34px;
+      background: #F1ECDF;
+      color: var(--color-bg-dark);
+      font-size: 14.5px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
       text-decoration: none;
-      transition: background 0.15s, opacity 0.15s;
-      cursor: pointer;
-      border: none;
+      transition: opacity 0.15s;
       display: inline-block;
     }
-    .btn-cta--primary { background: var(--color-accent); color: #fff; }
-    .btn-cta--primary:hover { background: var(--color-accent-hover); }
-    .btn-cta--inverted { background: #fff; color: var(--color-primary); }
-    .btn-cta--inverted:hover { opacity: 0.9; }
-    .btn-cta--outline {
-      background: transparent;
-      color: rgba(255,255,255,0.85);
-      border: 1px solid rgba(255,255,255,0.4);
+    .btn-cta-light:hover { opacity: 0.88; }
+    .btn-cta-ghost {
+      padding: 15px 28px;
+      border: 1px solid rgba(241,236,223,0.35);
+      color: #E6E0D0;
+      font-size: 14.5px;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: border-color 0.15s;
+      display: inline-block;
     }
-    .btn-cta--outline:hover { border-color: #fff; color: #fff; }
+    .btn-cta-ghost:hover { border-color: #F1ECDF; }
 
     /* ══ お問い合わせフォーム ══ */
+    .contact-section { padding: 84px 0; background: var(--color-bg-alt); border-top: 1px solid var(--color-border-2); }
     .contact-wrap { max-width: 640px; margin: 0 auto; }
-    .form-page__heading {
+    .contact-heading {
       font-family: var(--font-serif);
-      font-size: 28px;
-      font-weight: 500;
-      color: var(--color-primary);
-      margin-bottom: 12px;
+      font-weight: 700;
+      font-size: 26px;
+      color: var(--color-text-2);
+      margin: 0 0 10px;
+      letter-spacing: 0.02em;
     }
-    .form-page__sub {
-      font-size: 15px;
-      color: var(--color-text-secondary);
-      line-height: 1.8;
-      margin-bottom: 40px;
-      font-family: var(--font-sans);
-    }
+    .contact-sub { font-size: 14px; color: var(--color-text-mid); line-height: 1.8; margin: 0 0 36px; }
     .form-group { border: none; padding: 0; margin: 0 0 32px; }
-    .form-group__legend {
-      font-size: 13px;
+    .form-legend {
+      font-size: 11px;
       font-weight: 500;
-      color: var(--color-primary);
+      color: var(--color-text-2);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.1em;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--color-border);
       margin-bottom: 20px;
       width: 100%;
       display: block;
     }
-    .form-field { margin-bottom: 20px; }
+    .form-field { margin-bottom: 18px; }
     .form-label {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 500;
-      color: var(--color-text-primary);
+      color: var(--color-text-2);
       margin-bottom: 6px;
-      font-family: var(--font-sans);
     }
     .form-required {
-      background: var(--color-accent-tint);
-      color: var(--color-accent);
+      background: rgba(27,58,91,0.1);
+      color: var(--color-navy);
       font-size: 11px;
       font-weight: 500;
       padding: 1px 6px;
-      border-radius: var(--radius-badge);
+      border-radius: 999px;
     }
-    .form-optional { font-size: 12px; color: var(--color-text-secondary); font-weight: 400; }
+    .form-optional { font-size: 12px; color: var(--color-text-sub); font-weight: 400; }
     .form-input, .form-select, .form-textarea {
       width: 100%;
       padding: 10px 14px;
       border: 1px solid var(--color-border);
-      border-radius: var(--radius-btn);
-      font-size: 15px;
+      border-radius: 3px;
+      font-size: 14.5px;
       font-family: var(--font-sans);
-      color: var(--color-text-primary);
-      background: var(--color-base);
+      color: var(--color-text);
+      background: var(--color-card);
       transition: border-color 0.15s;
       appearance: none;
       -webkit-appearance: none;
     }
     .form-input:focus, .form-select:focus, .form-textarea:focus {
-      outline: 2px solid var(--color-accent);
+      outline: 2px solid var(--color-navy);
       outline-offset: 2px;
-      border-color: var(--color-accent);
+      border-color: var(--color-navy);
     }
-    .form-input.error, .form-select.error { border-color: #E24B4A; }
+    .form-input.error, .form-select.error { border-color: #C94B4A; }
     .form-select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235C6B7A' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a8270' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 14px center;
       padding-right: 36px;
     }
     .form-textarea { resize: vertical; min-height: 100px; }
-    .form-error {
-      display: block;
-      font-size: 12px;
-      color: #E24B4A;
-      margin-top: 4px;
-      min-height: 18px;
-      font-family: var(--font-sans);
-    }
+    .form-error { display: block; font-size: 12px; color: #C94B4A; margin-top: 4px; min-height: 18px; }
     .radio-options { display: flex; flex-direction: column; gap: 10px; }
-    .radio-label { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--color-text-primary); cursor: pointer; font-family: var(--font-sans); }
-    .radio-label input[type="radio"] { width: 18px; height: 18px; accent-color: var(--color-accent); cursor: pointer; flex-shrink: 0; }
-    .btn-submit { width: 100%; font-size: 16px; padding: 18px; margin-top: 8px; }
+    .radio-label { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--color-text); cursor: pointer; }
+    .radio-label input[type="radio"] { width: 17px; height: 17px; accent-color: var(--color-navy); cursor: pointer; flex-shrink: 0; }
+    .btn-submit {
+      width: 100%;
+      font-size: 15px;
+      padding: 17px;
+      margin-top: 8px;
+      background: var(--color-navy);
+      color: var(--color-bg);
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: opacity 0.15s;
+    }
+    .btn-submit:hover:not(:disabled) { opacity: 0.85; }
     .btn-submit:disabled, .btn-submit[aria-disabled="true"] {
-      background: var(--color-border);
-      color: var(--color-text-secondary);
+      background: #C3BBA6;
+      color: var(--color-text-sub);
       cursor: not-allowed;
     }
-    .form-hint { text-align: center; font-size: 12px; color: var(--color-text-secondary); margin-top: 8px; font-family: var(--font-sans); }
+    .form-hint { text-align: center; font-size: 12px; color: var(--color-text-sub); margin-top: 8px; }
     .form-success {
       display: none;
-      background: var(--color-accent-tint);
-      border: 1px solid var(--color-accent);
-      border-radius: var(--radius-card);
+      background: rgba(27,58,91,0.07);
+      border: 1px solid var(--color-navy);
+      border-radius: 4px;
       padding: 20px 24px;
       text-align: center;
       margin-top: 24px;
     }
     .form-success.visible { display: block; }
-    .form-success p { color: var(--color-accent); font-size: 15px; font-family: var(--font-sans); }
+    .form-success p { color: var(--color-navy); font-size: 14.5px; }
 
     /* ══ フッター ══ */
-    .site-footer {
-      background: var(--color-primary);
-      color: rgba(255,255,255,0.7);
-      padding: 48px 24px 32px;
-    }
+    .site-footer { background: var(--color-footer); padding: 46px 32px 36px; }
     .footer-inner {
-      max-width: var(--content-max-width);
+      max-width: 1080px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-    .footer-logo { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: #fff; }
-    .footer-nav { display: flex; flex-wrap: wrap; gap: 8px 24px; list-style: none; }
-    .footer-nav a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; font-family: var(--font-sans); transition: color 0.15s; }
-    .footer-nav a:hover { color: #fff; }
-    .footer-copy { font-size: 12px; }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .footer-logo__mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 3px;
+      background: var(--color-navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .footer-logo__mark img { width: 20px; height: 20px; object-fit: contain; filter: brightness(10); }
+    .footer-logo__name {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 18px;
+      color: #E6E0D0;
+      letter-spacing: 0.12em;
+    }
+    .footer-nav { display: flex; flex-wrap: wrap; gap: 10px 26px; list-style: none; }
+    .footer-nav a { font-size: 12.5px; color: #8b8472; text-decoration: none; transition: color 0.15s; }
+    .footer-nav a:hover { color: #E6E0D0; }
+    .footer-copy { font-size: 11.5px; color: #6e6857; margin: 0; }
 
     /* ══ レスポンシブ ══ */
     @media (max-width: 768px) {
-      .section { padding: var(--section-padding-sp) 0; }
-      .section__heading { font-size: 22px; }
-      .hero__heading { font-size: 28px; line-height: 1.35; }
-      .hero__sub { font-size: 15px; }
-      .navigator__buttons { flex-direction: column; align-items: stretch; }
-      .trust-badges { flex-direction: column; align-items: center; }
-      .persona-grid { grid-template-columns: 1fr; }
-      .compare-grid { grid-template-columns: 1fr; }
-      .service-grid { grid-template-columns: 1fr; }
-      .cta-section__heading { font-size: 24px; }
-      .global-nav, .btn-cta-nav { display: none; }
+      .nav-links, .nav-cta { display: none; }
       .hamburger { display: flex; }
+      .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+      .hero-photo { display: none; }
+      .hero-heading { font-size: 32px; }
+      .facts-belt { grid-template-columns: repeat(2, 1fr); }
+      .fact-item:nth-child(2) { border-right: none; }
+      .fact-item:nth-child(3) { border-right: 1px solid #E2DBCA; padding-left: 0; padding-right: 26px; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .fee-table__head { display: none; }
+      .fee-row { grid-template-columns: 56px 1fr; grid-template-rows: auto auto; }
+      .fee-row__period { grid-column: 2; font-size: 12px; }
+      .fee-row__price { grid-column: 2; text-align: left; font-size: 15px; }
+      .flow-step { grid-template-columns: 44px 1fr; }
+      .flow-step__period { display: none; }
+      .section-title { font-size: 22px; }
+      .hero { padding: 48px 0 0; }
+      .wrap { padding: 0 20px; }
+      .why-section, .flow-section { padding: 56px 0; }
+      .why-section .wrap, .flow-section .wrap { padding: 0 20px; }
+      .services-section { padding: 56px 0; }
+      .cta-heading { font-size: 22px; }
+      .cta-section { padding: 56px 0; }
     }
 
-    /* ══ アクセシビリティ ══ */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
     }
@@ -685,410 +735,313 @@
 </head>
 <body>
 
-<!-- ══ TRESWIN 戻るバー ══ -->
-<div class="back-bar">
-  <a href="services.html">← SERVICES</a>
-  <span class="back-sep">/</span>
-  <span class="back-current">アドバイザリー事業</span>
-</div>
-
-<!-- ══ ヘッダー ══ -->
-<header class="site-header" role="banner">
-  <div class="header-inner">
-    <a href="index.html" class="site-logo" aria-label="TRESWIN トップページへ">
-      <img src="treswinlogo2.png" alt="">
-      TRESWINアドバイザリー
+<!-- ══ ナビ ══ -->
+<nav class="site-nav" role="navigation" aria-label="グローバルナビゲーション">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="TRESWIN トップページへ">
+      <div class="nav-logo__mark">
+        <img src="treswinlogo2.png" alt="">
+      </div>
+      <div class="nav-logo__text">
+        <span class="nav-logo__name">TRESWIN</span>
+        <span class="nav-logo__en">ADVISORY</span>
+      </div>
     </a>
-    <nav class="global-nav" aria-label="グローバルナビゲーション">
-      <ul>
-        <li><a href="#services">サービス</a></li>
-        <li><a href="#flow">ご支援の流れ</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="company.html">会社情報</a></li>
-      </ul>
-    </nav>
-    <a href="#contact" class="btn-cta-nav">無料相談を予約する</a>
+    <div class="nav-links">
+      <a href="#services">支援内容</a>
+      <a href="#services">料金</a>
+      <a href="#flow">ご支援の流れ</a>
+      <a href="company.html">会社情報</a>
+      <a href="#contact" class="nav-cta">無料相談</a>
+    </div>
     <button class="hamburger" aria-label="メニューを開く" aria-expanded="false" aria-controls="sp-menu">
       <span></span><span></span><span></span>
     </button>
   </div>
-</header>
+</nav>
 
 <!-- ══ SPメニュー ══ -->
 <nav id="sp-menu" aria-hidden="true" aria-label="スマートフォンメニュー">
-  <a href="#services">サービス</a>
+  <a href="#services">支援内容・料金</a>
   <a href="#flow">ご支援の流れ</a>
-  <a href="#faq">よくある質問</a>
   <a href="company.html">会社情報</a>
-  <a href="#contact" class="btn-cta-sp">無料相談を予約する</a>
+  <a href="#contact" class="sp-cta">無料相談</a>
 </nav>
 
-<!-- ══ Section 1：ヒーロー ══ -->
-<section class="section section--hero" aria-label="ファーストビュー">
-  <div class="section__inner hero__inner">
-    <p class="hero__eyebrow">経営アドバイザリー事業 — TRESWIN</p>
-    <h1 class="hero__heading">
-      経営者の「やりたい」を、<br>動く計画に変える。
-    </h1>
-    <p class="hero__sub">
-      大手には頼めない。個人には任せられない。——そのジレンマを抱える
-      中小企業経営者のために、チームで戦略を立て、実行まで伴走します。
-    </p>
-
-    <!-- 課題診断ナビゲーター -->
-    <div class="navigator" role="group" aria-labelledby="navigator-label">
-      <p id="navigator-label" class="navigator__label">あなたの経営課題に近いのはどれですか？</p>
-      <div class="navigator__buttons">
-        <button class="navigator__btn active" data-target="persona-a" aria-pressed="true">売上の壁を突破したい</button>
-        <button class="navigator__btn" data-target="persona-b" aria-pressed="false">事業を次世代に引き継ぎたい</button>
-        <button class="navigator__btn" data-target="persona-c" aria-pressed="false">第二の収益柱をつくりたい</button>
+<!-- ══ ヒーロー ══ -->
+<section class="hero" aria-label="ファーストビュー">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="hero-eyebrow">経営アドバイザリー｜TRESWIN</p>
+        <h1 class="hero-heading">戦略の立案から、<br>実行の伴走まで。</h1>
+        <p class="hero-sub">大手ファームの対象から外れ、個人コンサルには委ねきれない。売上1〜30億円規模の経営に、担当チームが深く入り込み、計画を"動く状態"まで持っていきます。</p>
+        <div class="hero-buttons">
+          <a href="#contact" class="btn-primary">無料相談を申し込む</a>
+          <a href="#services" class="btn-outline">支援内容と料金を見る</a>
+        </div>
+        <p class="hero-note">初回相談 60分・無料　／　NDA締結　／　翌営業日に返信</p>
+      </div>
+      <div class="hero-photo" aria-hidden="true">
+        <p class="hero-photo__cap">[ 写真を配置 ]<br>経営会議／対話の情景</p>
       </div>
     </div>
 
-    <!-- 信頼バッジ -->
-    <ul class="trust-badges" aria-label="サービスの特徴">
-      <li class="trust-badges__item">初回相談60分・完全無料</li>
-      <li class="trust-badges__item">NDA締結で秘密厳守</li>
-      <li class="trust-badges__item">翌営業日以内に返信</li>
-    </ul>
+    <!-- 事実帯 -->
+    <div class="facts-belt" aria-label="サービス概要">
+      <div class="fact-item">
+        <p class="fact-label">対象</p>
+        <p class="fact-value">売上 1〜30億円<br>の中小企業</p>
+      </div>
+      <div class="fact-item">
+        <p class="fact-label">支援領域</p>
+        <p class="fact-value">診断・戦略・計画<br>実行の伴走</p>
+      </div>
+      <div class="fact-item">
+        <p class="fact-label">体制</p>
+        <p class="fact-value">担当固定＋<br>ダブルチェック制</p>
+      </div>
+      <div class="fact-item">
+        <p class="fact-label">拠点</p>
+        <p class="fact-value">大阪・全国<br>（オンライン）</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ══ Section 2：課題別コンテンツ展開 ══ -->
-<section class="section section--base" aria-label="課題別ご提案">
-  <div class="section__inner">
-
-    <!-- パターンA -->
-    <div class="persona-block" id="persona-a" aria-label="売上の壁を突破したい方へのご提案">
-      <div class="persona-grid">
-        <div class="persona-card persona-card--situation">
-          <p class="persona-card__head">あなたの状況</p>
-          <p class="persona-card__body">「売上5億円で3年横ばい。何かやらなければという焦りはあるが、コンサルにレポートだけ渡されて終わりになることへの不信感がある。」</p>
-        </div>
-        <div class="persona-card persona-card--solution">
-          <p class="persona-card__head">私たちの答え</p>
-          <p class="persona-card__body">中期経営戦略立案（S-2）＋月次顧問（S-5）の連続支援で、"計画倒れ"を防ぎます。担当者が毎月経営会議に同席し、実行を手放しません。</p>
-        </div>
-      </div>
-      <div style="text-align:center">
-        <a href="#contact" class="btn-cta btn-cta--primary">無料相談を予約する →</a>
-      </div>
+<!-- ══ 01 WHY ══ -->
+<section class="why-section" aria-labelledby="why-heading">
+  <div class="wrap">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-label">WHY TRESWIN</span>
+      <span class="section-rule"></span>
     </div>
+    <h2 id="why-heading" class="section-title">大手でも、個人でもない。第三の選択肢として。</h2>
+    <p class="section-lead">「相談相手がいない」のではなく、「規模に合う相談相手がいない」。その空白を、組織としての品質と、実行への責任で埋めます。</p>
 
-    <!-- パターンB -->
-    <div class="persona-block" id="persona-b" hidden aria-label="事業承継を検討している方へのご提案">
-      <div class="persona-grid">
-        <div class="persona-card persona-card--situation">
-          <p class="persona-card__head">あなたの状況</p>
-          <p class="persona-card__body">「70代で後継者に引き継ぎたい。自分の"感覚経営"を言語化できず、銀行から事業計画書の提出を求められている。」</p>
-        </div>
-        <div class="persona-card persona-card--solution">
-          <p class="persona-card__head">私たちの答え</p>
-          <p class="persona-card__body">経営診断（S-1）＋事業承継支援（S-6）で、暗黙知を言語化。後継者・金融機関すべてに伝わる経営言語に変換します。</p>
-        </div>
-      </div>
-      <div style="text-align:center">
-        <a href="#contact" class="btn-cta btn-cta--primary">無料相談を予約する →</a>
-      </div>
-    </div>
-
-    <!-- パターンC -->
-    <div class="persona-block" id="persona-c" hidden aria-label="新規事業を検討している方へのご提案">
-      <div class="persona-grid">
-        <div class="persona-card persona-card--situation">
-          <p class="persona-card__head">あなたの状況</p>
-          <p class="persona-card__body">「主力事業の先細りを感じ、第二の柱を立てたい。社内にノウハウがなく、一貫して伴走してくれる相談相手がいない。」</p>
-        </div>
-        <div class="persona-card persona-card--solution">
-          <p class="persona-card__head">私たちの答え</p>
-          <p class="persona-card__body">新規事業フルサポート（S-4）で市場調査・PoC設計・事業化を一気通貫支援。成果連動オプションで、本気度を共に背負います。</p>
-        </div>
-      </div>
-      <div style="text-align:center">
-        <a href="#contact" class="btn-cta btn-cta--primary">無料相談を予約する →</a>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ══ Section 3：選ばれる理由 ══ -->
-<section class="section section--surface" aria-labelledby="reason-heading">
-  <div class="section__inner">
-    <h2 id="reason-heading" class="section__heading">なぜ「大手でも個人でもなく」私たちなのか</h2>
     <div class="compare-grid">
       <div class="compare-card">
         <p class="compare-card__label">大手ファーム</p>
         <ul class="compare-card__list">
-          <li>高単価・SMBは対象外</li>
-          <li>案件終了で関係が終わる</li>
-          <li>提案書止まりになりがち</li>
+          <li>高単価で、中小は対象外になりやすい</li>
+          <li>案件が終われば関係も終わる</li>
+          <li>提案書の提出で完結しがち</li>
         </ul>
       </div>
       <div class="compare-card">
         <p class="compare-card__label">個人コンサル</p>
         <ul class="compare-card__list">
-          <li>品質にバラツキがある</li>
-          <li>個人依存でリスクが高い</li>
-          <li>スコープ外の対応が不安</li>
+          <li>品質が人に依存し、ばらつく</li>
+          <li>担当不在のリスクを負う</li>
+          <li>専門外の論点は手薄になる</li>
         </ul>
       </div>
       <div class="compare-card compare-card--featured" aria-label="当社（推奨）">
-        <p class="compare-card__label">TRESWIN</p>
+        <div class="compare-card__logo">
+          <span class="compare-card__logo-name">TRESWIN</span>
+        </div>
         <ul class="compare-card__list compare-card__list--accent">
           <li>中小企業専用・適正価格</li>
-          <li>ダブルチェック制・品質保証</li>
-          <li>実行まで一貫してチームで伴走</li>
+          <li>担当固定＋ダブルチェック制</li>
+          <li>実行まで、チームで伴走する</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ Section 4：サービスラインアップ ══ -->
-<section id="services" class="section section--base" aria-labelledby="service-heading">
-  <div class="section__inner">
-    <h2 id="service-heading" class="section__heading">フェーズで選べる6つの支援メニュー</h2>
-    <div class="phase-stepper" aria-label="支援フェーズ">
-      <span class="phase-step">診断</span>
-      <span class="phase-step__arrow" aria-hidden="true">→</span>
-      <span class="phase-step">戦略</span>
-      <span class="phase-step__arrow" aria-hidden="true">→</span>
-      <span class="phase-step">計画</span>
-      <span class="phase-step__arrow" aria-hidden="true">→</span>
-      <span class="phase-step">実行</span>
-      <span class="phase-step__arrow" aria-hidden="true">→</span>
-      <span class="phase-step">改善</span>
+<!-- ══ 02 サービスと料金 ══ -->
+<section id="services" class="services-section" aria-labelledby="services-heading">
+  <div class="wrap">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-label">SERVICES & FEES</span>
+      <span class="section-rule"></span>
     </div>
-    <div class="service-grid">
-      <article class="service-card">
-        <p class="service-card__num">S-1</p>
-        <h3 class="service-card__name">経営診断・現状分析</h3>
-        <span class="service-card__tag">診断フェーズ</span>
-        <p class="service-card__meta">期間：2〜3週間</p>
-        <p class="service-card__price">¥150,000〜</p>
-      </article>
-      <article class="service-card">
-        <p class="service-card__num">S-2</p>
-        <h3 class="service-card__name">中期経営戦略立案支援</h3>
-        <span class="service-card__tag">戦略フェーズ</span>
-        <p class="service-card__meta">期間：4〜8週間</p>
-        <p class="service-card__price">¥600,000〜</p>
-      </article>
-      <article class="service-card">
-        <p class="service-card__num">S-3</p>
-        <h3 class="service-card__name">単年度事業計画策定</h3>
-        <span class="service-card__tag">計画フェーズ</span>
-        <p class="service-card__meta">期間：3〜5週間</p>
-        <p class="service-card__price">¥400,000〜</p>
-      </article>
-      <article class="service-card">
-        <p class="service-card__num">S-4</p>
-        <h3 class="service-card__name">新規事業開発支援</h3>
-        <span class="service-card__tag">実行フェーズ</span>
-        <p class="service-card__meta">期間：3〜6ヶ月</p>
-        <p class="service-card__price">要相談</p>
-      </article>
-      <article class="service-card">
-        <p class="service-card__num">S-5</p>
-        <h3 class="service-card__name">月次顧問アドバイザリー</h3>
-        <span class="service-card__tag">改善フェーズ</span>
-        <p class="service-card__meta">期間：継続</p>
-        <p class="service-card__price">¥80,000〜/月</p>
-      </article>
-      <article class="service-card">
-        <p class="service-card__num">S-6</p>
-        <h3 class="service-card__name">事業承継戦略支援</h3>
-        <span class="service-card__tag">戦略フェーズ</span>
-        <p class="service-card__meta">期間：3〜6ヶ月</p>
-        <p class="service-card__price">要相談</p>
-      </article>
+    <h2 id="services-heading" class="section-title">フェーズで選べる、6つの支援。</h2>
+
+    <div class="phase-row" aria-label="支援フェーズ">
+      <span>診断</span><span class="phase-arrow">→</span>
+      <span>戦略</span><span class="phase-arrow">→</span>
+      <span>計画</span><span class="phase-arrow">→</span>
+      <span>実行</span><span class="phase-arrow">→</span>
+      <span>改善</span>
     </div>
+
+    <div class="fee-table" role="table" aria-label="サービス料金表">
+      <div class="fee-table__head" role="row">
+        <span role="columnheader"></span>
+        <span role="columnheader">サービス内容</span>
+        <span role="columnheader">期間</span>
+        <span role="columnheader" style="text-align:right;">料金（税別）</span>
+      </div>
+      <div class="fee-row" role="row">
+        <span class="fee-row__code" role="cell">S-1</span>
+        <div role="cell">
+          <p class="fee-row__name">経営診断・現状分析</p>
+          <p class="fee-row__meta">財務・組織・市場を多面的に可視化　<span>診断</span></p>
+        </div>
+        <span class="fee-row__period" role="cell">2〜3週間</span>
+        <span class="fee-row__price" role="cell">¥150,000〜</span>
+      </div>
+      <div class="fee-row" role="row">
+        <span class="fee-row__code" role="cell">S-2</span>
+        <div role="cell">
+          <p class="fee-row__name">中期経営戦略の立案</p>
+          <p class="fee-row__meta">3〜5年の方向と打ち手を構造化　<span>戦略</span></p>
+        </div>
+        <span class="fee-row__period" role="cell">4〜8週間</span>
+        <span class="fee-row__price" role="cell">¥600,000〜</span>
+      </div>
+      <div class="fee-row" role="row">
+        <span class="fee-row__code" role="cell">S-3</span>
+        <div role="cell">
+          <p class="fee-row__name">単年度事業計画の策定</p>
+          <p class="fee-row__meta">数値計画・KPI・ロードマップ　<span>計画</span></p>
+        </div>
+        <span class="fee-row__period" role="cell">3〜5週間</span>
+        <span class="fee-row__price" role="cell">¥400,000〜</span>
+      </div>
+      <div class="fee-row" role="row">
+        <span class="fee-row__code" role="cell">S-4</span>
+        <div role="cell">
+          <p class="fee-row__name">新規事業の開発支援</p>
+          <p class="fee-row__meta">市場調査・PoC設計・事業化まで　<span>実行</span></p>
+        </div>
+        <span class="fee-row__period" role="cell">3〜6ヶ月</span>
+        <span class="fee-row__price fee-row__price--ask" role="cell">要相談</span>
+      </div>
+      <div class="fee-row" role="row">
+        <span class="fee-row__code" role="cell">S-5</span>
+        <div role="cell">
+          <p class="fee-row__name">月次顧問アドバイザリー</p>
+          <p class="fee-row__meta">毎月の経営会議に同席し実行を定着　<span>改善</span></p>
+        </div>
+        <span class="fee-row__period" role="cell">継続</span>
+        <span class="fee-row__price" role="cell">¥80,000〜<span style="font-size:12px;color:var(--color-text-sub);">/月</span></span>
+      </div>
+      <div class="fee-row" role="row">
+        <span class="fee-row__code" role="cell">S-6</span>
+        <div role="cell">
+          <p class="fee-row__name">事業承継戦略の支援</p>
+          <p class="fee-row__meta">暗黙知の言語化と承継計画の策定　<span>戦略</span></p>
+        </div>
+        <span class="fee-row__period" role="cell">3〜6ヶ月</span>
+        <span class="fee-row__price fee-row__price--ask" role="cell">要相談</span>
+      </div>
+    </div>
+    <p class="fee-note">※ 料金は規模・範囲により変動します。初回相談で要件を確認のうえ、お見積もりを提示します。</p>
   </div>
 </section>
 
-<!-- ══ Section 5：ご支援の流れ ══ -->
-<section id="flow" class="section section--surface" aria-labelledby="flow-heading">
-  <div class="section__inner">
-    <h2 id="flow-heading" class="section__heading">はじめての方へ：相談から伴走まで</h2>
-    <ol class="flow-steps" aria-label="支援ステップ">
+<!-- ══ 03 ご支援の流れ ══ -->
+<section id="flow" class="flow-section" aria-labelledby="flow-heading">
+  <div class="wrap">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-label">PROCESS</span>
+      <span class="section-rule"></span>
+    </div>
+    <h2 id="flow-heading" class="section-title">相談から、伴走まで。</h2>
 
-      <li class="flow-step flow-step--highlight">
-        <div class="flow-step__num" aria-label="Step 0">0</div>
-        <div class="flow-step__content">
-          <p class="flow-step__label">無料相談</p>
-          <p class="flow-step__body">オンラインで60分。現状の課題を整理します。費用・義務は一切ありません。</p>
-          <p class="flow-step__duration">〜1週間</p>
+    <div class="flow-list" role="list">
+      <div class="flow-step flow-step--highlight" role="listitem">
+        <span class="flow-step__num">00</span>
+        <div>
+          <p class="flow-step__title">無料相談</p>
+          <p class="flow-step__body">オンラインで60分。現状の課題を一緒に整理します。費用も義務も一切ありません。</p>
         </div>
-      </li>
-
-      <li class="flow-step">
-        <div class="flow-step__num" aria-label="Step 1">1</div>
-        <div class="flow-step__content">
-          <p class="flow-step__label">診断・提案</p>
+        <span class="flow-step__period">〜1週間</span>
+      </div>
+      <div class="flow-step" role="listitem">
+        <span class="flow-step__num--muted">01</span>
+        <div>
+          <p class="flow-step__title">診断・提案</p>
           <p class="flow-step__body">現状分析と改善案をまとめた提案書をご提示します。</p>
-          <p class="flow-step__duration">1〜2週間</p>
         </div>
-      </li>
-
-      <li class="flow-step">
-        <div class="flow-step__num" aria-label="Step 2">2</div>
-        <div class="flow-step__content">
-          <p class="flow-step__label">情報収集</p>
-          <p class="flow-step__body">ドキュメントの精査と深掘りヒアリングを実施します。</p>
-          <p class="flow-step__duration">1〜2週間</p>
+        <span class="flow-step__period">1〜2週間</span>
+      </div>
+      <div class="flow-step" role="listitem">
+        <span class="flow-step__num--muted">02</span>
+        <div>
+          <p class="flow-step__title">情報収集</p>
+          <p class="flow-step__body">資料の精査と、深掘りのヒアリングを実施します。</p>
         </div>
-      </li>
-
-      <li class="flow-step">
-        <div class="flow-step__num" aria-label="Step 3">3</div>
-        <div class="flow-step__content">
-          <p class="flow-step__label">戦略立案</p>
-          <p class="flow-step__body">ワークショップ形式で中期戦略の骨子を策定します。</p>
-          <p class="flow-step__duration">2〜6週間</p>
+        <span class="flow-step__period">1〜2週間</span>
+      </div>
+      <div class="flow-step" role="listitem">
+        <span class="flow-step__num--muted">03</span>
+        <div>
+          <p class="flow-step__title">戦略立案</p>
+          <p class="flow-step__body">ワークショップ形式で、中期戦略の骨子を策定します。</p>
         </div>
-      </li>
-
-      <li class="flow-step">
-        <div class="flow-step__num" aria-label="Step 4">4</div>
-        <div class="flow-step__content">
-          <p class="flow-step__label">計画策定</p>
-          <p class="flow-step__body">数値計画・KPI・ロードマップを作成します。</p>
-          <p class="flow-step__duration">2〜4週間</p>
+        <span class="flow-step__period">2〜6週間</span>
+      </div>
+      <div class="flow-step" role="listitem">
+        <span class="flow-step__num--muted">04</span>
+        <div>
+          <p class="flow-step__title">計画策定</p>
+          <p class="flow-step__body">数値計画・KPI・ロードマップに落とし込みます。</p>
         </div>
-      </li>
-
-      <li class="flow-step">
-        <div class="flow-step__num" aria-label="Step 5">5</div>
-        <div class="flow-step__content">
-          <p class="flow-step__label">伴走支援</p>
-          <p class="flow-step__body">月次経営会議に同席し、実行の定着を支援します。</p>
-          <p class="flow-step__duration">継続</p>
+        <span class="flow-step__period">2〜4週間</span>
+      </div>
+      <div class="flow-step" role="listitem">
+        <span class="flow-step__num--muted">05</span>
+        <div>
+          <p class="flow-step__title">伴走支援</p>
+          <p class="flow-step__body">月次の経営会議に同席し、実行の定着まで支援します。</p>
         </div>
-      </li>
-
-    </ol>
+        <span class="flow-step__period">継続</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ══ Section 7：FAQ ══ -->
-<section id="faq" class="section section--base" aria-labelledby="faq-heading">
-  <div class="section__inner">
-    <h2 id="faq-heading" class="section__heading">よくあるご質問</h2>
-    <dl class="faq-list">
-
-      <div class="faq-item">
-        <dt><button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-1" id="faq-q-1">無料相談で何を話せばいいですか？</button></dt>
-        <dd id="faq-ans-1" role="region" aria-labelledby="faq-q-1" hidden>
-          <p class="faq-ans">現状の課題感だけで大丈夫です。事前準備は不要です。</p>
-        </dd>
-      </div>
-
-      <div class="faq-item">
-        <dt><button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-2" id="faq-q-2">自社の情報が外部に漏れませんか？</button></dt>
-        <dd id="faq-ans-2" role="region" aria-labelledby="faq-q-2" hidden>
-          <p class="faq-ans">相談前にNDAを締結します。情報管理を最優先にしています。</p>
-        </dd>
-      </div>
-
-      <div class="faq-item">
-        <dt><button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-3" id="faq-q-3">費用の目安を教えてください。</button></dt>
-        <dd id="faq-ans-3" role="region" aria-labelledby="faq-q-3" hidden>
-          <p class="faq-ans">経営診断は¥150,000〜。月次顧問は¥80,000/月〜。詳しくは上記サービスラインアップをご参照ください。</p>
-        </dd>
-      </div>
-
-      <div class="faq-item">
-        <dt><button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-4" id="faq-q-4">コンサルに頼んだ経験がないのですが大丈夫ですか？</button></dt>
-        <dd id="faq-ans-4" role="region" aria-labelledby="faq-q-4" hidden>
-          <p class="faq-ans">むしろ初めての方が多くいらっしゃいます。まず無料相談からお気軽にどうぞ。</p>
-        </dd>
-      </div>
-
-      <div class="faq-item">
-        <dt><button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-5" id="faq-q-5">対応できる地域はどこですか？</button></dt>
-        <dd id="faq-ans-5" role="region" aria-labelledby="faq-q-5" hidden>
-          <p class="faq-ans">全国対応（オンライン）です。対面は大阪・関西圏を中心に対応しています。</p>
-        </dd>
-      </div>
-
-      <div class="faq-item">
-        <dt><button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-6" id="faq-q-6">途中でやめることはできますか？</button></dt>
-        <dd id="faq-ans-6" role="region" aria-labelledby="faq-q-6" hidden>
-          <p class="faq-ans">月次顧問は30日前の書面通知で解約可能です。プロジェクト型は契約時に条件を明示します。</p>
-        </dd>
-      </div>
-
-      <div class="faq-item">
-        <dt><button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-7" id="faq-q-7">税理士や社労士と何が違いますか？</button></dt>
-        <dd id="faq-ans-7" role="region" aria-labelledby="faq-q-7" hidden>
-          <p class="faq-ans">経営戦略の立案と実行伴走が専門です。既存の士業の先生方と連携しながら支援します。</p>
-        </dd>
-      </div>
-
-      <div class="faq-item">
-        <dt><button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-8" id="faq-q-8">担当者は毎回変わりますか？</button></dt>
-        <dd id="faq-ans-8" role="region" aria-labelledby="faq-q-8" hidden>
-          <p class="faq-ans">担当コンサルタントは固定です。チームが変わっても引き継ぎを徹底します。</p>
-        </dd>
-      </div>
-
-    </dl>
-  </div>
-</section>
-
-<!-- ══ Section 8：CTAセクション ══ -->
-<section class="section section--navy cta-section" aria-labelledby="cta-heading">
-  <div class="section__inner cta-section__inner">
-    <h2 id="cta-heading" class="cta-section__heading">まずは60分、話してみてください。</h2>
-    <p class="cta-section__sub">費用も義務もありません。あなたの課題を整理するところから、一緒に始めます。</p>
-    <div class="cta-section__buttons">
-      <a href="#contact" class="btn-cta btn-cta--inverted">無料相談を予約する（60分・費用0円）</a>
-      <a href="contact.html" class="btn-cta btn-cta--outline">お問い合わせページへ</a>
+<!-- ══ CTA ══ -->
+<section class="cta-section" aria-labelledby="cta-heading">
+  <div class="wrap cta-section__inner">
+    <h2 id="cta-heading" class="cta-heading">まずは60分、現状を整理するところから。</h2>
+    <p class="cta-sub">費用も義務もありません。課題が漠然としていて構いません。</p>
+    <div class="cta-buttons">
+      <a href="#contact" class="btn-cta-light">無料相談を申し込む</a>
+      <a href="contact.html" class="btn-cta-ghost">お問い合わせ</a>
     </div>
   </div>
 </section>
 
 <!-- ══ お問い合わせフォーム ══ -->
-<section id="contact" class="section section--surface" aria-labelledby="contact-heading">
-  <div class="section__inner">
+<section id="contact" class="contact-section" aria-labelledby="contact-heading">
+  <div class="wrap">
     <div class="contact-wrap">
-      <h2 id="contact-heading" class="form-page__heading">無料相談のお申し込み</h2>
-      <p class="form-page__sub">
-        初回60分・費用・義務は一切ありません。<br>
-        必要事項をご入力のうえ、送信してください。翌営業日以内にご連絡いたします。
-      </p>
+      <h2 id="contact-heading" class="contact-heading">無料相談のお申し込み</h2>
+      <p class="contact-sub">初回60分・費用・義務は一切ありません。<br>必要事項をご入力のうえ、送信してください。翌営業日以内にご連絡いたします。</p>
 
-      <form id="contact-form" class="contact-form" method="POST" action="mail.php" novalidate>
+      <form id="contact-form" method="POST" action="mail.php" novalidate>
         <input type="hidden" name="ajax" value="1">
         <input type="hidden" name="source_page" value="service-advisory.html">
         <input type="hidden" name="inquiry_type" id="inquiry-type-hidden" value="">
 
-        <!-- 基本情報 -->
         <fieldset class="form-group">
-          <legend class="form-group__legend">基本情報</legend>
-
+          <legend class="form-legend">基本情報</legend>
           <div class="form-field">
-            <label for="name" class="form-label">お名前 <span class="form-required" aria-label="必須">必須</span></label>
+            <label for="name" class="form-label">お名前 <span class="form-required">必須</span></label>
             <input type="text" id="name" name="name" class="form-input" placeholder="山田 太郎" autocomplete="name" required aria-required="true" aria-describedby="name-error">
             <span class="form-error" id="name-error" aria-live="polite"></span>
           </div>
-
           <div class="form-field">
-            <label for="company" class="form-label">会社名 <span class="form-required" aria-label="必須">必須</span></label>
+            <label for="company" class="form-label">会社名 <span class="form-required">必須</span></label>
             <input type="text" id="company" name="company" class="form-input" placeholder="株式会社〇〇" autocomplete="organization" required aria-required="true" aria-describedby="company-error">
             <span class="form-error" id="company-error" aria-live="polite"></span>
           </div>
-
           <div class="form-field">
-            <label for="email" class="form-label">メールアドレス <span class="form-required" aria-label="必須">必須</span></label>
+            <label for="email" class="form-label">メールアドレス <span class="form-required">必須</span></label>
             <input type="email" id="email" name="email" class="form-input" placeholder="your@example.com" autocomplete="email" required aria-required="true" aria-describedby="email-error">
             <span class="form-error" id="email-error" aria-live="polite"></span>
           </div>
-
           <div class="form-field">
-            <fieldset class="form-radio-group">
-              <legend class="form-label">最も近い経営課題 <span class="form-required" aria-label="必須">必須</span></legend>
+            <fieldset>
+              <legend class="form-label">最も近い経営課題 <span class="form-required">必須</span></legend>
               <div class="radio-options" role="radiogroup">
                 <label class="radio-label"><input type="radio" name="challenge" value="① 売上の壁を突破したい" required> ① 売上の壁を突破したい</label>
                 <label class="radio-label"><input type="radio" name="challenge" value="② 事業承継を検討している"> ② 事業承継を検討している</label>
@@ -1101,10 +1054,8 @@
           </div>
         </fieldset>
 
-        <!-- 追加情報 -->
         <fieldset class="form-group">
-          <legend class="form-group__legend">追加情報 <span class="form-optional">任意</span></legend>
-
+          <legend class="form-legend">追加情報 <span class="form-optional">任意</span></legend>
           <div class="form-field">
             <label for="timing" class="form-label">ご相談の時期 <span class="form-optional">任意</span></label>
             <select id="timing" name="customer_type" class="form-select">
@@ -1115,14 +1066,13 @@
               <option value="まずは情報収集">まずは情報収集</option>
             </select>
           </div>
-
           <div class="form-field">
             <label for="message" class="form-label">ご相談内容 <span class="form-optional">任意</span></label>
             <textarea id="message" name="message" class="form-textarea" rows="5" placeholder="現在の状況や気になっていることを自由にご記入ください"></textarea>
           </div>
         </fieldset>
 
-        <button type="submit" id="submit-btn" class="btn-cta btn-cta--primary btn-submit" disabled aria-disabled="true">
+        <button type="submit" id="submit-btn" class="btn-submit" disabled aria-disabled="true">
           無料相談を予約する（60分・費用0円・秘密厳守）
         </button>
         <p class="form-hint">必須項目をすべて入力すると送信ボタンが有効になります</p>
@@ -1138,7 +1088,12 @@
 <!-- ══ フッター ══ -->
 <footer class="site-footer" role="contentinfo">
   <div class="footer-inner">
-    <p class="footer-logo">TRESWIN（トレスウィン）</p>
+    <div class="footer-logo">
+      <div class="footer-logo__mark">
+        <img src="treswinlogo2.png" alt="">
+      </div>
+      <span class="footer-logo__name">TRESWIN（トレスウィン）</span>
+    </div>
     <nav aria-label="フッターナビゲーション">
       <ul class="footer-nav">
         <li><a href="index.html">HOME</a></li>
@@ -1153,12 +1108,6 @@
 </footer>
 
 <script defer>
-  // ── ヘッダー sticky ──
-  const header = document.querySelector('.site-header');
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 50);
-  }, { passive: true });
-
   // ── ハンバーガーメニュー ──
   const hamburger = document.querySelector('.hamburger');
   const spMenu = document.getElementById('sp-menu');
@@ -1176,62 +1125,11 @@
     });
   });
 
-  // ── ナビゲーター切り替え ──
-  const navBtns = document.querySelectorAll('.navigator__btn');
-  const personaBlocks = document.querySelectorAll('.persona-block');
-
-  navBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetId = btn.dataset.target;
-      navBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
-      btn.classList.add('active');
-      btn.setAttribute('aria-pressed', 'true');
-
-      const current = document.querySelector('.persona-block:not([hidden])');
-      const next    = document.getElementById(targetId);
-      if (current === next) return;
-
-      current.classList.add('fade-out');
-      setTimeout(() => {
-        current.setAttribute('hidden', '');
-        current.classList.remove('fade-out');
-        next.removeAttribute('hidden');
-        next.style.opacity = 0;
-        requestAnimationFrame(() => {
-          next.style.transition = 'opacity 0.3s ease';
-          next.style.opacity    = 1;
-        });
-      }, 300);
-
-      // 課題ラジオボタンも連動して選択
-      const challengeMap = { 'persona-a': '① 売上の壁を突破したい', 'persona-b': '② 事業承継を検討している', 'persona-c': '③ 新規事業を立ち上げたい' };
-      const val = challengeMap[targetId];
-      if (val) {
-        const radio = document.querySelector(`input[name="challenge"][value="${val}"]`);
-        if (radio) { radio.checked = true; updateSubmitBtn(); }
-      }
-
-      window.dataLayer?.push({ event: 'navigator_select', persona_type: targetId });
-    });
-  });
-
-  // ── FAQ アコーディオン ──
-  document.querySelectorAll('.faq-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const isOpen = btn.getAttribute('aria-expanded') === 'true';
-      const ans    = document.getElementById(btn.getAttribute('aria-controls'));
-      btn.setAttribute('aria-expanded', String(!isOpen));
-      isOpen ? ans.setAttribute('hidden', '') : ans.removeAttribute('hidden');
-      window.dataLayer?.push({ event: 'faq_open', faq_question: btn.textContent.trim(), faq_state: isOpen ? 'close' : 'open' });
-    });
-  });
-
   // ── フォームバリデーション ──
   const form      = document.getElementById('contact-form');
   const submitBtn = document.getElementById('submit-btn');
-
   const REQUIRED_FIELDS = ['name', 'company', 'email'];
-  const ERROR_MESSAGES  = {
+  const ERROR_MESSAGES = {
     name:      'お名前を入力してください',
     company:   '会社名を入力してください',
     email:     '正しいメールアドレスを入力してください',
@@ -1255,7 +1153,7 @@
   }
 
   function isFormValid() {
-    const textValid    = REQUIRED_FIELDS.every(name => {
+    const textValid = REQUIRED_FIELDS.every(name => {
       const el = document.getElementById(name);
       if (!el) return false;
       if (name === 'email') return validateEmail(el.value.trim());
@@ -1285,11 +1183,9 @@
     radio.addEventListener('change', () => { showError('challenge', ''); updateSubmitBtn(); });
   });
 
-  // ── フォーム送信（Ajax） ──
   form.addEventListener('submit', async e => {
     e.preventDefault();
     let hasError = false;
-
     REQUIRED_FIELDS.forEach(name => {
       const el  = document.getElementById(name);
       const err = getFieldError(el);
@@ -1302,7 +1198,6 @@
     }
     if (hasError) return;
 
-    // 課題をinquiry_typeにも反映
     const checkedChallenge = document.querySelector('input[name="challenge"]:checked');
     if (checkedChallenge) document.getElementById('inquiry-type-hidden').value = checkedChallenge.value;
 
@@ -1315,7 +1210,6 @@
       if (data.success) {
         form.style.display = 'none';
         document.getElementById('form-success').classList.add('visible');
-        window.dataLayer?.push({ event: 'contact_form_submit' });
       } else {
         submitBtn.disabled = false;
         submitBtn.textContent = '無料相談を予約する（60分・費用0円・秘密厳守）';
@@ -1329,18 +1223,6 @@
   });
 
   updateSubmitBtn();
-
-  // ── スクロール深度計測 ──
-  const scrollDepthFired = { 50: false, 100: false };
-  window.addEventListener('scroll', () => {
-    const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-    [50, 100].forEach(t => {
-      if (!scrollDepthFired[t] && pct >= t) {
-        scrollDepthFired[t] = true;
-        window.dataLayer?.push({ event: `scroll_depth_${t}`, page_path: location.pathname });
-      }
-    });
-  }, { passive: true });
 </script>
 </body>
 </html>
