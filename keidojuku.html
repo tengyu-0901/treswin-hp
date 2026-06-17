@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>啓道塾｜経営アドバイザリー</title>
+  <meta name="description" content="啓道塾（けいどうじゅく）は売上1〜30億円規模の中小企業に特化した経営アドバイザリー。診断・戦略・計画・実行の伴走まで、担当チームが深く入り込みます。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700&family=Noto+Serif+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F4F1E8;
+      --bg-alt: #EFE9DB;
+      --bg-dark: #1F1C16;
+      --bg-darkest: #17150F;
+      --navy: #1B3A5B;
+      --red: #9E3B2E;
+      --ink: #23201A;
+      --ink-light: #605a4e;
+      --ink-muted: #8a8270;
+      --border: #D3CBB8;
+      --border-light: #E2DBCA;
+      --border-alt: #E5DECD;
+      --surface: #FCFAF4;
+      --surface-warm: #FBF8F1;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); font-family: 'Noto Sans JP', sans-serif; color: var(--ink); line-height: 1.6; }
+
+    /* ── ナビ ── */
+    .nav {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(244,241,232,0.92); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1080px; margin: 0 auto; padding: 0 32px;
+      height: 66px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-icon {
+      width: 32px; height: 32px; border-radius: 3px; background: var(--red);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.16);
+    }
+    .nav-icon span {
+      writing-mode: vertical-rl; font-family: 'Shippori Mincho B1', serif;
+      font-weight: 700; font-size: 9px; letter-spacing: 1px; color: #F4EFE2; line-height: 1.05;
+    }
+    .nav-name { display: flex; align-items: baseline; gap: 9px; }
+    .nav-name-ja { font-family: 'Shippori Mincho B1', serif; font-weight: 700; font-size: 19px; color: var(--ink); letter-spacing: 0.12em; }
+    .nav-name-en { font-size: 9.5px; letter-spacing: 0.28em; color: var(--ink-muted); }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { font-size: 13px; color: #4a463c; text-decoration: none; }
+    .nav-cta {
+      padding: 9px 18px; background: var(--navy); color: var(--bg);
+      font-size: 13px; border-radius: 3px; letter-spacing: 0.04em; text-decoration: none;
+    }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 1px; transition: 0.3s; }
+    .sp-menu { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 30; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
+    .sp-menu.open { display: flex; }
+    .sp-menu a { font-size: 18px; color: var(--ink); text-decoration: none; letter-spacing: 0.1em; }
+    .sp-menu-close { position: absolute; top: 20px; right: 24px; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--ink); }
+
+    /* ── ヒーロー ── */
+    .hero { max-width: 1080px; margin: 0 auto; padding: 78px 32px 0; }
+    .hero-grid { display: grid; grid-template-columns: 1.18fr 0.82fr; gap: 56px; align-items: center; }
+    .hero-eyebrow { font-size: 12.5px; letter-spacing: 0.2em; color: var(--navy); margin-bottom: 22px; }
+    .hero-h1 { font-family: 'Shippori Mincho B1', serif; font-weight: 700; font-size: 45px; line-height: 1.5; letter-spacing: 0.02em; color: var(--bg-dark); margin-bottom: 26px; }
+    .hero-lead { font-family: 'Noto Serif JP', serif; font-size: 15.5px; line-height: 2; color: var(--ink-light); margin-bottom: 34px; max-width: 480px; }
+    .hero-btns { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .btn-primary { padding: 14px 30px; background: var(--navy); color: var(--bg); font-size: 14.5px; border-radius: 3px; letter-spacing: 0.04em; text-decoration: none; }
+    .btn-secondary { padding: 14px 24px; border: 1px solid #C3BBA6; color: #3a362d; font-size: 14.5px; border-radius: 3px; text-decoration: none; }
+    .hero-note { font-size: 12px; color: var(--ink-muted); margin-top: 22px; }
+    .hero-photo {
+      position: relative; aspect-ratio: 4/5;
+      background: #ECE6D6; background-image: repeating-linear-gradient(135deg, rgba(31,28,22,0.045) 0 2px, transparent 2px 13px);
+      border: 1px solid var(--border); display: flex; align-items: flex-end; padding: 22px;
+    }
+    .hero-photo::before { content: ''; position: absolute; top: 18px; left: 18px; width: 1px; height: 34px; background: var(--navy); }
+    .hero-photo-label { font-family: ui-monospace, 'SFMono-Regular', monospace; font-size: 11px; letter-spacing: 0.03em; color: var(--ink-muted); line-height: 1.7; }
+
+    /* 事実帯 */
+    .facts {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      margin-top: 64px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .fact-item { padding: 24px 26px; border-right: 1px solid #E2DBCA; }
+    .fact-item:first-child { padding-left: 0; }
+    .fact-item:last-child { border-right: none; }
+    .fact-label { font-size: 11px; letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 8px; }
+    .fact-value { font-family: 'Shippori Mincho B1', serif; font-size: 16px; color: var(--bg-dark); line-height: 1.6; }
+
+    /* ── 01 WHY ── */
+    .section-alt { background: var(--bg-alt); border-top: 1px solid var(--border-light); margin-top: 88px; }
+    .section-inner { max-width: 1080px; margin: 0 auto; padding: 84px 32px; }
+    .section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 30px; }
+    .section-num { font-family: 'Shippori Mincho B1', serif; font-size: 14px; color: var(--navy); }
+    .section-tag { font-size: 11px; letter-spacing: 0.22em; color: var(--ink-muted); }
+    .section-rule { flex: 1; height: 1px; background: var(--border); }
+    .section-h2 { font-family: 'Shippori Mincho B1', serif; font-weight: 700; font-size: 29px; line-height: 1.5; color: var(--bg-dark); margin-bottom: 12px; letter-spacing: 0.02em; }
+    .section-lead { font-family: 'Noto Serif JP', serif; font-size: 15px; line-height: 1.95; color: var(--ink-light); margin-bottom: 40px; max-width: 600px; }
+
+    .compare-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .compare-card { background: var(--surface-warm); border: 1px solid #DED7C6; border-radius: 4px; padding: 26px 24px; }
+    .compare-card.highlight { background: var(--surface); border-color: #C9BFA6; border-top: 2px solid var(--navy); }
+    .compare-card-title { font-size: 13px; color: var(--ink-muted); margin-bottom: 18px; letter-spacing: 0.04em; }
+    .compare-card-title-brand { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+    .compare-card-title-brand strong { font-family: 'Shippori Mincho B1', serif; font-weight: 700; font-size: 14px; color: var(--bg-dark); letter-spacing: 0.1em; }
+    .brand-badge { width: 18px; height: 18px; border-radius: 2px; background: var(--red); display: flex; align-items: center; justify-content: center; }
+    .brand-badge span { writing-mode: vertical-rl; font-family: 'Shippori Mincho B1', serif; font-size: 6px; color: #F4EFE2; letter-spacing: 0.5px; }
+    .compare-list { display: flex; flex-direction: column; gap: 12px; }
+    .compare-item { font-size: 13.5px; line-height: 1.6; color: var(--ink-light); padding-left: 16px; position: relative; }
+    .compare-item::before { content: '—'; position: absolute; left: 0; color: #b5ad99; }
+    .compare-item.positive { color: #2c281f; padding-left: 18px; }
+    .compare-item.positive::before { content: '✓'; color: var(--navy); font-weight: 700; }
+
+    /* ── 02 料金 ── */
+    .section-plain { max-width: 1080px; margin: 0 auto; padding: 84px 32px; }
+    .phase-flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 34px; font-size: 13px; color: var(--ink-light); }
+    .phase-arrow { color: #bdb49f; }
+    .fee-table { border: 1px solid var(--border); border-radius: 5px; overflow: hidden; background: var(--surface); }
+    .fee-header {
+      display: grid; grid-template-columns: 64px 1fr 110px 140px; gap: 20px;
+      padding: 14px 26px; background: var(--bg-alt); border-bottom: 1px solid var(--border);
+      font-size: 11px; letter-spacing: 0.12em; color: var(--ink-muted);
+    }
+    .fee-header span:last-child { text-align: right; }
+    .fee-row {
+      display: grid; grid-template-columns: 64px 1fr 110px 140px; gap: 20px;
+      padding: 22px 26px; border-bottom: 1px solid var(--border-alt); align-items: center;
+    }
+    .fee-row:last-child { border-bottom: none; }
+    .fee-code { font-family: 'Shippori Mincho B1', serif; font-weight: 700; font-size: 15px; color: var(--navy); }
+    .fee-name { font-family: 'Shippori Mincho B1', serif; font-size: 16px; color: var(--bg-dark); margin-bottom: 4px; }
+    .fee-sub { font-size: 12.5px; color: var(--ink-muted); }
+    .fee-sub .tag { color: var(--navy); }
+    .fee-period { font-size: 13.5px; color: var(--ink-light); }
+    .fee-price { text-align: right; font-family: 'Shippori Mincho B1', serif; font-size: 17px; color: var(--bg-dark); }
+    .fee-price.consult { font-size: 15px; color: var(--ink-light); font-family: 'Noto Sans JP', sans-serif; }
+    .fee-unit { font-size: 12px; color: var(--ink-muted); }
+    .fee-note { font-size: 12px; color: var(--ink-muted); margin-top: 14px; }
+
+    /* ── 03 フロー ── */
+    .flow-list { display: flex; flex-direction: column; }
+    .flow-step-highlight {
+      display: grid; grid-template-columns: 54px 1fr 90px; gap: 24px; align-items: start;
+      background: var(--surface); border: 1px solid #C9BFA6; border-left: 2px solid var(--navy);
+      border-radius: 4px; padding: 22px 24px; margin-bottom: 14px;
+    }
+    .flow-step {
+      display: grid; grid-template-columns: 54px 1fr 90px; gap: 24px; align-items: start;
+      padding: 20px 24px; border-bottom: 1px solid #DED7C6;
+    }
+    .flow-step:last-child { border-bottom: none; }
+    .step-num-main { font-family: 'Shippori Mincho B1', serif; font-weight: 700; font-size: 22px; color: var(--navy); }
+    .step-num { font-family: 'Shippori Mincho B1', serif; font-size: 20px; color: #b0a78f; }
+    .step-title { font-family: 'Shippori Mincho B1', serif; font-size: 16.5px; color: var(--bg-dark); margin-bottom: 5px; }
+    .step-title-sm { font-family: 'Shippori Mincho B1', serif; font-size: 16px; color: var(--bg-dark); margin-bottom: 5px; }
+    .step-desc { font-size: 13.5px; line-height: 1.8; color: var(--ink-light); }
+    .step-duration { font-size: 12.5px; color: var(--ink-muted); text-align: right; }
+
+    /* ── CTA ── */
+    .cta { background: var(--bg-dark); }
+    .cta-inner { max-width: 1080px; margin: 0 auto; padding: 78px 32px; text-align: center; }
+    .cta-h2 { font-family: 'Shippori Mincho B1', serif; font-weight: 600; font-size: 28px; line-height: 1.6; color: #F1ECDF; margin-bottom: 14px; letter-spacing: 0.03em; }
+    .cta-lead { font-family: 'Noto Serif JP', serif; font-size: 14.5px; line-height: 1.9; color: #a9a290; margin-bottom: 34px; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .cta-btn-primary { padding: 15px 34px; background: #F1ECDF; color: var(--bg-dark); font-size: 14.5px; border-radius: 3px; letter-spacing: 0.04em; text-decoration: none; }
+    .cta-btn-secondary { padding: 15px 28px; border: 1px solid rgba(241,236,223,0.35); color: #E6E0D0; font-size: 14.5px; border-radius: 3px; text-decoration: none; }
+
+    /* ── フッター ── */
+    footer { background: var(--bg-darkest); }
+    .footer-inner { max-width: 1080px; margin: 0 auto; padding: 46px 32px 36px; display: flex; flex-direction: column; gap: 20px; }
+    .footer-brand { display: flex; align-items: center; gap: 11px; }
+    .footer-icon { width: 30px; height: 30px; border-radius: 3px; background: var(--red); display: flex; align-items: center; justify-content: center; }
+    .footer-icon span { writing-mode: vertical-rl; font-family: 'Shippori Mincho B1', serif; font-weight: 700; font-size: 8px; letter-spacing: 1px; color: #F4EFE2; line-height: 1.05; }
+    .footer-name { font-family: 'Shippori Mincho B1', serif; font-weight: 700; font-size: 18px; color: #E6E0D0; letter-spacing: 0.12em; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+    .footer-links a { font-size: 12.5px; color: #8b8472; text-decoration: none; }
+    .footer-copy { font-size: 11.5px; color: #6e6857; }
+
+    /* ── レスポンシブ ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-photo { display: none; }
+      .hero-h1 { font-size: 32px; }
+      .facts { grid-template-columns: repeat(2,1fr); }
+      .fact-item { border-right: none; border-bottom: 1px solid #E2DBCA; }
+      .fact-item:nth-child(odd) { border-right: 1px solid #E2DBCA; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .fee-header { display: none; }
+      .fee-row { grid-template-columns: 48px 1fr; }
+      .fee-period { display: none; }
+      .fee-price { text-align: left; }
+      .flow-step, .flow-step-highlight { grid-template-columns: 44px 1fr; }
+      .step-duration { display: none; }
+      .section-inner, .section-plain { padding: 60px 20px; }
+      .hero { padding: 48px 20px 0; }
+      .cta-inner { padding: 60px 20px; }
+      .cta-h2 { font-size: 22px; }
+      .footer-inner { padding: 36px 20px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ナビ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <div class="nav-icon"><span>啓道塾</span></div>
+      <div class="nav-name">
+        <span class="nav-name-ja">啓道塾</span>
+        <span class="nav-name-en">KEIDŌ JUKU</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#services">支援内容</a>
+      <a href="#fees">料金</a>
+      <a href="#process">ご支援の流れ</a>
+      <a href="#contact" class="nav-cta">無料相談</a>
+    </div>
+    <button class="nav-hamburger" aria-label="メニュー" onclick="document.getElementById('spMenu').classList.add('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- SPメニュー -->
+<div class="sp-menu" id="spMenu">
+  <button class="sp-menu-close" onclick="document.getElementById('spMenu').classList.remove('open')">&times;</button>
+  <a href="#services" onclick="document.getElementById('spMenu').classList.remove('open')">支援内容</a>
+  <a href="#fees" onclick="document.getElementById('spMenu').classList.remove('open')">料金</a>
+  <a href="#process" onclick="document.getElementById('spMenu').classList.remove('open')">ご支援の流れ</a>
+  <a href="#contact" onclick="document.getElementById('spMenu').classList.remove('open')">無料相談</a>
+</div>
+
+<!-- ヒーロー -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <p class="hero-eyebrow">経営アドバイザリー｜啓道塾</p>
+      <h1 class="hero-h1">戦略の立案から、<br>実行の伴走まで。</h1>
+      <p class="hero-lead">大手ファームの対象から外れ、個人コンサルには委ねきれない。売上1〜30億円規模の経営に、担当チームが深く入り込み、計画を"動く状態"まで持っていきます。</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">無料相談を申し込む</a>
+        <a href="#fees" class="btn-secondary">支援内容と料金を見る</a>
+      </div>
+      <p class="hero-note">初回相談 60分・無料　／　NDA締結　／　翌営業日に返信</p>
+    </div>
+    <div class="hero-photo">
+      <span class="hero-photo-label">[ 写真を配置 ]<br>経営会議／対話の情景</span>
+    </div>
+  </div>
+
+  <!-- 事実帯 -->
+  <div class="facts">
+    <div class="fact-item">
+      <p class="fact-label">対象</p>
+      <p class="fact-value">売上 1〜30億円<br>の中小企業</p>
+    </div>
+    <div class="fact-item">
+      <p class="fact-label">支援領域</p>
+      <p class="fact-value">診断・戦略・計画<br>実行の伴走</p>
+    </div>
+    <div class="fact-item">
+      <p class="fact-label">体制</p>
+      <p class="fact-value">担当固定＋<br>ダブルチェック制</p>
+    </div>
+    <div class="fact-item">
+      <p class="fact-label">拠点</p>
+      <p class="fact-value">大阪・全国<br>（オンライン）</p>
+    </div>
+  </div>
+</section>
+
+<!-- 01 WHY -->
+<section class="section-alt" id="services">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <span class="section-tag">WHY KEIDŌ JUKU</span>
+      <span class="section-rule"></span>
+    </div>
+    <h2 class="section-h2">大手でも、個人でもない。第三の選択肢として。</h2>
+    <p class="section-lead">「相談相手がいない」のではなく、「規模に合う相談相手がいない」。その空白を、組織としての品質と、実行への責任で埋めます。</p>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <p class="compare-card-title">大手ファーム</p>
+        <div class="compare-list">
+          <p class="compare-item">高単価で、中小は対象外になりやすい</p>
+          <p class="compare-item">案件が終われば関係も終わる</p>
+          <p class="compare-item">提案書の提出で完結しがち</p>
+        </div>
+      </div>
+      <div class="compare-card">
+        <p class="compare-card-title">個人コンサル</p>
+        <div class="compare-list">
+          <p class="compare-item">品質が人に依存し、ばらつく</p>
+          <p class="compare-item">担当不在のリスクを負う</p>
+          <p class="compare-item">専門外の論点は手薄になる</p>
+        </div>
+      </div>
+      <div class="compare-card highlight">
+        <div class="compare-card-title-brand">
+          <strong>啓道塾</strong>
+          <div class="brand-badge"><span>啓道</span></div>
+        </div>
+        <div class="compare-list">
+          <p class="compare-item positive">中小企業専用・適正価格</p>
+          <p class="compare-item positive">担当固定＋ダブルチェック制</p>
+          <p class="compare-item positive">実行まで、チームで伴走する</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 料金 -->
+<section class="section-plain" id="fees">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <span class="section-tag">SERVICES &amp; FEES</span>
+    <span class="section-rule"></span>
+  </div>
+  <h2 class="section-h2">フェーズで選べる、6つの支援。</h2>
+
+  <div class="phase-flow">
+    <span>診断</span><span class="phase-arrow">→</span>
+    <span>戦略</span><span class="phase-arrow">→</span>
+    <span>計画</span><span class="phase-arrow">→</span>
+    <span>実行</span><span class="phase-arrow">→</span>
+    <span>改善</span>
+  </div>
+
+  <div class="fee-table">
+    <div class="fee-header">
+      <span></span><span>サービス内容</span><span>期間</span><span>料金（税別）</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-1</span>
+      <div><p class="fee-name">経営診断・現状分析</p><p class="fee-sub">財務・組織・市場を多面的に可視化　<span class="tag">診断</span></p></div>
+      <span class="fee-period">2〜3週間</span>
+      <span class="fee-price">¥150,000〜</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-2</span>
+      <div><p class="fee-name">中期経営戦略の立案</p><p class="fee-sub">3〜5年の方向と打ち手を構造化　<span class="tag">戦略</span></p></div>
+      <span class="fee-period">4〜8週間</span>
+      <span class="fee-price">¥600,000〜</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-3</span>
+      <div><p class="fee-name">単年度事業計画の策定</p><p class="fee-sub">数値計画・KPI・ロードマップ　<span class="tag">計画</span></p></div>
+      <span class="fee-period">3〜5週間</span>
+      <span class="fee-price">¥400,000〜</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-4</span>
+      <div><p class="fee-name">新規事業の開発支援</p><p class="fee-sub">市場調査・PoC設計・事業化まで　<span class="tag">実行</span></p></div>
+      <span class="fee-period">3〜6ヶ月</span>
+      <span class="fee-price consult">要相談</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-5</span>
+      <div><p class="fee-name">月次顧問アドバイザリー</p><p class="fee-sub">毎月の経営会議に同席し実行を定着　<span class="tag">改善</span></p></div>
+      <span class="fee-period">継続</span>
+      <span class="fee-price">¥80,000〜<span class="fee-unit">/月</span></span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-6</span>
+      <div><p class="fee-name">事業承継戦略の支援</p><p class="fee-sub">暗黙知の言語化と承継計画の策定　<span class="tag">戦略</span></p></div>
+      <span class="fee-period">3〜6ヶ月</span>
+      <span class="fee-price consult">要相談</span>
+    </div>
+  </div>
+  <p class="fee-note">※ 料金は規模・範囲により変動します。初回相談で要件を確認のうえ、お見積もりを提示します。</p>
+</section>
+
+<!-- 03 フロー -->
+<section class="section-alt" id="process">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <span class="section-tag">PROCESS</span>
+      <span class="section-rule"></span>
+    </div>
+    <h2 class="section-h2">相談から、伴走まで。</h2>
+
+    <div class="flow-list">
+      <div class="flow-step-highlight">
+        <span class="step-num-main">00</span>
+        <div>
+          <p class="step-title">無料相談</p>
+          <p class="step-desc">オンラインで60分。現状の課題を一緒に整理します。費用も義務も一切ありません。</p>
+        </div>
+        <span class="step-duration">〜1週間</span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">01</span>
+        <div><p class="step-title-sm">診断・提案</p><p class="step-desc">現状分析と改善案をまとめた提案書をご提示します。</p></div>
+        <span class="step-duration">1〜2週間</span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">02</span>
+        <div><p class="step-title-sm">情報収集</p><p class="step-desc">資料の精査と、深掘りのヒアリングを実施します。</p></div>
+        <span class="step-duration">1〜2週間</span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">03</span>
+        <div><p class="step-title-sm">戦略立案</p><p class="step-desc">ワークショップ形式で、中期戦略の骨子を策定します。</p></div>
+        <span class="step-duration">2〜6週間</span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">04</span>
+        <div><p class="step-title-sm">計画策定</p><p class="step-desc">数値計画・KPI・ロードマップに落とし込みます。</p></div>
+        <span class="step-duration">2〜4週間</span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">05</span>
+        <div><p class="step-title-sm">伴走支援</p><p class="step-desc">月次の経営会議に同席し、実行の定着まで支援します。</p></div>
+        <span class="step-duration">継続</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <div class="cta-inner">
+    <h2 class="cta-h2">まずは60分、現状を整理するところから。</h2>
+    <p class="cta-lead">費用も義務もありません。課題が漠然としていて構いません。</p>
+    <div class="cta-btns">
+      <a href="contact.html" class="cta-btn-primary">無料相談を申し込む</a>
+      <a href="contact.html" class="cta-btn-secondary">お問い合わせ</a>
+    </div>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-icon"><span>啓道塾</span></div>
+      <span class="footer-name">啓道塾</span>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">HOME</a>
+      <a href="#services">支援内容</a>
+      <a href="#fees">料金</a>
+      <a href="#process">ご支援の流れ</a>
+      <a href="company.html">会社概要</a>
+      <a href="contact.html">お問い合わせ</a>
+    </div>
+    <p class="footer-copy">© 2026 啓道塾（けいどうじゅく）. All Rights Reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
