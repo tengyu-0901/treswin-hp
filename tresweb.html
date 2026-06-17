@@ -1268,6 +1268,69 @@ footer {
     })();
     </script>
 
+    <!-- MODAL: 日本人材開発機構 -->
+    <div class="modal-backdrop" id="modalJtad" style="display:none;" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <button class="modal-close" aria-label="閉じる" onclick="closeModal()">✕</button>
+            <div class="modal-hero-img">
+                <div class="modal-hero-inner" style="background:#0a0a1a;position:relative;overflow:hidden;">
+                    <img src="jtad-thumb.jpg" alt="日本人材開発機構" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
+                    <div style="position:absolute;bottom:1.25rem;left:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">コーポレートサイト</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">アニメーション</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">採用強化</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="modal-category">コーポレートサイト</div>
+                <div class="modal-title">日本人材開発機構</div>
+                <p class="modal-desc">キャリア支援・人材エコシステムを展開するJ-TAD社のコーポレートサイト。ドットマップ・パーティクルアニメーションを活用した没入感のある世界観と、ミッション・サービス・採用情報を一体化した設計。</p>
+                <div class="modal-points-label">こだわりポイント</div>
+                <div class="modal-points">
+                    <div class="modal-point">
+                        <div class="modal-point-icon">🌐</div>
+                        <div>
+                            <div class="modal-point-title">ドットマップ×パーティクルによる没入型ビジュアル</div>
+                            <p class="modal-point-desc">インタラクティブなSVGドットマップと動的パーティクルアニメーションをヒーローセクションに実装。テクノロジー×人材というブランドコンセプトを視覚的に表現し、初見でのブランド印象を大幅に強化。</p>
+                        </div>
+                    </div>
+                    <div class="modal-point">
+                        <div class="modal-point-icon">🎯</div>
+                        <div>
+                            <div class="modal-point-title">ミッション・サービス・採用を一体化した導線設計</div>
+                            <p class="modal-point-desc">「なぜ存在するか（ミッション）」→「何をするか（サービス）」→「一緒にやらないか（採用）」という自然な読み進め設計で、企業理解から行動までのCVRを最大化。スクロール連動のアニメーションで離脱を防止。</p>
+                        </div>
+                    </div>
+                    <div class="modal-point">
+                        <div class="modal-point-icon">💎</div>
+                        <div>
+                            <div class="modal-point-title">ダークトーン×ゴールドアクセントの高品位ブランディング</div>
+                            <p class="modal-point-desc">深いネイビー・チャコールを基調に、ゴールドのアクセントカラーを戦略的に配置。「信頼と挑戦」を体現するカラーパレットで、競合との差別化と高級感を両立したビジュアルブランディングを実現。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-meta">
+                    <div class="modal-meta-item"><div class="modal-meta-label">制作期間</div><div class="modal-meta-val">8週間</div></div>
+                    <div class="modal-meta-item"><div class="modal-meta-label">ページ数</div><div class="modal-meta-val">全7P</div></div>
+                    <div class="modal-meta-item"><div class="modal-meta-label">主な対応</div><div class="modal-meta-val">新規制作</div></div>
+                </div>
+                <a href="jtad-corp.html" class="modal-link" target="_blank" rel="noopener">サイトを見る →</a>
+            </div>
+        </div>
+    </div>
+    <script>
+    function openModal(id) {
+        if (id === 'jtad') document.getElementById('modalJtad').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+        document.getElementById('modalJtad').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+    </script>
+
     <!-- SERVICES -->
     <section id="services">
         <div class="section-label">Services</div>
