@@ -77,9 +77,11 @@
     .hero-note { font-size: 12px; color: var(--ink-muted); margin-top: 22px; }
     .hero-photo {
       position: relative; aspect-ratio: 4/5;
-      border: 1px solid var(--border); overflow: hidden;
+      background: #ECE6D6; background-image: repeating-linear-gradient(135deg, rgba(31,28,22,0.045) 0 2px, transparent 2px 13px);
+      border: 1px solid var(--border); display: flex; align-items: flex-end; padding: 22px;
     }
-    .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-photo::before { content: ''; position: absolute; top: 18px; left: 18px; width: 1px; height: 34px; background: var(--navy); }
+    .hero-photo-label { font-family: ui-monospace, 'SFMono-Regular', monospace; font-size: 11px; letter-spacing: 0.03em; color: var(--ink-muted); line-height: 1.7; }
 
     /* 事実帯 */
     .facts {
@@ -253,7 +255,7 @@
       <p class="hero-note">初回相談 60分・無料　／　NDA締結　／　翌営業日に返信</p>
     </div>
     <div class="hero-photo">
-      <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&q=80&fit=crop" alt="経営会議の情景">
+      <span class="hero-photo-label">[ 写真を配置 ]<br>経営会議／対話の情景</span>
     </div>
   </div>
 
@@ -321,6 +323,66 @@
   </div>
 </section>
 
+<!-- 02 料金 -->
+<section class="section-plain" id="fees">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <span class="section-tag">SERVICES &amp; FEES</span>
+    <span class="section-rule"></span>
+  </div>
+  <h2 class="section-h2">フェーズで選べる、6つの支援。</h2>
+
+  <div class="phase-flow">
+    <span>診断</span><span class="phase-arrow">→</span>
+    <span>戦略</span><span class="phase-arrow">→</span>
+    <span>計画</span><span class="phase-arrow">→</span>
+    <span>実行</span><span class="phase-arrow">→</span>
+    <span>改善</span>
+  </div>
+
+  <div class="fee-table">
+    <div class="fee-header">
+      <span></span><span>サービス内容</span><span>期間</span><span>料金（税別）</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-1</span>
+      <div><p class="fee-name">経営診断・現状分析</p><p class="fee-sub">財務・組織・市場を多面的に可視化　<span class="tag">診断</span></p></div>
+      <span class="fee-period">2〜3週間</span>
+      <span class="fee-price">¥150,000〜</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-2</span>
+      <div><p class="fee-name">中期経営戦略の立案</p><p class="fee-sub">3〜5年の方向と打ち手を構造化　<span class="tag">戦略</span></p></div>
+      <span class="fee-period">4〜8週間</span>
+      <span class="fee-price">¥600,000〜</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-3</span>
+      <div><p class="fee-name">単年度事業計画の策定</p><p class="fee-sub">数値計画・KPI・ロードマップ　<span class="tag">計画</span></p></div>
+      <span class="fee-period">3〜5週間</span>
+      <span class="fee-price">¥400,000〜</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-4</span>
+      <div><p class="fee-name">新規事業の開発支援</p><p class="fee-sub">市場調査・PoC設計・事業化まで　<span class="tag">実行</span></p></div>
+      <span class="fee-period">3〜6ヶ月</span>
+      <span class="fee-price consult">要相談</span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-5</span>
+      <div><p class="fee-name">月次顧問アドバイザリー</p><p class="fee-sub">毎月の経営会議に同席し実行を定着　<span class="tag">改善</span></p></div>
+      <span class="fee-period">継続</span>
+      <span class="fee-price">¥80,000〜<span class="fee-unit">/月</span></span>
+    </div>
+    <div class="fee-row">
+      <span class="fee-code">S-6</span>
+      <div><p class="fee-name">事業承継戦略の支援</p><p class="fee-sub">暗黙知の言語化と承継計画の策定　<span class="tag">戦略</span></p></div>
+      <span class="fee-period">3〜6ヶ月</span>
+      <span class="fee-price consult">要相談</span>
+    </div>
+  </div>
+  <p class="fee-note">※ 料金は規模・範囲により変動します。初回相談で要件を確認のうえ、お見積もりを提示します。</p>
+</section>
 
 <!-- 03 フロー -->
 <section class="section-alt" id="process">

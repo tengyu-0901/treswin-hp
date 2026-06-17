@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRESWEB | HP制作事業 — TRESWIN</title>
+  <meta name="description" content="TRESWINのHP制作事業「TRESWEB」。戦略から改善まで、ビジネスに伴走するWeb制作サービス。大阪・全国対応。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+/* cyrillic */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* cyrillic */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* cyrillic */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* cyrillic */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */
+
+/* vietnamese */
+
+/* latin-ext */
+
+/* latin */*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --bg:      #FAFAF8;
+    --bg2:     #F3F3EF;
+    --bg3:     #EAEAE4;
+    --ink:     #111110;
+    --ink2:    #2A2A28;
+    --ink3:    #3F3F3C;
+    --mid:     #888884;
+    --ghost:   #B8B8B2;
+    --border:  rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.13);
+    --accent:  #1A1AF0;
+    --accent-bg: color-mix(in srgb, var(--accent) 6%, transparent);
+    --accent-border: color-mix(in srgb, var(--accent) 18%, transparent);
+    --white:   #FFFFFF;
+}
+html { font-size: 16px; }
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+.grotesk { font-family: 'Space Grotesk', sans-serif; }
+
+/* ── BACK LINK ── */
+.back-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+    background: rgba(250,250,248,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    height: 52px;
+    display: flex; align-items: center; padding: 0 5vw;
+    gap: 1rem;
+}
+.back-bar a {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.78rem; font-weight: 600;
+    color: var(--mid); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    transition: color 0.2s;
+}
+.back-bar a:hover { color: var(--ink); }
+.back-bar a::before { content: '←'; }
+.back-sep { color: var(--ghost); font-size: 0.75rem; }
+.back-current { font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem; color: var(--ink3); font-weight: 500; }
+
+/* ── NAV ── */
+nav {
+    position: fixed; top: 52px; left: 0; right: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 60px;
+    background: rgba(250,250,248,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+    text-decoration: none;
+    display: flex; align-items: center;
+    line-height: 1;
+}
+.nav-logo svg { display: block; }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.nav-links a {
+    color: var(--mid); text-decoration: none; font-size: 0.85rem;
+    font-weight: 500; transition: color 0.2s; letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-cta {
+    background: var(--ink) !important;
+    color: #fff !important;
+    padding: 0.45rem 1.1rem;
+    border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600 !important; font-size: 0.82rem;
+    transition: opacity 0.15s !important;
+}
+.nav-cta:hover { opacity: 0.75; }
+
+/* ── HERO ── */
+.hero {
+    min-height: 100vh; padding-top: 112px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding-left: 5vw; padding-right: 5vw;
+    padding-bottom: 6vh; padding-top: calc(112px + 6vh);
+    position: relative; overflow: hidden;
+    background: var(--bg);
+}
+.hero-grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 40%, transparent 100%);
+}
+.hero-bg-mark {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -52%);
+    width: clamp(260px, 36vw, 480px);
+    opacity: 0.055;
+    user-select: none; pointer-events: none;
+}
+.hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 2.5rem; position: relative; z-index: 1;
+}
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+    content: ''; width: 20px; height: 1px; background: var(--accent);
+}
+.hero-h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(3rem, 8.5vw, 8rem);
+    font-weight: 700; line-height: 1.0; letter-spacing: -0.035em;
+    color: var(--ink);
+    position: relative; z-index: 1;
+}
+.hero-h1 .h1-lg {
+    display: block;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+}
+.hero-h1 .h1-sm {
+    display: block;
+    font-size: clamp(1.4rem, 3.2vw, 3rem);
+    font-weight: 400;
+    color: var(--mid);
+    letter-spacing: -0.01em;
+    margin-top: 0.35em;
+}
+/* split layout (vertical kicker + horizontal headline) */
+.hero-h1--split {
+    display: flex; align-items: center; justify-content: center;
+    gap: clamp(1.25rem, 2.5vw, 2.25rem);
+}
+.hero-h1--split .h1-vert {
+    writing-mode: vertical-rl;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: clamp(0.85rem, 1.3vw, 1.1rem);
+    font-weight: 500; color: var(--mid);
+    letter-spacing: 0.2em; line-height: 1;
+    padding-top: 0.3rem;
+}
+.hero-h1--split .h1-div {
+    width: 1px; align-self: stretch;
+    background: var(--border2);
+    margin: 0.4rem 0;
+}
+.hero-h1--split .h1-lg {
+    margin-top: 0; text-align: left;
+}
+@media (max-width: 640px) {
+    .hero-h1--split { gap: 1.25rem; }
+    .hero-h1--split .h1-vert { font-size: 0.85rem; letter-spacing: 0.16em; }
+}
+.hero-sub {
+    margin-top: 2.75rem; font-size: 1.05rem; color: var(--mid);
+    max-width: 36ch; line-height: 1.9; position: relative; z-index: 1;
+}
+.hero-actions {
+    display: flex; align-items: center; justify-content: center; gap: 1.25rem;
+    margin-top: 3.25rem; position: relative; z-index: 1;
+}
+.btn-primary {
+    background: var(--ink); color: #fff;
+    padding: 0.95rem 2.25rem; border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 0.95rem; text-decoration: none;
+    display: inline-block; transition: opacity 0.15s;
+}
+.btn-primary:hover { opacity: 0.75; }
+.btn-ghost {
+    color: var(--mid); font-size: 0.9rem; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    transition: color 0.2s;
+    font-family: 'Space Grotesk', sans-serif;
+}
+.btn-ghost:hover { color: var(--ink); }
+.btn-ghost::after { content: '→'; transition: transform 0.2s; }
+.btn-ghost:hover::after { transform: translateX(4px); }
+
+/* ── MARQUEE ── */
+.marquee-strip {
+    overflow: hidden; border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0.85rem 0; background: var(--bg2);
+}
+.marquee-inner {
+    display: flex; gap: 2.5rem; width: max-content;
+    animation: marquee 28s linear infinite;
+}
+.marquee-item {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+    color: var(--ghost); text-transform: uppercase; white-space: nowrap;
+    display: flex; align-items: center; gap: 0.75rem;
+}
+.marquee-item::after { content: '✦'; color: var(--accent); font-size: 0.5rem; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── COMMON SECTION ── */
+section { padding: 7rem 5vw; }
+.section-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em;
+    color: var(--accent); text-transform: uppercase;
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.85rem;
+}
+.section-label::before { content: ''; width: 18px; height: 1px; background: var(--accent); }
+.section-h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.7rem, 3vw, 2.6rem);
+    font-weight: 700; line-height: 1.15; letter-spacing: -0.015em; color: var(--ink);
+}
+.section-h2 em { font-style: normal; color: var(--accent); }
+
+/* ── ABOUT / WHY ── */
+#about { background: var(--white); border-top: 1px solid var(--border); }
+.about-layout {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center; margin-top: 3.5rem;
+}
+.reason-list { display: flex; flex-direction: column; }
+.reason-item {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    padding: 1.75rem 0; border-bottom: 1px solid var(--border);
+}
+.reason-item:first-child { border-top: 1px solid var(--border); }
+.reason-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.68rem; font-weight: 700; color: var(--accent);
+    letter-spacing: 0.07em; padding-top: 0.25rem; min-width: 26px;
+}
+.reason-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem;
+}
+.reason-desc { font-size: 0.875rem; color: var(--mid); line-height: 1.85; }
+
+/* mock browser */
+.mock-browser {
+    border: 1px solid var(--border2); border-radius: 12px; overflow: hidden;
+    background: var(--white); box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+}
+.mock-titlebar {
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    padding: 0.7rem 1rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+.mock-url {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 0.25rem 0.6rem;
+    font-family: 'Space Grotesk', sans-serif; font-size: 0.65rem; color: var(--mid);
+    margin: 0 0.5rem;
+}
+.mock-body { padding: 1.25rem; }
+.m-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.m-logo { width: 60px; height: 8px; border-radius: 2px; background: var(--ink); }
+.m-navs { display: flex; gap: 0.4rem; }
+.m-nav { width: 30px; height: 6px; border-radius: 2px; background: var(--bg3); }
+.m-hero { background: var(--ink); border-radius: 8px; padding: 1.25rem; margin-bottom: 0.75rem; }
+.m-hl { height: 11px; border-radius: 2px; background: rgba(255,255,255,0.9); margin-bottom: 0.45rem; width: 70%; }
+.m-hl.sm { width: 45%; background: rgba(255,255,255,0.4); height: 7px; }
+.m-btn { width: 70px; height: 22px; border-radius: 100px; background: var(--accent); margin-top: 0.75rem; }
+.m-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
+.m-card { background: var(--bg2); border-radius: 6px; padding: 0.6rem; border: 1px solid var(--border); }
+.m-card-icon { width: 16px; height: 16px; border-radius: 3px; background: var(--accent-bg); border: 1px solid var(--accent-border); margin-bottom: 0.35rem; }
+.m-line { height: 5px; border-radius: 2px; background: var(--bg3); margin-top: 0.25rem; }
+.m-line.w70 { width: 70%; } .m-line.w50 { width: 50%; }
+.m-metrics { background: var(--bg2); border-radius: 6px; padding: 0.75rem; border: 1px solid var(--border); }
+.m-metric-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+.m-metric-row:last-child { margin-bottom: 0; }
+.m-metric-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.6rem; color: var(--mid); width: 54px; }
+.m-bar-wrap { flex: 1; height: 3px; background: var(--bg3); border-radius: 2px; }
+.m-bar { height: 100%; border-radius: 2px; background: var(--accent); }
+.m-metric-val { font-family: 'Space Grotesk', sans-serif; font-size: 0.6rem; color: var(--accent); font-weight: 600; width: 28px; text-align: right; }
+
+/* ── WORKS (SLIDER) ── */
+#works { background: var(--bg); border-top: 1px solid var(--border); }
+.works-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 2.5rem; gap: 1rem;
+}
+.slider-controls { display: flex; gap: 0.5rem; }
+.slider-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--border2); background: var(--white);
+    cursor: pointer; font-size: 1rem; display: grid; place-items: center;
+    transition: background 0.15s, border-color 0.15s; color: var(--ink);
+}
+.slider-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+.works-track-wrap { overflow: hidden; }
+.works-track {
+    display: flex; gap: 1.25rem;
+    transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.work-card {
+    flex: 0 0 calc(33.333% - 0.84rem);
+    border: 1px solid var(--border2); border-radius: 12px; overflow: hidden;
+    background: var(--white); cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.work-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+.work-thumb {
+    width: 100%; aspect-ratio: 16/10; overflow: hidden;
+    position: relative;
+}
+.work-thumb-inner {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+}
+.work-thumb-label {
+    position: absolute; top: 0.75rem; left: 0.75rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
+    color: #fff; background: rgba(0,0,0,0.45);
+    padding: 0.2rem 0.55rem; border-radius: 100px; backdrop-filter: blur(4px);
+}
+.work-thumb-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0); display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: all 0.2s;
+}
+.work-card:hover .work-thumb-overlay { opacity: 1; background: rgba(0,0,0,0.3); }
+.work-thumb-cta {
+    background: #fff; color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.8rem; font-weight: 600;
+    padding: 0.5rem 1.1rem; border-radius: 100px;
+    transform: translateY(6px); transition: transform 0.2s;
+}
+.work-card:hover .work-thumb-cta { transform: translateY(0); }
+.work-info { padding: 1.1rem 1.25rem; }
+.work-category {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.67rem; font-weight: 600; letter-spacing: 0.1em;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 0.35rem;
+}
+.work-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem;
+}
+.work-desc { font-size: 0.8rem; color: var(--mid); line-height: 1.7; }
+.work-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.75rem; }
+.work-tag {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.65rem; font-weight: 500;
+    color: var(--ink3); background: var(--bg2);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+}
+.works-dots { display: flex; gap: 0.4rem; margin-top: 1.5rem; justify-content: center; }
+.works-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--bg3); transition: background 0.2s, width 0.2s;
+}
+.works-dot.active { background: var(--ink); width: 20px; border-radius: 3px; }
+
+/* ── MODAL ── */
+.modal-backdrop {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+}
+.modal {
+    background: var(--white); border-radius: 16px; max-width: 760px; width: 100%;
+    max-height: 90vh; overflow-y: auto; position: relative;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+}
+.modal-close {
+    position: sticky; top: 1rem; left: 100%; float: right;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--bg2); border: 1px solid var(--border2);
+    cursor: pointer; font-size: 1.1rem; display: grid; place-items: center;
+    margin: 1rem 1rem 0 0; z-index: 10;
+}
+.modal-close:hover { background: var(--bg3); }
+.modal-hero-img { width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+.modal-hero-inner { width: 100%; height: 100%; }
+.modal-content { padding: 2rem 2.5rem 2.5rem; }
+.modal-category {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.modal-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.6rem; font-weight: 700; color: var(--ink);
+    line-height: 1.2; margin-bottom: 0.75rem;
+}
+.modal-desc { font-size: 0.9rem; color: var(--mid); line-height: 1.9; margin-bottom: 2rem; }
+.modal-points-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem;
+}
+.modal-points { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
+.modal-point {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1rem 1.25rem; background: var(--bg); border-radius: 10px;
+    border: 1px solid var(--border);
+}
+.modal-point-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--accent-bg); border: 1px solid var(--accent-border);
+    display: grid; place-items: center; font-size: 0.85rem; flex-shrink: 0;
+}
+.modal-point-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 0.25rem;
+}
+.modal-point-desc { font-size: 0.82rem; color: var(--mid); line-height: 1.75; }
+.modal-meta {
+    display: flex; gap: 1.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+.modal-meta-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--ghost); text-transform: uppercase; margin-bottom: 0.2rem;
+}
+.modal-meta-val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem; font-weight: 600; color: var(--ink);
+}
+.modal-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--ink); color: #fff;
+    padding: 0.7rem 1.5rem; border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem; font-weight: 600;
+    text-decoration: none; margin-top: 1.5rem;
+    transition: opacity 0.15s;
+}
+.modal-link:hover { opacity: 0.75; }
+
+/* ── SERVICES ── */
+#services { background: var(--white); border-top: 1px solid var(--border); }
+.services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; margin-top: 3.5rem;
+    border: 1px solid var(--border2); border-radius: 14px; overflow: hidden;
+}
+.service-card {
+    background: var(--white); padding: 2rem 1.75rem;
+    transition: background 0.2s; position: relative;
+}
+.service-card:hover { background: var(--bg); }
+.service-card + .service-card { border-left: 1px solid var(--border2); }
+.service-card:nth-child(4) { border-left: none; }
+.service-card:nth-child(n+4) { border-top: 1px solid var(--border2); }
+.service-icon {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--accent); margin-bottom: 1.75rem;
+    display: flex; align-items: center; gap: 0.5rem;
+}
+.service-icon::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.service-card { padding: 2.25rem 1.9rem 2.5rem; }
+.service-title { font-size: 1.02rem; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
+.service-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem;
+}
+.service-desc { font-size: 0.83rem; color: var(--mid); line-height: 1.8; }
+.service-tag {
+    display: inline-block; margin-top: 1.1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.07em;
+    color: var(--accent); background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    padding: 0.2rem 0.6rem; border-radius: 100px;
+}
+
+/* ── PROCESS ── */
+#process { background: var(--bg2); border-top: 1px solid var(--border); }
+.process-steps { margin-top: 3.5rem; }
+.process-step {
+    display: grid; grid-template-columns: 72px 1fr;
+    gap: 2rem; padding: 2.25rem 0;
+    border-bottom: 1px solid var(--border); align-items: start;
+}
+.process-step:last-child { border-bottom: none; }
+.step-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.2rem; font-weight: 700; line-height: 1;
+    color: var(--bg3); -webkit-text-stroke: 1px var(--border2);
+}
+.step-num.active { color: var(--accent); -webkit-text-stroke: none; }
+.step-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem; font-weight: 600; color: var(--ink);
+    margin-bottom: 0.4rem; margin-top: 0.2rem;
+}
+.step-desc { font-size: 0.875rem; color: var(--mid); line-height: 1.85; max-width: 52ch; }
+.step-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.9rem; }
+.chip {
+    font-family: 'Space Grotesk', sans-serif; font-size: 0.68rem; font-weight: 500;
+    color: var(--ink3); background: var(--white);
+    border: 1px solid var(--border2); padding: 0.18rem 0.55rem; border-radius: 4px;
+}
+
+/* ── CTA BAND ── */
+.cta-band {
+    background: var(--ink); padding: 5.5rem 5vw; text-align: center;
+}
+.cta-band-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em;
+    text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 1rem;
+}
+.cta-band-h {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.7rem, 3.5vw, 2.8rem);
+    font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 0.75rem;
+}
+.cta-band-sub { font-size: 0.9rem; color: rgba(255,255,255,0.45); max-width: 38ch; margin: 0 auto 2.25rem; }
+.btn-accent {
+    background: var(--accent); color: #fff;
+    padding: 1rem 2.25rem; border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 0.95rem;
+    text-decoration: none; display: inline-block;
+    transition: opacity 0.15s;
+}
+.btn-accent:hover { opacity: 0.8; }
+
+/* ── CONTACT ── */
+#contact { background: var(--white); border-top: 1px solid var(--border); }
+.contact-layout {
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 5rem; margin-top: 3.5rem; align-items: start;
+}
+.contact-info p { color: var(--mid); font-size: 0.9rem; line-height: 1.9; margin-top: 0.9rem; }
+.contact-promise { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 2rem; }
+.promise-item {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.84rem; color: var(--ink3);
+}
+.promise-check {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent-bg); border: 1px solid var(--accent-border);
+    display: grid; place-items: center;
+    font-size: 0.58rem; color: var(--accent); flex-shrink: 0;
+}
+form { display: flex; flex-direction: column; gap: 1.1rem; }
+.field-group { display: flex; flex-direction: column; gap: 0.35rem; }
+label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+    color: var(--mid); text-transform: uppercase;
+}
+input, select, textarea {
+    background: var(--bg); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    color: var(--ink); font-size: 0.92rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%; outline: none; appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: var(--accent); background: #fff;
+    box-shadow: 0 0 0 3px var(--accent-bg);
+}
+input::placeholder, textarea::placeholder { color: var(--ghost); }
+textarea { resize: vertical; min-height: 110px; }
+select { cursor: pointer; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+.btn-submit {
+    background: var(--ink); color: #fff;
+    padding: 0.9rem 2rem; border-radius: 100px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    transition: opacity 0.15s;
+}
+.btn-submit:hover { opacity: 0.75; }
+
+/* ── FOOTER ── */
+footer {
+    background: var(--bg2); border-top: 1px solid var(--border);
+    padding: 2.5rem 5vw;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.footer-logo { display: flex; align-items: center; line-height: 1; }
+.footer-copy { font-size: 0.77rem; color: var(--ghost); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+    .about-layout, .contact-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .work-card { flex: 0 0 calc(50% - 0.625rem); }
+}
+@media (max-width: 640px) {
+    .back-bar { padding: 0 4vw; }
+    nav { padding: 0 4vw; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    section { padding: 4rem 5vw; }
+    .services-grid { grid-template-columns: 1fr; }
+    .service-card + .service-card { border-left: none; border-top: 1px solid var(--border2); }
+    .field-row { grid-template-columns: 1fr; }
+    .work-card { flex: 0 0 calc(80vw); }
+    .hero-bg-mark { display: none; }
+    footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+    .process-step { grid-template-columns: 1fr; gap: 0.5rem; }
+    .works-header { flex-direction: column; align-items: flex-start; }
+    .modal-content { padding: 1.25rem 1.25rem 2rem; }
+    .modal-meta { flex-wrap: wrap; gap: 1rem; }
+}
+  </style>
+</head>
+<body>
+<div style="--accent: #1A1AF0;">
+
+    <!-- BACK BAR -->
+    <div class="back-bar">
+        <a href="services.html">SERVICES</a>
+        <span class="back-sep">/</span>
+        <span class="back-current">HP制作事業 — TRESWEB</span>
+    </div>
+
+    <!-- NAV -->
+    <nav>
+        <a href="index.html" class="nav-logo" aria-label="TRESWIN トップへ">
+            <svg width="148" height="40" viewBox="0 0 148 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="40" height="40" rx="8" fill="#111110"></rect>
+                <line x1="10" y1="30" x2="20" y2="11" stroke="white" stroke-width="2.2" stroke-linecap="round"></line>
+                <line x1="20" y1="11" x2="30" y2="30" stroke="#1A1AF0" stroke-width="2.8" stroke-linecap="round"></line>
+                <line x1="13" y1="30" x2="31" y2="30" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.28"></line>
+                <circle cx="20" cy="11" r="2" fill="#1A1AF0"></circle>
+                <text x="52" y="22" font-family="'Space Grotesk', sans-serif" font-size="17" font-weight="700" fill="#111110" letter-spacing="-0.3">TRES</text>
+                <text x="53" y="35" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="500" fill="#888884" letter-spacing="4.2">WEB</text>
+                <line x1="52" y1="25.5" x2="142" y2="25.5" stroke="#E0E0D8" stroke-width="0.5"></line>
+            </svg>
+        </a>
+        <div class="nav-links">
+            <a href="#about">TRESWEBとは</a>
+            <a href="#works">実績</a>
+            <a href="#services">サービス</a>
+            <a href="#process">制作の流れ</a>
+            <a href="#contact" class="nav-cta">相談する</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        
+            <div class="hero-grid-bg"></div>
+        
+        <svg class="hero-bg-mark" aria-hidden="true" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="100,10 190,168 10,168" fill="none" stroke="#111110" stroke-width="6"></polygon>
+            <polygon points="100,52 158,158 42,158" fill="none" stroke="#111110" stroke-width="3"></polygon>
+            <polygon points="100,88 126,148 74,148" fill="none" stroke="#111110" stroke-width="1.5"></polygon>
+        </svg>
+
+        <span class="hero-eyebrow">Web制作 × 成果設計</span>
+        <h1 class="hero-h1 hero-h1--split">
+            <span class="h1-vert">ビジネスを加速させる</span>
+            <span class="h1-div"></span>
+            <span class="h1-lg">勝てる<br>サイトを。</span>
+        </h1>
+        <p class="hero-sub">
+            制作で終わらない。<br>
+            戦略から改善まで、ビジネスに伴走する。
+        </p>
+        <div class="hero-actions">
+            <a href="#contact" class="btn-primary">無料で相談する</a>
+            <a href="#works" class="btn-ghost">実績を見る</a>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-strip">
+        <div class="marquee-inner">
+            <span class="marquee-item">LP制作</span>
+            <span class="marquee-item">コーポレートサイト</span>
+            <span class="marquee-item">SEO設計</span>
+            <span class="marquee-item">CMS構築</span>
+            <span class="marquee-item">リニューアル</span>
+            <span class="marquee-item">UI/UXデザイン</span>
+            <span class="marquee-item">アクセス解析</span>
+            <span class="marquee-item">LP制作</span>
+            <span class="marquee-item">コーポレートサイト</span>
+            <span class="marquee-item">SEO設計</span>
+            <span class="marquee-item">CMS構築</span>
+            <span class="marquee-item">リニューアル</span>
+            <span class="marquee-item">UI/UXデザイン</span>
+            <span class="marquee-item">アクセス解析</span>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="section-label">Why TRESWEB</div>
+        <h2 class="section-h2">選ばれる<em>3つ</em>の理由</h2>
+        <div class="about-layout">
+            <div class="reason-list">
+                <div class="reason-item">
+                    <span class="reason-num">01</span>
+                    <div>
+                        <div class="reason-title">徹底した戦略設計</div>
+                        <p class="reason-desc">課題を起点にKPIを明確化。数字で語れるサイトを設計します。</p>
+                    </div>
+                </div>
+                <div class="reason-item">
+                    <span class="reason-num">02</span>
+                    <div>
+                        <div class="reason-title">SEO・集客に強い構造</div>
+                        <p class="reason-desc">技術と設計の両輪で、「見つかる」「動かす」構造を構築。</p>
+                    </div>
+                </div>
+                <div class="reason-item">
+                    <span class="reason-num">03</span>
+                    <div>
+                        <div class="reason-title">作って終わらない伴走支援</div>
+                        <p class="reason-desc">公開後の分析・改善まで伴走し、長期的な成果を追求します。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mock-browser">
+                <div class="mock-titlebar">
+                    <div class="mock-dot" style="background:#ff5f57"></div>
+                    <div class="mock-dot" style="background:#ffbd2e"></div>
+                    <div class="mock-dot" style="background:#28ca41"></div>
+                    <div class="mock-url">tresweb-client.jp</div>
+                </div>
+                <div class="mock-body">
+                    <div class="m-header">
+                        <div class="m-logo"></div>
+                        <div class="m-navs">
+                            <div class="m-nav"></div><div class="m-nav"></div><div class="m-nav"></div>
+                        </div>
+                    </div>
+                    <div class="m-hero">
+                        <div class="m-hl"></div>
+                        <div class="m-hl sm"></div>
+                        <div class="m-btn"></div>
+                    </div>
+                    <div class="m-cards">
+                        <div class="m-card"><div class="m-card-icon"></div><div class="m-line w70"></div><div class="m-line w50"></div></div>
+                        <div class="m-card"><div class="m-card-icon"></div><div class="m-line w70"></div><div class="m-line w50"></div></div>
+                        <div class="m-card"><div class="m-card-icon"></div><div class="m-line w70"></div><div class="m-line w50"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKS -->
+    <section id="works">
+        <div class="works-header">
+            <div>
+                <div class="section-label">Works</div>
+                <h2 class="section-h2">制作<em>実績</em></h2>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn" aria-label="前へ" id="sliderPrev">←</button>
+                <button class="slider-btn" aria-label="次へ" id="sliderNext">→</button>
+            </div>
+        </div>
+        <div class="works-track-wrap" id="worksWrap">
+            <div class="works-track" id="worksTrack" style="transform: translateX(0);">
+
+                <!-- 日本人材開発機構 -->
+                <div class="work-card" onclick="openModal('jtad')">
+                    <div class="work-thumb">
+                        <div class="work-thumb-inner" style="background:#0a0a1a;position:relative;overflow:hidden;">
+                            <img src="jtad-thumb.png" alt="日本人材開発機構" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
+                            <span class="work-thumb-label">コーポレートサイト</span>
+                            <div class="work-thumb-overlay"><div class="work-thumb-cta">詳細を見る</div></div>
+                        </div>
+                    </div>
+                    <div class="work-info">
+                        <div class="work-category">コーポレートサイト</div>
+                        <div class="work-title">日本人材開発機構</div>
+                        <p class="work-desc">キャリア支援・人材エコシステムを展開するJ-TAD社のコーポレートサイト。ドットマップ・パーティクルアニメーション…</p>
+                        <div class="work-tags">
+                            <span class="work-tag">コーポレートサイト</span>
+                            <span class="work-tag">アニメーション</span>
+                            <span class="work-tag">採用強化</span>
+                            <span class="work-tag" style="background:rgba(79,195,247,0.1);color:#4fc3f7;border-color:#4fc3f740;">ブランド認知度向上</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 啓道塾 -->
+                <div class="work-card" onclick="openModal('keidojuku')">
+                    <div class="work-thumb">
+                        <div class="work-thumb-inner" style="background:#F4F1E8;position:relative;overflow:hidden;">
+                            <img src="keidojuku-thumb.jpg" alt="啓道塾" style="width:100%;height:100%;object-fit:cover;display:block;">
+                            <span class="work-thumb-label">経営アドバイザリー</span>
+                            <div class="work-thumb-overlay"><div class="work-thumb-cta">サイトを見る</div></div>
+                        </div>
+                    </div>
+                    <div class="work-info">
+                        <div class="work-category">経営アドバイザリー</div>
+                        <div class="work-title">啓道塾</div>
+                        <p class="work-desc">中小企業向け経営アドバイザリーサービスのランディングページ。ウォームエディトリアルデザインで信頼感と専門性を…</p>
+                        <div class="work-tags">
+                            <span class="work-tag">LP制作</span>
+                            <span class="work-tag">戦略設計</span>
+                            <span class="work-tag" style="background:#eefaf3;color:#1a7a4a;border-color:#b6e8cc;">TRESWIN制作</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="works-dots" id="worksDots">
+            <div class="works-dot active" id="dot0"></div>
+            <div class="works-dot" id="dot1"></div>
+        </div>
+    </section>
+    <script>
+    (function(){
+        var track = document.getElementById('worksTrack');
+        var wrap = document.getElementById('worksWrap');
+        var dots = [document.getElementById('dot0'), document.getElementById('dot1')];
+        var cards = track ? track.querySelectorAll('.work-card') : [];
+        var current = 0;
+        function goTo(i) {
+            if (!cards.length) return;
+            current = Math.max(0, Math.min(i, cards.length - 1));
+            var w = cards[0].offsetWidth + 20;
+            track.style.transform = 'translateX(-' + (current * w) + 'px)';
+            dots.forEach(function(d, idx){ d.classList.toggle('active', idx === current); });
+        }
+        var btn = document.getElementById('sliderNext');
+        var prevBtn = document.getElementById('sliderPrev');
+        if (btn) btn.addEventListener('click', function(){ goTo(current + 1); });
+        if (prevBtn) prevBtn.addEventListener('click', function(){ goTo(current - 1); });
+    })();
+    </script>
+
+    <!-- MODAL: 啓道塾 -->
+    <div class="modal-backdrop" id="modalKeidojuku" style="display:none;" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <button class="modal-close" aria-label="閉じる" onclick="closeModal()">✕</button>
+            <div class="modal-hero-img">
+                <div class="modal-hero-inner" style="background:#F4F1E8;position:relative;overflow:hidden;">
+                    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=900&q=80&fit=crop" alt="啓道塾" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    <div style="position:absolute;bottom:1.25rem;left:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">LP制作</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">戦略設計</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">経営アドバイザリー</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="modal-category">経営アドバイザリー</div>
+                <div class="modal-title">啓道塾</div>
+                <p class="modal-desc">売上1〜30億円規模の中小企業に特化した経営アドバイザリーサービス「啓道塾」のランディングページ。大手ファームでも個人コンサルでもない「第三の選択肢」という独自ポジショニングを、温かみのある編集的デザインで体現。</p>
+                <div class="modal-points-label">こだわりポイント</div>
+                <div class="modal-points">
+                    <div class="modal-point">
+                        <div class="modal-point-icon">📖</div>
+                        <div>
+                            <div class="modal-point-title">ウォームエディトリアルデザインによる信頼の可視化</div>
+                            <p class="modal-point-desc">ベージュ基調のウォームトーンと明朝体見出しを組み合わせた「経営誌」的な質感が、硬質なコンサルサイトにありがちな冷たさを排除。「相談しやすい専門家」という第一印象を初見で確立する。</p>
+                        </div>
+                    </div>
+                    <div class="modal-point">
+                        <div class="modal-point-icon">⚖️</div>
+                        <div>
+                            <div class="modal-point-title">比較グリッドによる即効性の高い差別化訴求</div>
+                            <p class="modal-point-desc">大手ファーム・個人コンサル・啓道塾の3列比較を最上部に配置し、訪問者が抱える「どこに頼めばいいか分からない」という悩みを即座に解消。啓道塾の優位性をポジショニングマップなしで直感的に伝える設計。</p>
+                        </div>
+                    </div>
+                    <div class="modal-point">
+                        <div class="modal-point-icon">🗺️</div>
+                        <div>
+                            <div class="modal-point-title">00〜05のフェーズ設計で不安を先回りして潰す</div>
+                            <p class="modal-point-desc">「無料相談→診断→戦略→計画→伴走」という6ステップのプロセスを数字付きで明示。「何をされるか分からない」という見込み客の不安をページ内で完結して解消し、無料相談へのハードルを最小化する。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-meta">
+                    <div class="modal-meta-item"><div class="modal-meta-label">種別</div><div class="modal-meta-val">LP制作</div></div>
+                    <div class="modal-meta-item"><div class="modal-meta-label">対象</div><div class="modal-meta-val">中小企業</div></div>
+                    <div class="modal-meta-item"><div class="modal-meta-label">主な対応</div><div class="modal-meta-val">新規制作</div></div>
+                </div>
+                <a href="service-advisory.html" class="modal-link" target="_blank" rel="noopener">サイトを見る →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: 日本人材開発機構 -->
+    <div class="modal-backdrop" id="modalJtad" style="display:none;" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <button class="modal-close" aria-label="閉じる" onclick="closeModal()">✕</button>
+            <div class="modal-hero-img">
+                <div class="modal-hero-inner" style="background:#0a0a1a;position:relative;overflow:hidden;">
+                    <img src="jtad-thumb.png" alt="日本人材開発機構" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
+                    <div style="position:absolute;bottom:1.25rem;left:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">コーポレートサイト</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">アニメーション</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">採用強化</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="modal-category">コーポレートサイト</div>
+                <div class="modal-title">日本人材開発機構</div>
+                <p class="modal-desc">キャリア支援・人材エコシステムを展開するJ-TAD社のコーポレートサイト。ドットマップ・パーティクルアニメーションを活用した没入感のある世界観と、ミッション・サービス・採用情報を一体化した設計。</p>
+                <div class="modal-points-label">こだわりポイント</div>
+                <div class="modal-points">
+                    <div class="modal-point">
+                        <div class="modal-point-icon">🌐</div>
+                        <div>
+                            <div class="modal-point-title">ドットマップ×パーティクルによる没入型ビジュアル</div>
+                            <p class="modal-point-desc">インタラクティブなSVGドットマップと動的パーティクルアニメーションをヒーローセクションに実装。テクノロジー×人材というブランドコンセプトを視覚的に表現し、初見でのブランド印象を大幅に強化。</p>
+                        </div>
+                    </div>
+                    <div class="modal-point">
+                        <div class="modal-point-icon">🎯</div>
+                        <div>
+                            <div class="modal-point-title">ミッション・サービス・採用を一体化した導線設計</div>
+                            <p class="modal-point-desc">「なぜ存在するか（ミッション）」→「何をするか（サービス）」→「一緒にやらないか（採用）」という自然な読み進め設計で、企業理解から行動までのCVRを最大化。スクロール連動のアニメーションで離脱を防止。</p>
+                        </div>
+                    </div>
+                    <div class="modal-point">
+                        <div class="modal-point-icon">💎</div>
+                        <div>
+                            <div class="modal-point-title">ダークトーン×ゴールドアクセントの高品位ブランディング</div>
+                            <p class="modal-point-desc">深いネイビー・チャコールを基調に、ゴールドのアクセントカラーを戦略的に配置。「信頼と挑戦」を体現するカラーパレットで、競合との差別化と高級感を両立したビジュアルブランディングを実現。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-meta">
+                    <div class="modal-meta-item"><div class="modal-meta-label">制作期間</div><div class="modal-meta-val">8週間</div></div>
+                    <div class="modal-meta-item"><div class="modal-meta-label">ページ数</div><div class="modal-meta-val">全7P</div></div>
+                    <div class="modal-meta-item"><div class="modal-meta-label">主な対応</div><div class="modal-meta-val">新規制作</div></div>
+                </div>
+                <a href="jtad-corp.html" class="modal-link" target="_blank" rel="noopener">サイトを見る →</a>
+            </div>
+        </div>
+    </div>
+    <script>
+    function openModal(id) {
+        if (id === 'jtad') document.getElementById('modalJtad').style.display = 'flex';
+        if (id === 'keidojuku') document.getElementById('modalKeidojuku').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+        document.getElementById('modalJtad').style.display = 'none';
+        document.getElementById('modalKeidojuku').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+    </script>
+
+    <!-- SERVICES -->
+    <section id="services">
+        <div class="section-label">Services</div>
+        <h2 class="section-h2">提供する<em>サービス</em></h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">01</div>
+                <div class="service-title">ランディングページ制作</div>
+                <p class="service-desc">ターゲット心理とUI設計を掛け合わせ、高転換率のLPを。</p>
+                <span class="service-tag">最短2週間〜</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">02</div>
+                <div class="service-title">コーポレートサイト構築</div>
+                <p class="service-desc">採用・営業・信頼を同時に強化する戦略的サイトを。</p>
+                <span class="service-tag">戦略設計込み</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">03</div>
+                <div class="service-title">サイトリニューアル</div>
+                <p class="service-desc">解析データから課題を特定し、デザインと構造を刷新。</p>
+                <span class="service-tag">データ分析付き</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">04</div>
+                <div class="service-title">SEO・コンテンツ設計</div>
+                <p class="service-desc">技術的SEOと検索意図設計で、自然流入を継続的に。</p>
+                <span class="service-tag">継続支援あり</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">05</div>
+                <div class="service-title">サイト高速化</div>
+                <p class="service-desc">表示速度を最適化し、離脱率とCore Web Vitalsを改善。</p>
+                <span class="service-tag">即効性あり</span>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">06</div>
+                <div class="service-title">運用・改善の伴走</div>
+                <p class="service-desc">月次レポートとA/Bテストで、成果を伸ばし続ける。</p>
+                <span class="service-tag">月次契約</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section id="process">
+        <div class="section-label">Process</div>
+        <h2 class="section-h2">制作の<em>流れ</em></h2>
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="step-num active">01</div>
+                <div>
+                    <div class="step-title">ヒアリング・戦略設計</div>
+                    <p class="step-desc">課題・ターゲット・競合を整理し、KPIと設計方針を確定します。</p>
+                    <div class="step-chips"><span class="chip">ヒアリングシート</span><span class="chip">競合分析</span><span class="chip">ペルソナ設定</span></div>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">02</div>
+                <div>
+                    <div class="step-title">設計・ワイヤーフレーム</div>
+                    <p class="step-desc">情報の優先順位と導線を設計し、構造とCTA配置を可視化します。</p>
+                    <div class="step-chips"><span class="chip">サイトマップ</span><span class="chip">ワイヤーフレーム</span><span class="chip">導線設計</span></div>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">03</div>
+                <div>
+                    <div class="step-title">デザイン・コーディング</div>
+                    <p class="step-desc">ブランドに合うUIを高品質なコードで実装。表示速度も標準対応。</p>
+                    <div class="step-chips"><span class="chip">UI/UXデザイン</span><span class="chip">レスポンシブ対応</span><span class="chip">高速実装</span></div>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-num">04</div>
+                <div>
+                    <div class="step-title">公開・運用・改善</div>
+                    <p class="step-desc">解析と改善提案を継続し、サイトを「生きた資産」に育てます。</p>
+                    <div class="step-chips"><span class="chip">GA4設定</span><span class="chip">月次レポート</span><span class="chip">A/Bテスト</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BAND -->
+    <div class="cta-band">
+        <div class="cta-band-label">First Step</div>
+        <div class="cta-band-h">まずは、無料相談から。</div>
+        <p class="cta-band-sub">お気軽にお問い合わせください。現状のサイトの課題整理だけでもご相談いただけます。</p>
+        <a href="#contact" class="btn-accent">無料相談を申し込む →</a>
+    </div>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="section-label">Contact</div>
+        <h2 class="section-h2">お問い合わせ</h2>
+        <div class="contact-layout">
+            <div class="contact-info">
+                <p>サービス内容・料金・スケジュールなど、どんなことでもご相談ください。まずは現状のお悩みをお聞かせいただくだけでも構いません。</p>
+                <div class="contact-promise">
+                    <div class="promise-item"><div class="promise-check">✓</div><span>3営業日以内にご返信します</span></div>
+                    <div class="promise-item"><div class="promise-check">✓</div><span>初回相談は完全無料・事前準備不要</span></div>
+                    <div class="promise-item"><div class="promise-check">✓</div><span>しつこい営業は一切行いません</span></div>
+                </div>
+            </div>
+            <form onsubmit="return false;">
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="name">お名前</label>
+                        <input type="text" id="name" name="name" placeholder="山田 太郎" required="">
+                    </div>
+                    <div class="field-group">
+                        <label for="company">会社名・屋号</label>
+                        <input type="text" id="company" name="company" placeholder="株式会社〇〇（任意）">
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" id="email" name="email" placeholder="example@mail.com" required="">
+                </div>
+                <div class="field-group">
+                    <label for="ctype">ご相談内容</label>
+                    <select id="ctype" name="ctype">
+                        <option value="" disabled="" selected="">選択してください</option>
+                        <option>新規サイト制作</option>
+                        <option>サイトリニューアル</option>
+                        <option>LP・広告ページ制作</option>
+                        <option>SEO・集客改善</option>
+                        <option>月次運用サポート</option>
+                        <option>その他・まず相談したい</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label for="message">ご要望・現状の課題（任意）</label>
+                    <textarea id="message" name="message" placeholder="現在のサイトのお悩みや、実現したいことを教えていただけると、より的確なご提案ができます。"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">送信する →</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">
+            <svg width="126" height="34" viewBox="0 0 148 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="40" height="40" rx="8" fill="#111110"></rect>
+                <line x1="10" y1="30" x2="20" y2="11" stroke="white" stroke-width="2.2" stroke-linecap="round"></line>
+                <line x1="20" y1="11" x2="30" y2="30" stroke="#1A1AF0" stroke-width="2.8" stroke-linecap="round"></line>
+                <line x1="13" y1="30" x2="31" y2="30" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.28"></line>
+                <circle cx="20" cy="11" r="2" fill="#1A1AF0"></circle>
+                <text x="52" y="22" font-family="'Space Grotesk', sans-serif" font-size="17" font-weight="700" fill="#111110" letter-spacing="-0.3">TRES</text>
+                <text x="53" y="35" font-family="'Space Grotesk', sans-serif" font-size="10" font-weight="500" fill="#888884" letter-spacing="4.2">WEB</text>
+                <line x1="52" y1="25.5" x2="142" y2="25.5" stroke="#E0E0D8" stroke-width="0.5"></line>
+            </svg>
+        </div>
+        <div class="footer-copy">© 2026 TRESWEB / TRESWIN All Rights Reserved.</div>
+    </footer>
+
+
+</div>
+</body>
+</html>
