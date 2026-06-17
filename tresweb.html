@@ -1220,7 +1220,7 @@ footer {
                 </div>
 
                 <!-- 啓道塾 -->
-                <div class="work-card" onclick="location.href='service-advisory.html'">
+                <div class="work-card" onclick="openModal('keidojuku')">
                     <div class="work-thumb">
                         <div class="work-thumb-inner" style="background:#F4F1E8;position:relative;overflow:hidden;">
                             <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&q=80&fit=crop" alt="啓道塾" style="width:100%;height:100%;object-fit:cover;display:block;">
@@ -1267,6 +1267,58 @@ footer {
         if (prevBtn) prevBtn.addEventListener('click', function(){ goTo(current - 1); });
     })();
     </script>
+
+    <!-- MODAL: 啓道塾 -->
+    <div class="modal-backdrop" id="modalKeidojuku" style="display:none;" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <button class="modal-close" aria-label="閉じる" onclick="closeModal()">✕</button>
+            <div class="modal-hero-img">
+                <div class="modal-hero-inner" style="background:#F4F1E8;position:relative;overflow:hidden;">
+                    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=900&q=80&fit=crop" alt="啓道塾" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    <div style="position:absolute;bottom:1.25rem;left:1.5rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">LP制作</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">戦略設計</span>
+                        <span style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:600;background:rgba(0,0,0,0.45);color:#fff;padding:0.2rem 0.6rem;border-radius:100px;backdrop-filter:blur(4px);">経営アドバイザリー</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="modal-category">経営アドバイザリー</div>
+                <div class="modal-title">啓道塾</div>
+                <p class="modal-desc">売上1〜30億円規模の中小企業に特化した経営アドバイザリーサービス「啓道塾」のランディングページ。大手ファームでも個人コンサルでもない「第三の選択肢」という独自ポジショニングを、温かみのある編集的デザインで体現。</p>
+                <div class="modal-points-label">こだわりポイント</div>
+                <div class="modal-points">
+                    <div class="modal-point">
+                        <div class="modal-point-icon">📖</div>
+                        <div>
+                            <div class="modal-point-title">ウォームエディトリアルデザインによる信頼の可視化</div>
+                            <p class="modal-point-desc">ベージュ基調のウォームトーンと明朝体見出しを組み合わせた「経営誌」的な質感が、硬質なコンサルサイトにありがちな冷たさを排除。「相談しやすい専門家」という第一印象を初見で確立する。</p>
+                        </div>
+                    </div>
+                    <div class="modal-point">
+                        <div class="modal-point-icon">⚖️</div>
+                        <div>
+                            <div class="modal-point-title">比較グリッドによる即効性の高い差別化訴求</div>
+                            <p class="modal-point-desc">大手ファーム・個人コンサル・啓道塾の3列比較を最上部に配置し、訪問者が抱える「どこに頼めばいいか分からない」という悩みを即座に解消。啓道塾の優位性をポジショニングマップなしで直感的に伝える設計。</p>
+                        </div>
+                    </div>
+                    <div class="modal-point">
+                        <div class="modal-point-icon">🗺️</div>
+                        <div>
+                            <div class="modal-point-title">00〜05のフェーズ設計で不安を先回りして潰す</div>
+                            <p class="modal-point-desc">「無料相談→診断→戦略→計画→伴走」という6ステップのプロセスを数字付きで明示。「何をされるか分からない」という見込み客の不安をページ内で完結して解消し、無料相談へのハードルを最小化する。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-meta">
+                    <div class="modal-meta-item"><div class="modal-meta-label">種別</div><div class="modal-meta-val">LP制作</div></div>
+                    <div class="modal-meta-item"><div class="modal-meta-label">対象</div><div class="modal-meta-val">中小企業</div></div>
+                    <div class="modal-meta-item"><div class="modal-meta-label">主な対応</div><div class="modal-meta-val">新規制作</div></div>
+                </div>
+                <a href="service-advisory.html" class="modal-link" target="_blank" rel="noopener">サイトを見る →</a>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL: 日本人材開発機構 -->
     <div class="modal-backdrop" id="modalJtad" style="display:none;" onclick="if(event.target===this)closeModal()">
@@ -1322,10 +1374,12 @@ footer {
     <script>
     function openModal(id) {
         if (id === 'jtad') document.getElementById('modalJtad').style.display = 'flex';
+        if (id === 'keidojuku') document.getElementById('modalKeidojuku').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
     function closeModal() {
         document.getElementById('modalJtad').style.display = 'none';
+        document.getElementById('modalKeidojuku').style.display = 'none';
         document.body.style.overflow = '';
     }
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
