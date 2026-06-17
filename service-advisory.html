@@ -77,11 +77,9 @@
     .hero-note { font-size: 12px; color: var(--ink-muted); margin-top: 22px; }
     .hero-photo {
       position: relative; aspect-ratio: 4/5;
-      background: #ECE6D6; background-image: repeating-linear-gradient(135deg, rgba(31,28,22,0.045) 0 2px, transparent 2px 13px);
-      border: 1px solid var(--border); display: flex; align-items: flex-end; padding: 22px;
+      border: 1px solid var(--border); overflow: hidden;
     }
-    .hero-photo::before { content: ''; position: absolute; top: 18px; left: 18px; width: 1px; height: 34px; background: var(--navy); }
-    .hero-photo-label { font-family: ui-monospace, 'SFMono-Regular', monospace; font-size: 11px; letter-spacing: 0.03em; color: var(--ink-muted); line-height: 1.7; }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* 事実帯 */
     .facts {
@@ -255,7 +253,7 @@
       <p class="hero-note">初回相談 60分・無料　／　NDA締結　／　翌営業日に返信</p>
     </div>
     <div class="hero-photo">
-      <span class="hero-photo-label">[ 写真を配置 ]<br>経営会議／対話の情景</span>
+      <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&q=80&fit=crop" alt="経営会議の情景">
     </div>
   </div>
 
