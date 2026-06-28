@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SNS運用代行契約書 | TRESLINK</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap');
+
+    :root {
+      --navy: #1d184a;
+      --yellow: #dfd71c;
+      --border: #ccc;
+      --light: #f8f8f8;
+      --text: #111;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Serif JP', 'Yu Mincho', '游明朝', serif;
+      background: #ddd;
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 14px;
+    }
+
+    /* ===== TOOLBAR ===== */
+    .toolbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: var(--navy);
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+    }
+    .toolbar .brand {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 2px;
+    }
+    .toolbar .brand span { color: var(--yellow); }
+    .toolbar .note {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+    }
+    .toolbar button {
+      font-family: 'Noto Sans JP', sans-serif;
+      padding: 7px 18px;
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 1px;
+    }
+    .toolbar button:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* ===== PAGE ===== */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #fff;
+      margin: 72px auto 32px;
+      padding: 20mm 22mm 20mm;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    }
+
+    @media print {
+      body { background: white; }
+      .toolbar { display: none; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        width: 100%;
+        padding: 15mm 18mm;
+        page-break-after: always;
+      }
+      .page:last-child { page-break-after: avoid; }
+    }
+
+    /* ===== HEADER ===== */
+    .doc-header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--navy);
+    }
+    .doc-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .doc-subtitle {
+      font-size: 12px;
+      color: #666;
+      letter-spacing: 2px;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    /* ===== INTRO ===== */
+    .intro {
+      margin-bottom: 24px;
+      font-size: 13.5px;
+      line-height: 2.0;
+      text-indent: 1em;
+    }
+
+    /* ===== ARTICLE ===== */
+    .article {
+      margin-bottom: 22px;
+    }
+    .article-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #ddd;
+      letter-spacing: 1px;
+    }
+    .article-body {
+      font-size: 13.5px;
+      line-height: 2.1;
+      padding-left: 0;
+    }
+    .article-body p {
+      margin-bottom: 6px;
+      text-indent: 0;
+    }
+    .article-body ol {
+      padding-left: 2em;
+      margin: 6px 0;
+    }
+    .article-body ol li {
+      margin-bottom: 4px;
+    }
+    .article-body ul {
+      padding-left: 2em;
+      margin: 6px 0;
+    }
+    .article-body ul li {
+      margin-bottom: 4px;
+      list-style-type: disc;
+    }
+
+    /* ===== FILL-IN FIELDS ===== */
+    .field {
+      display: inline-block;
+      border-bottom: 1px solid #333;
+      min-width: 140px;
+      padding: 0 4px;
+      color: #333;
+    }
+    .field-lg {
+      display: inline-block;
+      border-bottom: 1px solid #333;
+      min-width: 220px;
+      padding: 0 4px;
+    }
+    .field-sm {
+      display: inline-block;
+      border-bottom: 1px solid #333;
+      min-width: 60px;
+      padding: 0 4px;
+    }
+
+    /* ===== SIGNATURE BLOCK ===== */
+    .signature-section {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #ccc;
+    }
+    .signature-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .sig-block {
+      border: 1px solid #ccc;
+      padding: 20px;
+    }
+    .sig-block .role {
+      font-size: 11px;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: #888;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .sig-line {
+      border-bottom: 1px solid #333;
+      height: 28px;
+      margin-bottom: 8px;
+    }
+    .sig-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+    .seal-box {
+      width: 60px;
+      height: 60px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 8px;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    /* ===== SCHEDULE ===== */
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 10px 0;
+    }
+    .schedule-table th {
+      background: var(--navy);
+      color: #fff;
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 700;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+    .schedule-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: top;
+    }
+    .schedule-table tr:nth-child(even) td { background: var(--light); }
+    .schedule-table .write-in {
+      border-bottom: 1px solid #333;
+      display: inline-block;
+      min-width: 160px;
+    }
+
+    /* ===== DATE LINE ===== */
+    .date-line {
+      text-align: right;
+      font-size: 13.5px;
+      margin-bottom: 24px;
+      color: #444;
+    }
+
+    /* ===== NOTES ===== */
+    .footnote {
+      font-size: 11.5px;
+      color: #888;
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px dashed #ccc;
+      font-family: 'Noto Sans JP', sans-serif;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="brand">TRES<span>LINK</span> <span style="font-weight:400;font-size:11px;color:rgba(255,255,255,0.4);margin-left:10px;">SNS運用代行契約書テンプレート</span></div>
+  <div class="note">※ このテンプレートは参考資料です。実際の使用前に専門家にご確認ください。</div>
+  <button onclick="window.print()">🖨 PDF出力 / 印刷</button>
+</div>
+
+<!-- ==================== PAGE 1 ==================== -->
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-title">SNS運用代行契約書</div>
+    <div class="doc-subtitle">TRESWIN（TRESLINK） / Social Media Management Agreement</div>
+  </div>
+
+  <div class="date-line">
+    締結日：令和　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>年　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>月　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>日
+  </div>
+
+  <p class="intro">
+    <span class="field-lg">&nbsp;（以下「甲」という）</span>と、大槻 雄人（屋号：トレスウィン、以下「乙」という）は、甲が乙に対してSNSアカウントの運用代行業務を委託することについて、以下の通り契約を締結する。
+  </p>
+
+  <!-- 第1条 -->
+  <div class="article">
+    <div class="article-title">第1条（委託業務）</div>
+    <div class="article-body">
+      <p>乙は甲から委託を受け、以下の業務（以下「本業務」という）を行う。</p>
+      <ol>
+        <li>SNS戦略の立案・改善提案</li>
+        <li>投稿コンテンツの企画・制作（画像・動画・テキスト）</li>
+        <li>対象アカウントへの投稿・スケジュール管理</li>
+        <li>コメント・DM対応（別途合意がある場合）</li>
+        <li>月次レポートの作成・報告</li>
+        <li>その他、別紙「業務仕様書」に定める事項</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 第2条 -->
+  <div class="article">
+    <div class="article-title">第2条（対象アカウント・プラットフォーム）</div>
+    <div class="article-body">
+      <p>本契約における対象SNSアカウントは以下の通りとする。</p>
+      <table class="schedule-table" style="margin:10px 0;">
+        <thead><tr><th>プラットフォーム</th><th>アカウント名 / URL</th></tr></thead>
+        <tbody>
+          <tr><td>Instagram</td><td><span class="write-in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>
+          <tr><td>X（Twitter）</td><td><span class="write-in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>
+          <tr><td>その他</td><td><span class="write-in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td></tr>
+        </tbody>
+      </table>
+      <p>対象アカウントの変更・追加は、両者協議の上で書面または電磁的手段により合意するものとする。</p>
+    </div>
+  </div>
+
+  <!-- 第3条 -->
+  <div class="article">
+    <div class="article-title">第3条（契約期間）</div>
+    <div class="article-body">
+      <p>本契約の期間は、以下の通りとする。</p>
+      <p>開始日：令和　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>年　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>月　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>日</p>
+      <p>終了日：令和　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>年　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>月　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>日（または第9条に基づく解約日）</p>
+      <p>契約期間満了の30日前までに甲乙いずれかから書面または電磁的手段による別段の意思表示がない場合、同一条件にて1ヶ月ずつ自動更新されるものとする。</p>
+    </div>
+  </div>
+
+  <!-- 第4条 -->
+  <div class="article">
+    <div class="article-title">第4条（委託料・支払条件）</div>
+    <div class="article-body">
+      <ol>
+        <li>甲は乙に対し、本業務の対価として月額金　<span class="field">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>　円（税別）を支払うものとする。</li>
+        <li>初期費用として金　<span class="field">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>　円（税別）を契約締結時に支払うものとする（初期費用が不要な場合は「なし」と記載）。</li>
+        <li>乙は毎月末日までに翌月分の請求書を甲に発行し、甲は請求書受領後　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>　日以内に乙の指定する銀行口座に振込により支払うものとする。振込手数料は甲の負担とする。</li>
+        <li>支払いが期日を超えた場合、甲は遅延損害金として年率14.6%を乗じた金額を加算して支払うものとする。</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 第5条 -->
+  <div class="article">
+    <div class="article-title">第5条（甲の義務・協力事項）</div>
+    <div class="article-body">
+      <p>甲は本業務の円滑な遂行のため、以下の事項に協力するものとする。</p>
+      <ol>
+        <li>対象アカウントの管理権限（ログイン情報等）を乙に提供すること</li>
+        <li>業務に必要な素材（写真・ロゴ・商品情報等）を速やかに提供すること</li>
+        <li>乙からの確認・承認依頼に対し、合意した期限内に回答すること</li>
+        <li>医療広告ガイドライン等の法令・業界規制に関する情報を乙に共有すること</li>
+        <li>月次報告ミーティング（オンライン）に参加すること</li>
+      </ol>
+    </div>
+  </div>
+
+</div><!-- /page 1 -->
+
+
+<!-- ==================== PAGE 2 ==================== -->
+<div class="page">
+
+  <!-- 第6条 -->
+  <div class="article">
+    <div class="article-title">第6条（知的財産権）</div>
+    <div class="article-body">
+      <ol>
+        <li>乙が本業務において制作したコンテンツ（画像・動画・テキスト等）の著作権は、委託料の完済をもって甲に帰属するものとする。</li>
+        <li>乙は本業務の実績として、甲の事前承認を得た上で、制作物の一部をポートフォリオや営業資料に使用できるものとする。</li>
+        <li>甲が乙に提供した素材・商標・ロゴ等の知的財産権は甲に帰属する。乙はこれを本業務の目的にのみ使用するものとする。</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 第7条 -->
+  <div class="article">
+    <div class="article-title">第7条（秘密保持）</div>
+    <div class="article-body">
+      <ol>
+        <li>甲および乙は、本契約の履行を通じて知り得た相手方の業務上の秘密情報（顧客情報・経営情報・個人情報・ノウハウ等）を、相手方の事前の書面による承諾なく第三者に開示・漏洩してはならない。</li>
+        <li>前項の義務は、本契約終了後3年間継続するものとする。</li>
+        <li>乙はアカウントのログイン情報その他アクセス資格情報を厳重に管理し、本業務以外の目的に使用してはならない。</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 第8条 -->
+  <div class="article">
+    <div class="article-title">第8条（禁止事項）</div>
+    <div class="article-body">
+      <p>乙は本業務の遂行にあたり、以下の行為を行ってはならない。</p>
+      <ol>
+        <li>各SNSプラットフォームの利用規約に違反する行為</li>
+        <li>医療広告ガイドラインその他適用法令に違反するコンテンツの投稿</li>
+        <li>甲の事前承認を得ない重要投稿・キャンペーンの実施</li>
+        <li>甲のアカウントを用いた本業務以外の行為</li>
+        <li>フォロワーの購入・エンゲージメントの人工的な水増し</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 第9条 -->
+  <div class="article">
+    <div class="article-title">第9条（解約・中途解約）</div>
+    <div class="article-body">
+      <ol>
+        <li>甲または乙は、相手方に対して30日前までに書面または電磁的手段による通知を行うことで、本契約を解約することができる。</li>
+        <li>解約通知後も、通知月の月末までの委託料は発生するものとする。</li>
+        <li>相手方が次のいずれかに該当した場合、通知なく直ちに本契約を解除できる。
+          <ul style="margin-top:6px;">
+            <li>本契約の重大な違反があり、相当期間内に是正されない場合</li>
+            <li>支払いが2ヶ月以上遅滞した場合</li>
+            <li>破産・民事再生・会社更生等の手続きが開始された場合</li>
+            <li>信用を著しく損なう行為があったと合理的に判断できる場合</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 第10条 -->
+  <div class="article">
+    <div class="article-title">第10条（免責事項）</div>
+    <div class="article-body">
+      <ol>
+        <li>乙はSNSのフォロワー数・エンゲージメント数・来客数・売上等の具体的な成果を保証しない。</li>
+        <li>SNSプラットフォームのアルゴリズム変更・仕様変更・サービス停止等により生じた損害について、乙は責任を負わない。</li>
+        <li>甲が提供した情報・素材の内容に起因する問題（権利侵害・法令違反等）について、乙は責任を負わない。</li>
+        <li>乙の責に帰すべき事由により甲に損害が生じた場合、乙の賠償責任は当該月の委託料を上限とする。</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 第11条 -->
+  <div class="article">
+    <div class="article-title">第11条（契約の変更）</div>
+    <div class="article-body">
+      <p>本契約の内容を変更する場合は、甲乙双方の書面または電磁的手段による合意を要するものとする。</p>
+    </div>
+  </div>
+
+  <!-- 第12条 -->
+  <div class="article">
+    <div class="article-title">第12条（準拠法・管轄裁判所）</div>
+    <div class="article-body">
+      <p>本契約は日本法に準拠するものとし、本契約に関する一切の紛争については、大阪地方裁判所を第一審の専属的合意管轄裁判所とする。</p>
+    </div>
+  </div>
+
+  <!-- 第13条 -->
+  <div class="article">
+    <div class="article-title">第13条（協議事項）</div>
+    <div class="article-body">
+      <p>本契約に定めのない事項または解釈に疑義が生じた場合は、甲乙誠意をもって協議し、解決するものとする。</p>
+    </div>
+  </div>
+
+  <p class="intro" style="margin-top:8px;">
+    本契約の成立を証するため、本書2通を作成し、甲乙各1通を保有する。
+  </p>
+
+  <!-- 署名欄 -->
+  <div class="signature-section">
+    <div class="signature-title">署名・捺印欄</div>
+    <div class="sig-grid">
+      <div class="sig-block">
+        <div class="role">甲（委託者）</div>
+        <div class="sig-label">住所</div>
+        <div class="sig-line"></div>
+        <div class="sig-label" style="margin-top:8px;">事業者名・氏名</div>
+        <div class="sig-line"></div>
+        <div class="sig-label" style="margin-top:8px;">代表者名</div>
+        <div class="sig-line"></div>
+        <div class="seal-box">印</div>
+      </div>
+      <div class="sig-block">
+        <div class="role">乙（受託者）</div>
+        <div class="sig-label">住所</div>
+        <div style="font-size:12px;color:#444;border-bottom:1px solid #ccc;padding-bottom:4px;margin-bottom:8px;">〒530-0001 大阪府大阪市北区梅田1丁目2番2号<br>大阪駅前第2ビル 12-12</div>
+        <div class="sig-label">屋号・氏名</div>
+        <div style="font-size:13px;color:#222;border-bottom:1px solid #ccc;padding-bottom:4px;margin-bottom:8px;">トレスウィン（TRESWIN）　大槻 雄人</div>
+        <div class="sig-label">連絡先</div>
+        <div style="font-size:12px;color:#444;border-bottom:1px solid #ccc;padding-bottom:4px;margin-bottom:8px;">info@tres-win.com</div>
+        <div class="seal-box">印</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    ※ 本契約書テンプレートはTRESWIN（トレスウィン）が作成した参考資料です。実際の契約締結前に弁護士等の専門家にご確認いただくことを推奨します。<br>
+    ※ 業務の詳細は別紙「業務仕様書」に記載し、本契約書と一体として管理してください。
+  </div>
+
+</div><!-- /page 2 -->
+
+
+<!-- ==================== PAGE 3: 別紙（業務仕様書） ==================== -->
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-title">別紙　業務仕様書</div>
+    <div class="doc-subtitle">SNS運用代行契約書 附属書類 / Service Specification Sheet</div>
+  </div>
+
+  <p class="intro" style="margin-bottom:20px;">
+    本仕様書は、SNS運用代行契約書（締結日：令和　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>年　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>月　<span class="field-sm">&nbsp;&nbsp;&nbsp;</span>日）の附属書類として、業務の詳細を定めるものとする。
+  </p>
+
+  <!-- 選択プラン -->
+  <div class="article">
+    <div class="article-title">1. 選択プラン</div>
+    <div class="article-body">
+      <table class="schedule-table">
+        <thead><tr><th>項目</th><th>内容</th></tr></thead>
+        <tbody>
+          <tr><td>プラン名</td><td>□ Starter　　□ Standard　　□ Premium　　□ カスタム</td></tr>
+          <tr><td>月額料金（税別）</td><td>金　<span class="write-in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>　円</td></tr>
+          <tr><td>初期費用（税別）</td><td>金　<span class="write-in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>　円　／　□ なし</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 対象業務 -->
+  <div class="article">
+    <div class="article-title">2. 対象業務・提供内容</div>
+    <div class="article-body">
+      <table class="schedule-table">
+        <thead><tr><th>業務内容</th><th>対象</th><th>備考</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>SNS戦略設計</td>
+            <td>□ 含む　□ 含まない</td>
+            <td><span class="write-in" style="min-width:120px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+          </tr>
+          <tr>
+            <td>投稿コンテンツ制作</td>
+            <td>□ 含む　□ 含まない</td>
+            <td>□ 画像　□ 動画　□ テキストのみ</td>
+          </tr>
+          <tr>
+            <td>投稿・スケジュール管理</td>
+            <td>□ 含む　□ 含まない</td>
+            <td><span class="write-in" style="min-width:120px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+          </tr>
+          <tr>
+            <td>コメント対応</td>
+            <td>□ 含む　□ 含まない</td>
+            <td><span class="write-in" style="min-width:120px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+          </tr>
+          <tr>
+            <td>DM対応</td>
+            <td>□ 含む　□ 含まない</td>
+            <td><span class="write-in" style="min-width:120px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+          </tr>
+          <tr>
+            <td>月次レポート</td>
+            <td>□ 含む　□ 含まない</td>
+            <td>□ 月次MTGあり　□ レポートのみ</td>
+          </tr>
+          <tr>
+            <td>SNS広告運用</td>
+            <td>□ 含む　□ 含まない</td>
+            <td>広告費は別途甲が負担</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 承認フロー -->
+  <div class="article">
+    <div class="article-title">3. 投稿承認フロー</div>
+    <div class="article-body">
+      <table class="schedule-table">
+        <thead><tr><th>項目</th><th>合意内容</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>投稿前の確認</td>
+            <td>□ 全投稿を甲が事前確認する　　□ 乙の判断で投稿する（都度確認不要）</td>
+          </tr>
+          <tr>
+            <td>確認期限</td>
+            <td>乙が確認依頼をした翌日から　<span class="write-in" style="min-width:40px;">&nbsp;&nbsp;&nbsp;</span>　営業日以内に甲が回答する</td>
+          </tr>
+          <tr>
+            <td>確認手段</td>
+            <td>□ メール　　□ LINE　　□ チャットツール（<span class="write-in" style="min-width:80px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 月次レポート -->
+  <div class="article">
+    <div class="article-title">4. 月次レポート・定例ミーティング</div>
+    <div class="article-body">
+      <table class="schedule-table">
+        <thead><tr><th>項目</th><th>合意内容</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>レポート提出日</td>
+            <td>毎月　<span class="write-in" style="min-width:40px;">&nbsp;&nbsp;&nbsp;</span>　日までに提出</td>
+          </tr>
+          <tr>
+            <td>定例MTG</td>
+            <td>□ あり（毎月　<span class="write-in" style="min-width:40px;">&nbsp;&nbsp;&nbsp;</span>　日頃・約30分・オンライン）　　□ なし</td>
+          </tr>
+          <tr>
+            <td>レポート内容</td>
+            <td>フォロワー推移・リーチ数・エンゲージメント率・改善提案</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 特記事項 -->
+  <div class="article">
+    <div class="article-title">5. 特記事項・個別合意事項</div>
+    <div class="article-body">
+      <div style="border:1px solid #ccc;min-height:80px;padding:12px;font-size:13px;color:#aaa;">
+        （例：医療広告ガイドライン遵守方針、投稿NGキーワードリスト、使用禁止画像の指定、など）
+      </div>
+    </div>
+  </div>
+
+  <!-- 署名 -->
+  <div class="signature-section">
+    <div class="signature-title">確認署名</div>
+    <div class="sig-grid">
+      <div class="sig-block">
+        <div class="role">甲（委託者）確認</div>
+        <div class="sig-label">氏名</div>
+        <div class="sig-line"></div>
+        <div class="sig-label" style="margin-top:10px;">確認日：令和　　　年　　月　　日</div>
+        <div class="seal-box">印</div>
+      </div>
+      <div class="sig-block">
+        <div class="role">乙（受託者）確認</div>
+        <div class="sig-label">氏名</div>
+        <div style="font-size:13px;color:#222;border-bottom:1px solid #ccc;padding-bottom:4px;">大槻 雄人（トレスウィン）</div>
+        <div class="sig-label" style="margin-top:10px;">確認日：令和　　　年　　月　　日</div>
+        <div class="seal-box">印</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page 3 -->
+
+</body>
+</html>
