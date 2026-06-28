@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Instagram管理ツール デモ | TRESWIN</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <style>
     :root {
       --bg: #0f0e1a;
@@ -22,7 +21,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
 
-    /* DEMO BANNER */
     .demo-banner {
       background: linear-gradient(90deg, rgba(223,215,28,0.15), rgba(225,48,108,0.1));
       border-bottom: 1px solid rgba(223,215,28,0.3);
@@ -34,7 +32,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* LAYOUT */
     .app { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 34px); }
 
     /* SIDEBAR */
@@ -43,14 +40,12 @@
     .sidebar-logo .brand { font-size: 15px; font-weight: 800; letter-spacing: 2px; }
     .sidebar-logo .brand span { color: var(--accent); }
     .sidebar-logo .sub { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
-
     nav { padding: 12px 0; flex: 1; }
     .nav-section { font-size: 10px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; padding: 14px 20px 5px; font-weight: 600; }
     .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--muted); font-size: 14px; font-weight: 500; border-left: 3px solid transparent; cursor: pointer; transition: all 0.15s; }
     .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
     .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(223,215,28,0.06); }
     .nav-item .icon { width: 20px; text-align: center; }
-
     .sidebar-account { padding: 16px 20px; border-top: 1px solid var(--border); }
     .account-info { display: flex; align-items: center; gap: 10px; }
     .avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
@@ -62,7 +57,6 @@
     .page { display: none; padding: 28px 32px; }
     .page.active { display: block; }
 
-    /* PAGE HEADER */
     .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
     .page-title { font-size: 20px; font-weight: 700; }
     .page-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
@@ -81,14 +75,22 @@
     .down { color: #f87171; }
     .kpi-ico { position: absolute; top: 14px; right: 14px; font-size: 22px; opacity: 0.12; }
 
-    /* CHARTS GRID */
+    /* CHART BOX */
     .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
     .chart-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-    .chart-box.full { grid-column: 1 / -1; }
     .chart-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .chart-ttl { font-size: 13px; font-weight: 600; }
     .chart-sub { font-size: 11px; color: var(--muted); }
-    .chart-wrap { position: relative; height: 180px; }
+
+    /* SVG LINE CHART */
+    .svg-chart { width: 100%; height: 180px; }
+    .svg-chart-sm { width: 100%; height: 100px; }
+
+    /* DONUT */
+    .donut-wrap { display: flex; align-items: center; gap: 20px; height: 180px; }
+    .donut-legend { display: flex; flex-direction: column; gap: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
     /* AUDIENCE BARS */
     .aud-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
@@ -111,9 +113,8 @@
     .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
     .media-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.15s; cursor: pointer; }
     .media-card:hover { transform: translateY(-2px); }
-    .media-thumb { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 36px; position: relative; overflow: hidden; }
-    .media-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .media-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); opacity: 0; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 16px; font-size: 13px; font-weight: 700; }
+    .media-thumb { width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; background: var(--bg2); }
+    .media-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); opacity: 0; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 16px; font-size: 13px; font-weight: 700; }
     .media-card:hover .media-overlay { opacity: 1; }
     .media-info { padding: 9px 10px; }
     .media-stats { display: flex; gap: 10px; font-size: 11px; color: var(--muted); }
@@ -147,12 +148,10 @@
     .rkpi-val { font-size: 20px; font-weight: 800; }
     .rkpi-lbl { font-size: 10px; color: var(--muted); margin-top: 3px; }
 
-    /* TOP POSTS */
     .top-posts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .tp-card { background: var(--bg3); border-radius: 8px; padding: 12px; font-size: 12px; }
     .tp-emoji { font-size: 24px; margin-bottom: 8px; }
     .tp-stats { display: flex; gap: 10px; color: var(--muted); margin-top: 4px; }
-    .tp-cap { color: var(--muted); line-height: 1.5; }
 
     /* BUTTONS */
     .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all 0.15s; }
@@ -161,7 +160,6 @@
     .btn-sec { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
     .btn-sec:hover { border-color: var(--accent); color: var(--accent); }
     .btn-sm { padding: 5px 10px; font-size: 11px; }
-    .btn-danger { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
 
     /* FORM */
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -182,17 +180,15 @@
     .modal-ttl { font-size: 15px; font-weight: 700; }
     .modal-x { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; }
 
-    /* POST DETAIL SIDE PANEL */
+    /* DETAIL PANEL */
     .detail-panel { position: fixed; right: -420px; top: 34px; bottom: 0; width: 400px; background: var(--bg2); border-left: 1px solid var(--border); z-index: 100; overflow-y: auto; transition: right 0.3s ease; padding: 24px; }
     .detail-panel.open { right: 0; }
     .panel-overlay { position: fixed; inset: 0; z-index: 99; display: none; }
     .panel-overlay.open { display: block; }
 
-    /* ER COLOR */
     .er-good { color: #4ade80; }
     .er-ok { color: var(--accent); }
 
-    /* SCROLLBAR */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg2); }
     ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
@@ -203,7 +199,6 @@
 <div class="demo-banner">🔵 デモモード — すべてサンプルデータです</div>
 
 <div class="app">
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="brand">TRES<span>WIN</span></div>
@@ -230,67 +225,45 @@
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main>
 
-    <!-- ===== DASHBOARD ===== -->
+    <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="page-header">
-        <div>
-          <div class="page-title">ダッシュボード</div>
-          <div class="page-sub">2026年6月 — アカウント概要</div>
-        </div>
+        <div><div class="page-title">ダッシュボード</div><div class="page-sub">2026年6月 — アカウント概要</div></div>
         <button class="btn btn-sec">🔄 更新</button>
       </div>
-
       <div class="kpi-row">
-        <div class="kpi">
-          <div class="kpi-ico">👥</div>
-          <div class="kpi-lbl">フォロワー</div>
-          <div class="kpi-val">12,840</div>
-          <div class="kpi-chg up">▲ +412 先月比</div>
-        </div>
-        <div class="kpi pink">
-          <div class="kpi-ico">💫</div>
-          <div class="kpi-lbl">エンゲージメント率</div>
-          <div class="kpi-val er-good">4.7%</div>
-          <div class="kpi-chg up">▲ 業界平均の2.3倍</div>
-        </div>
-        <div class="kpi purple">
-          <div class="kpi-ico">👁</div>
-          <div class="kpi-lbl">月間リーチ</div>
-          <div class="kpi-val">84,200</div>
-          <div class="kpi-chg up">▲ +18% 先月比</div>
-        </div>
-        <div class="kpi blue">
-          <div class="kpi-ico">📱</div>
-          <div class="kpi-lbl">今月の投稿数</div>
-          <div class="kpi-val">18</div>
-          <div class="kpi-chg up">▲ 目標20件まで残り2件</div>
-        </div>
+        <div class="kpi"><div class="kpi-ico">👥</div><div class="kpi-lbl">フォロワー</div><div class="kpi-val">12,840</div><div class="kpi-chg up">▲ +412 先月比</div></div>
+        <div class="kpi pink"><div class="kpi-ico">💫</div><div class="kpi-lbl">エンゲージメント率</div><div class="kpi-val er-good">4.7%</div><div class="kpi-chg up">▲ 業界平均の2.3倍</div></div>
+        <div class="kpi purple"><div class="kpi-ico">👁</div><div class="kpi-lbl">月間リーチ</div><div class="kpi-val">84,200</div><div class="kpi-chg up">▲ +18% 先月比</div></div>
+        <div class="kpi blue"><div class="kpi-ico">📱</div><div class="kpi-lbl">今月の投稿数</div><div class="kpi-val">18</div><div class="kpi-chg up">▲ 目標20件まで残り2件</div></div>
       </div>
-
       <div class="charts-row">
         <div class="chart-box">
-          <div class="chart-hd">
-            <div>
-              <div class="chart-ttl">フォロワー推移（30日）</div>
-              <div class="chart-sub">純増 +412人</div>
-            </div>
-          </div>
-          <div class="chart-wrap"><canvas id="follower-chart"></canvas></div>
+          <div class="chart-hd"><div><div class="chart-ttl">フォロワー推移（30日）</div><div class="chart-sub">純増 +412人</div></div></div>
+          <svg class="svg-chart" viewBox="0 0 600 180" id="follower-svg"></svg>
         </div>
         <div class="chart-box">
           <div class="chart-hd"><div class="chart-ttl">投稿種別</div></div>
-          <div class="chart-wrap"><canvas id="type-chart"></canvas></div>
+          <div class="donut-wrap">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="50" fill="none" stroke="#dfd71c" stroke-width="22" stroke-dasharray="188 126" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="50" fill="none" stroke="#e1306c" stroke-width="22" stroke-dasharray="126 188" stroke-dashoffset="-188" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="50" fill="none" stroke="#833ab4" stroke-width="22" stroke-dasharray="63 251" stroke-dashoffset="-314" transform="rotate(-90 70 70)"/>
+              <text x="70" y="66" text-anchor="middle" fill="white" font-size="16" font-weight="700">18</text>
+              <text x="70" y="82" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="10">投稿</text>
+            </svg>
+            <div class="donut-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#dfd71c"></div><div><div style="font-size:12px;font-weight:600">画像</div><div style="font-size:11px;color:var(--muted)">9件 / 50%</div></div></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#e1306c"></div><div><div style="font-size:12px;font-weight:600">カルーセル</div><div style="font-size:11px;color:var(--muted)">6件 / 33%</div></div></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#833ab4"></div><div><div style="font-size:12px;font-weight:600">リール</div><div style="font-size:11px;color:var(--muted)">3件 / 17%</div></div></div>
+            </div>
+          </div>
         </div>
       </div>
-
       <div class="tbl-box">
-        <div class="tbl-hd">
-          <div class="tbl-ttl">最新投稿トップ5</div>
-          <button class="btn btn-sec btn-sm" onclick="go('media')">すべて見る</button>
-        </div>
+        <div class="tbl-hd"><div class="tbl-ttl">最新投稿トップ5</div><button class="btn btn-sec btn-sm" onclick="go('media')">すべて見る</button></div>
         <table>
           <thead><tr><th>投稿</th><th>いいね</th><th>コメント</th><th>リーチ</th><th>ER</th><th>投稿日</th></tr></thead>
           <tbody>
@@ -304,56 +277,28 @@
       </div>
     </div>
 
-    <!-- ===== INSIGHTS ===== -->
+    <!-- INSIGHTS -->
     <div class="page" id="page-insights">
       <div class="page-header">
-        <div>
-          <div class="page-title">インサイト分析</div>
-          <div class="page-sub">リーチ・インプレッション・オーディエンス詳細</div>
-        </div>
-        <select class="btn btn-sec" style="cursor:pointer">
-          <option>日別</option><option>週別</option><option>月別</option>
-        </select>
+        <div><div class="page-title">インサイト分析</div><div class="page-sub">リーチ・インプレッション・オーディエンス詳細</div></div>
+        <select class="btn btn-sec" style="cursor:pointer"><option>日別</option><option>週別</option><option>月別</option></select>
       </div>
-
       <div class="kpi-row">
-        <div class="kpi">
-          <div class="kpi-ico">👁</div>
-          <div class="kpi-lbl">リーチ（今月）</div>
-          <div class="kpi-val">84,200</div>
-          <div class="kpi-chg up">▲ +18%</div>
-        </div>
-        <div class="kpi pink">
-          <div class="kpi-ico">📊</div>
-          <div class="kpi-lbl">インプレッション</div>
-          <div class="kpi-val">142,600</div>
-          <div class="kpi-chg up">▲ +22%</div>
-        </div>
-        <div class="kpi purple">
-          <div class="kpi-ico">🏠</div>
-          <div class="kpi-lbl">プロフィール閲覧</div>
-          <div class="kpi-val">3,410</div>
-          <div class="kpi-chg down">▼ -2%</div>
-        </div>
-        <div class="kpi blue">
-          <div class="kpi-ico">🔗</div>
-          <div class="kpi-lbl">Webクリック</div>
-          <div class="kpi-val">284</div>
-          <div class="kpi-chg up">▲ +8%</div>
-        </div>
+        <div class="kpi"><div class="kpi-ico">👁</div><div class="kpi-lbl">リーチ（今月）</div><div class="kpi-val">84,200</div><div class="kpi-chg up">▲ +18%</div></div>
+        <div class="kpi pink"><div class="kpi-ico">📊</div><div class="kpi-lbl">インプレッション</div><div class="kpi-val">142,600</div><div class="kpi-chg up">▲ +22%</div></div>
+        <div class="kpi purple"><div class="kpi-ico">🏠</div><div class="kpi-lbl">プロフィール閲覧</div><div class="kpi-val">3,410</div><div class="kpi-chg down">▼ -2%</div></div>
+        <div class="kpi blue"><div class="kpi-ico">🔗</div><div class="kpi-lbl">Webクリック</div><div class="kpi-val">284</div><div class="kpi-chg up">▲ +8%</div></div>
       </div>
-
-      <div class="charts-row" style="grid-template-columns:1fr 1fr">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
         <div class="chart-box">
           <div class="chart-hd"><div class="chart-ttl">リーチ推移</div></div>
-          <div class="chart-wrap"><canvas id="reach-chart"></canvas></div>
+          <svg class="svg-chart" viewBox="0 0 600 180" id="reach-svg"></svg>
         </div>
         <div class="chart-box">
           <div class="chart-hd"><div class="chart-ttl">インプレッション推移</div></div>
-          <div class="chart-wrap"><canvas id="imp-chart"></canvas></div>
+          <svg class="svg-chart" viewBox="0 0 600 180" id="imp-svg"></svg>
         </div>
       </div>
-
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div class="chart-box">
           <div class="chart-hd"><div class="chart-ttl">年齢・性別分布</div></div>
@@ -375,37 +320,29 @@
             <div class="aud-bar"><div class="aud-lbl">台湾</div><div class="aud-track"><div class="aud-fill" style="width:3%;background:var(--accent)"></div></div><div class="aud-pct">3%</div></div>
             <div class="aud-bar"><div class="aud-lbl">その他</div><div class="aud-track"><div class="aud-fill" style="width:5%;background:var(--accent)"></div></div><div class="aud-pct">5%</div></div>
           </div>
-          <div style="margin-top:16px">
-            <div class="chart-hd"><div class="chart-ttl">アクティブ時間（時間帯）</div></div>
-            <div class="chart-wrap" style="height:100px"><canvas id="active-chart"></canvas></div>
+          <div style="margin-top:20px">
+            <div style="font-size:12px;font-weight:600;margin-bottom:10px">アクティブ時間帯</div>
+            <svg class="svg-chart-sm" viewBox="0 0 400 100" id="active-svg"></svg>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ===== MEDIA ===== -->
+    <!-- MEDIA -->
     <div class="page" id="page-media">
       <div class="page-header">
-        <div>
-          <div class="page-title">投稿一覧</div>
-          <div class="page-sub">直近24件の投稿パフォーマンス</div>
-        </div>
+        <div><div class="page-title">投稿一覧</div><div class="page-sub">直近12件のパフォーマンス</div></div>
         <button class="btn btn-sec">🔄 更新</button>
       </div>
-
       <div class="media-grid" id="media-grid"></div>
     </div>
 
-    <!-- ===== CALENDAR ===== -->
+    <!-- CALENDAR -->
     <div class="page" id="page-calendar">
       <div class="page-header">
-        <div>
-          <div class="page-title">コンテンツカレンダー</div>
-          <div class="page-sub">2026年7月の投稿スケジュール</div>
-        </div>
+        <div><div class="page-title">コンテンツカレンダー</div><div class="page-sub">2026年7月の投稿スケジュール</div></div>
         <button class="btn btn-acc" onclick="openModal('schedule-modal')">+ 投稿を予約する</button>
       </div>
-
       <div class="tbl-box" style="padding:20px;margin-bottom:20px">
         <div class="cal-nav">
           <button class="btn btn-sec btn-sm">← 前月</button>
@@ -414,80 +351,35 @@
         </div>
         <div class="cal-grid" id="cal-grid"></div>
       </div>
-
       <div class="tbl-box">
         <div class="tbl-hd"><div class="tbl-ttl">予約投稿一覧</div></div>
         <table>
           <thead><tr><th>予定日時</th><th>種別</th><th>キャプション</th><th>ステータス</th><th>操作</th></tr></thead>
           <tbody>
-            <tr>
-              <td>7/1 (火) 12:00</td>
-              <td>📸 画像</td>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">7月のスタートを切る一枚。今月も...#TRESWIN</td>
-              <td><span class="badge ev-pending" style="border-radius:4px">予約済</span></td>
-              <td><button class="btn btn-sec btn-sm">編集</button></td>
-            </tr>
-            <tr>
-              <td>7/3 (木) 19:00</td>
-              <td>🎬 リール</td>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Webサイト制作の裏側を公開 #TRESWEB</td>
-              <td><span class="badge ev-pending" style="border-radius:4px">予約済</span></td>
-              <td><button class="btn btn-sec btn-sm">編集</button></td>
-            </tr>
-            <tr>
-              <td>7/5 (土) 09:00</td>
-              <td>🗂 カルーセル</td>
-              <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Instagram ER を上げる5つのコツ...</td>
-              <td><span class="badge ev-pending" style="border-radius:4px">予約済</span></td>
-              <td><button class="btn btn-sec btn-sm">編集</button></td>
-            </tr>
+            <tr><td>7/1 (火) 12:00</td><td>📸 画像</td><td>7月のスタートを切る一枚。今月も...</td><td><span class="badge ev-pending" style="border-radius:4px">予約済</span></td><td><button class="btn btn-sec btn-sm">編集</button></td></tr>
+            <tr><td>7/3 (木) 19:00</td><td>🎬 リール</td><td>Webサイト制作の裏側を公開 #TRESWEB</td><td><span class="badge ev-pending" style="border-radius:4px">予約済</span></td><td><button class="btn btn-sec btn-sm">編集</button></td></tr>
+            <tr><td>7/5 (土) 09:00</td><td>🗂 カルーセル</td><td>Instagram ER を上げる5つのコツ...</td><td><span class="badge ev-pending" style="border-radius:4px">予約済</span></td><td><button class="btn btn-sec btn-sm">編集</button></td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ===== CLIENTS ===== -->
+    <!-- CLIENTS -->
     <div class="page" id="page-clients">
       <div class="page-header">
-        <div>
-          <div class="page-title">クライアント管理</div>
-          <div class="page-sub">運用代行クライアント一覧</div>
-        </div>
+        <div><div class="page-title">クライアント管理</div><div class="page-sub">運用代行クライアント一覧</div></div>
         <button class="btn btn-acc" onclick="openModal('client-modal')">+ クライアント登録</button>
       </div>
-
       <div class="tbl-box">
         <table>
           <thead><tr><th>クライアント名</th><th>Instagramアカウント</th><th>プラン</th><th>契約終了</th><th>ステータス</th><th>操作</th></tr></thead>
           <tbody>
-            <tr>
-              <td><div style="font-weight:600">山田 花子</div><div style="font-size:11px;color:var(--muted)">株式会社フラワー</div></td>
-              <td>@flower_osaka_official</td>
-              <td><span class="badge b-premium">プレミアム</span></td>
-              <td>2026/12/31</td>
-              <td><span class="badge b-active">稼働中</span></td>
-              <td><div style="display:flex;gap:6px"><button class="btn btn-sec btn-sm">編集</button><button class="btn btn-sec btn-sm">レポート</button></div></td>
-            </tr>
-            <tr>
-              <td><div style="font-weight:600">田中 誠</div><div style="font-size:11px;color:var(--muted)">田中ベーカリー</div></td>
-              <td>@tanaka_bakery_umeda</td>
-              <td><span class="badge b-standard">スタンダード</span></td>
-              <td>2026/09/30</td>
-              <td><span class="badge b-active">稼働中</span></td>
-              <td><div style="display:flex;gap:6px"><button class="btn btn-sec btn-sm">編集</button><button class="btn btn-sec btn-sm">レポート</button></div></td>
-            </tr>
-            <tr>
-              <td><div style="font-weight:600">佐藤 商事</div><div style="font-size:11px;color:var(--muted)">佐藤商事株式会社</div></td>
-              <td>@sato_trading_co</td>
-              <td><span class="badge b-basic">ベーシック</span></td>
-              <td>2026/08/31</td>
-              <td><span class="badge b-active">稼働中</span></td>
-              <td><div style="display:flex;gap:6px"><button class="btn btn-sec btn-sm">編集</button><button class="btn btn-sec btn-sm">レポート</button></div></td>
-            </tr>
+            <tr><td><div style="font-weight:600">山田 花子</div><div style="font-size:11px;color:var(--muted)">株式会社フラワー</div></td><td>@flower_osaka_official</td><td><span class="badge b-premium">プレミアム</span></td><td>2026/12/31</td><td><span class="badge b-active">稼働中</span></td><td><div style="display:flex;gap:6px"><button class="btn btn-sec btn-sm">編集</button><button class="btn btn-sec btn-sm">レポート</button></div></td></tr>
+            <tr><td><div style="font-weight:600">田中 誠</div><div style="font-size:11px;color:var(--muted)">田中ベーカリー</div></td><td>@tanaka_bakery_umeda</td><td><span class="badge b-standard">スタンダード</span></td><td>2026/09/30</td><td><span class="badge b-active">稼働中</span></td><td><div style="display:flex;gap:6px"><button class="btn btn-sec btn-sm">編集</button><button class="btn btn-sec btn-sm">レポート</button></div></td></tr>
+            <tr><td><div style="font-weight:600">佐藤 商事</div><div style="font-size:11px;color:var(--muted)">佐藤商事株式会社</div></td><td>@sato_trading_co</td><td><span class="badge b-basic">ベーシック</span></td><td>2026/08/31</td><td><span class="badge b-active">稼働中</span></td><td><div style="display:flex;gap:6px"><button class="btn btn-sec btn-sm">編集</button><button class="btn btn-sec btn-sm">レポート</button></div></td></tr>
           </tbody>
         </table>
       </div>
-
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
         <div class="kpi"><div class="kpi-ico">👥</div><div class="kpi-lbl">契約クライアント数</div><div class="kpi-val">3</div></div>
         <div class="kpi pink"><div class="kpi-ico">💰</div><div class="kpi-lbl">月次売上（合計）</div><div class="kpi-val">¥160,000</div></div>
@@ -495,39 +387,23 @@
       </div>
     </div>
 
-    <!-- ===== REPORTS ===== -->
+    <!-- REPORTS -->
     <div class="page" id="page-reports">
       <div class="page-header">
-        <div>
-          <div class="page-title">レポート生成</div>
-          <div class="page-sub">月次レポートの作成・エクスポート</div>
-        </div>
+        <div><div class="page-title">レポート生成</div><div class="page-sub">月次レポートの作成・エクスポート</div></div>
         <button class="btn btn-acc">⬇ CSV ダウンロード</button>
       </div>
-
       <div class="chart-box" style="margin-bottom:18px">
         <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
-          <div class="fg"><label>クライアント</label>
-            <select style="min-width:180px">
-              <option>自分のアカウント（TRESWIN）</option>
-              <option>山田 花子（株式会社フラワー）</option>
-              <option>田中 誠（田中ベーカリー）</option>
-            </select>
-          </div>
+          <div class="fg"><label>クライアント</label><select style="min-width:180px"><option>自分のアカウント（TRESWIN）</option><option>山田 花子</option><option>田中 誠</option></select></div>
           <div class="fg"><label>年</label><input type="number" value="2026" style="width:80px"></div>
-          <div class="fg"><label>月</label>
-            <select style="width:80px">
-              <option>6月</option><option>5月</option><option>4月</option>
-            </select>
-          </div>
+          <div class="fg"><label>月</label><select style="width:80px"><option>6月</option><option>5月</option><option>4月</option></select></div>
           <button class="btn btn-acc">生成</button>
         </div>
       </div>
-
       <div class="chart-box" style="margin-bottom:16px">
         <div style="font-size:16px;font-weight:700;margin-bottom:4px">2026年6月 月次レポート</div>
         <div style="font-size:12px;color:var(--muted);margin-bottom:18px">@treswin_official · 12,840フォロワー</div>
-
         <div class="report-kpis">
           <div class="rkpi"><div class="rkpi-val">84,200</div><div class="rkpi-lbl">リーチ</div></div>
           <div class="rkpi"><div class="rkpi-val">142,600</div><div class="rkpi-lbl">インプレッション</div></div>
@@ -539,26 +415,22 @@
           <div class="rkpi"><div class="rkpi-val">284</div><div class="rkpi-lbl">Webクリック</div></div>
         </div>
       </div>
-
       <div style="font-size:13px;font-weight:600;margin-bottom:10px">トップ投稿</div>
-      <div class="top-posts">
-        <div class="tp-card"><div class="tp-emoji">☕</div><div style="font-size:12px;font-weight:600">コーヒーと朝の時間</div><div class="tp-cap">#morning #coffee #大阪</div><div class="tp-stats"><span>❤️ 324</span><span>💬 28</span><span>👁 4,820</span></div></div>
-        <div class="tp-card"><div class="tp-emoji">📊</div><div style="font-size:12px;font-weight:600">上半期の振り返り</div><div class="tp-cap">#2026 #ビジネス #TRESWIN</div><div class="tp-stats"><span>❤️ 241</span><span>💬 34</span><span>👁 5,100</span></div></div>
-        <div class="tp-card"><div class="tp-emoji">🌿</div><div style="font-size:12px;font-weight:600">オフィスのグリーン</div><div class="tp-cap">#インテリア #大阪オフィス</div><div class="tp-stats"><span>❤️ 287</span><span>💬 19</span><span>👁 3,940</span></div></div>
+      <div class="top-posts" style="margin-bottom:18px">
+        <div class="tp-card"><div class="tp-emoji">☕</div><div style="font-size:12px;font-weight:600">コーヒーと朝の時間</div><div style="font-size:11px;color:var(--muted)">#morning #coffee #大阪</div><div class="tp-stats"><span>❤️ 324</span><span>💬 28</span><span>👁 4,820</span></div></div>
+        <div class="tp-card"><div class="tp-emoji">📊</div><div style="font-size:12px;font-weight:600">上半期の振り返り</div><div style="font-size:11px;color:var(--muted)">#2026 #ビジネス #TRESWIN</div><div class="tp-stats"><span>❤️ 241</span><span>💬 34</span><span>👁 5,100</span></div></div>
+        <div class="tp-card"><div class="tp-emoji">🌿</div><div style="font-size:12px;font-weight:600">オフィスのグリーン</div><div style="font-size:11px;color:var(--muted)">#インテリア #大阪オフィス</div><div class="tp-stats"><span>❤️ 287</span><span>💬 19</span><span>👁 3,940</span></div></div>
       </div>
-
-      <div style="margin-top:18px">
-        <div class="chart-box">
-          <div class="chart-hd"><div class="chart-ttl">リーチ推移（6月）</div></div>
-          <div class="chart-wrap"><canvas id="report-chart"></canvas></div>
-        </div>
+      <div class="chart-box">
+        <div class="chart-hd"><div class="chart-ttl">リーチ推移（6月）</div></div>
+        <svg class="svg-chart" viewBox="0 0 600 180" id="report-svg"></svg>
       </div>
     </div>
 
   </main>
 </div>
 
-<!-- ===== 投稿詳細パネル ===== -->
+<!-- DETAIL PANEL -->
 <div class="panel-overlay" id="panel-overlay" onclick="closePanel()"></div>
 <div class="detail-panel" id="detail-panel">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
@@ -568,20 +440,15 @@
   <div id="panel-content"></div>
 </div>
 
-<!-- ===== モーダル: 予約投稿 ===== -->
+<!-- MODAL: 予約投稿 -->
 <div class="modal-wrap" id="schedule-modal" onclick="if(event.target===this)closeModal('schedule-modal')">
   <div class="modal">
-    <div class="modal-head">
-      <div class="modal-ttl">投稿を予約する</div>
-      <button class="modal-x" onclick="closeModal('schedule-modal')">✕</button>
-    </div>
+    <div class="modal-head"><div class="modal-ttl">投稿を予約する</div><button class="modal-x" onclick="closeModal('schedule-modal')">✕</button></div>
     <div class="form-row">
-      <div class="fg"><label>投稿種別</label>
-        <select><option>画像</option><option>カルーセル</option><option>リール</option></select>
-      </div>
+      <div class="fg"><label>投稿種別</label><select><option>画像</option><option>カルーセル</option><option>リール</option></select></div>
       <div class="fg"><label>投稿日時</label><input type="datetime-local" value="2026-07-01T12:00"></div>
-      <div class="fg full"><label>画像URL</label><input type="url" placeholder="https://...（公開URLを入力）"></div>
-      <div class="fg full"><label>キャプション</label><textarea placeholder="投稿のキャプションを入力...&#10;&#10;#hashtag #タグ"></textarea></div>
+      <div class="fg full"><label>画像URL</label><input type="url" placeholder="https://..."></div>
+      <div class="fg full"><label>キャプション</label><textarea placeholder="投稿のキャプションを入力...&#10;#hashtag"></textarea></div>
     </div>
     <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
       <button class="btn btn-sec" onclick="closeModal('schedule-modal')">キャンセル</button>
@@ -590,20 +457,15 @@
   </div>
 </div>
 
-<!-- ===== モーダル: クライアント登録 ===== -->
+<!-- MODAL: クライアント登録 -->
 <div class="modal-wrap" id="client-modal" onclick="if(event.target===this)closeModal('client-modal')">
   <div class="modal">
-    <div class="modal-head">
-      <div class="modal-ttl">新規クライアント登録</div>
-      <button class="modal-x" onclick="closeModal('client-modal')">✕</button>
-    </div>
+    <div class="modal-head"><div class="modal-ttl">新規クライアント登録</div><button class="modal-x" onclick="closeModal('client-modal')">✕</button></div>
     <div class="form-row">
       <div class="fg"><label>担当者名 *</label><input placeholder="山田 太郎"></div>
       <div class="fg"><label>会社名</label><input placeholder="株式会社○○"></div>
       <div class="fg"><label>Instagramユーザー名 *</label><input placeholder="username"></div>
-      <div class="fg"><label>プラン</label>
-        <select><option>ベーシック ¥30,000/月</option><option>スタンダード ¥50,000/月</option><option>プレミアム ¥80,000/月</option></select>
-      </div>
+      <div class="fg"><label>プラン</label><select><option>ベーシック ¥30,000/月</option><option>スタンダード ¥50,000/月</option><option>プレミアム ¥80,000/月</option></select></div>
       <div class="fg"><label>契約開始日</label><input type="date"></div>
       <div class="fg"><label>契約終了日</label><input type="date"></div>
       <div class="fg full"><label>メモ</label><textarea placeholder="特記事項など..."></textarea></div>
@@ -616,7 +478,7 @@
 </div>
 
 <script>
-// ===== NAV =====
+// NAV
 function go(page) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -624,13 +486,10 @@ function go(page) {
   document.getElementById(`page-${page}`).classList.add('active');
 }
 
-// ===== MODAL =====
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// ===== DETAIL PANEL =====
-function openPanel(content) {
-  document.getElementById('panel-content').innerHTML = content;
+function openPanel(html) {
+  document.getElementById('panel-content').innerHTML = html;
   document.getElementById('detail-panel').classList.add('open');
   document.getElementById('panel-overlay').classList.add('open');
 }
@@ -639,166 +498,144 @@ function closePanel() {
   document.getElementById('panel-overlay').classList.remove('open');
 }
 
-// ===== MOCK DATA =====
-const posts = [
-  { emoji:'☕', cap:'コーヒーと朝の時間 #morning #coffee', likes:324, comments:28, reach:4820, saved:142, er:'7.3%', date:'6/27', type:'画像' },
-  { emoji:'🌿', cap:'オフィスのグリーン #インテリア #大阪', likes:287, comments:19, reach:3940, saved:98, er:'5.2%', date:'6/25', type:'カルーセル' },
-  { emoji:'📊', cap:'2026年上半期の振り返り #ビジネス', likes:241, comments:34, reach:5100, saved:203, er:'5.4%', date:'6/23', type:'カルーセル' },
-  { emoji:'🎯', cap:'チームMTGの裏側 #OUSAKA #チーム', likes:198, comments:11, reach:2810, saved:67, er:'3.9%', date:'6/20', type:'リール' },
-  { emoji:'🌸', cap:'梅田オフィスからの夕焼け #夕焼け', likes:176, comments:9, reach:2340, saved:54, er:'3.1%', date:'6/18', type:'画像' },
-  { emoji:'💻', cap:'新しいWebプロジェクト始動！ #制作', likes:162, comments:22, reach:3120, saved:88, er:'4.0%', date:'6/15', type:'リール' },
-  { emoji:'🍱', cap:'ランチタイムの風景 #梅田ランチ', likes:148, comments:6, reach:1980, saved:32, er:'2.8%', date:'6/12', type:'画像' },
-  { emoji:'🎉', cap:'おかげさまで1万フォロワー！#感謝', likes:512, comments:87, reach:8400, saved:310, er:'12.1%', date:'6/10', type:'画像' },
-  { emoji:'📱', cap:'スマホ撮影のコツ5選 #photography', likes:234, comments:41, reach:4210, saved:187, er:'5.8%', date:'6/8', type:'カルーセル' },
-  { emoji:'🌆', cap:'大阪の朝 #osaka #大阪 #朝活', likes:189, comments:14, reach:3050, saved:72, er:'3.9%', date:'6/5', type:'画像' },
-  { emoji:'🔥', cap:'今月のチームハイライト #team', likes:144, comments:8, reach:2180, saved:41, er:'2.9%', date:'6/3', type:'リール' },
-  { emoji:'✨', cap:'6月のスタート！今月の目標は...', likes:121, comments:17, reach:2620, saved:58, er:'3.2%', date:'6/1', type:'画像' },
-];
+// SVG LINE CHART
+function svgLine(id, data, color, fill) {
+  const svg = document.getElementById(id);
+  if (!svg) return;
+  const W = 600, H = 180, pad = 12;
+  const min = Math.min(...data), max = Math.max(...data);
+  const range = max - min || 1;
+  const pts = data.map((v, i) => {
+    const x = pad + (i / (data.length - 1)) * (W - pad * 2);
+    const y = H - pad - ((v - min) / range) * (H - pad * 2);
+    return `${x},${y}`;
+  });
+  const last = pts[pts.length - 1].split(',');
 
-// ===== MEDIA GRID =====
-function buildMediaGrid() {
-  document.getElementById('media-grid').innerHTML = posts.map((p, i) => `
-    <div class="media-card" onclick="showPostDetail(${i})">
-      <div class="media-thumb">
-        <span>${p.emoji}</span>
-        <div class="media-overlay">
-          <span>❤️ ${p.likes}</span>
-          <span>💬 ${p.comments}</span>
-        </div>
-      </div>
-      <div class="media-info">
-        <div class="media-stats">
-          <span>❤️ ${p.likes}</span>
-          <span>💬 ${p.comments}</span>
-          <span>👁 ${p.reach.toLocaleString()}</span>
-        </div>
-        <div class="media-cap">${p.cap}</div>
-        <div class="media-cap" style="font-size:10px;margin-top:2px">${p.date} · ${p.type}</div>
-      </div>
-    </div>
-  `).join('');
+  // Grid lines
+  let grid = '';
+  for (let i = 0; i <= 4; i++) {
+    const y = pad + (i / 4) * (H - pad * 2);
+    grid += `<line x1="${pad}" y1="${y}" x2="${W-pad}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+    const val = Math.round(max - (i / 4) * range);
+    grid += `<text x="${pad-2}" y="${y+3}" text-anchor="end" fill="rgba(255,255,255,0.3)" font-size="9">${val >= 1000 ? (val/1000).toFixed(1)+'k' : val}</text>`;
+  }
+
+  // Area fill
+  const areaPoints = `${pad},${H-pad} ${pts.join(' ')} ${W-pad},${H-pad}`;
+  const area = `<polygon points="${areaPoints}" fill="${fill}" opacity="0.15"/>`;
+
+  // Line
+  const line = `<polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+  // Last value dot
+  const dot = `<circle cx="${last[0]}" cy="${last[1]}" r="4" fill="${color}"/>`;
+  const valLabel = `<text x="${parseFloat(last[0])+8}" y="${parseFloat(last[1])+4}" fill="${color}" font-size="11" font-weight="700">${data[data.length-1].toLocaleString()}</text>`;
+
+  svg.innerHTML = grid + area + line + dot + valLabel;
 }
 
-function showPostDetail(i) {
+// BAR CHART (アクティブ時間帯)
+function svgBars(id, data, labels, color) {
+  const svg = document.getElementById(id);
+  if (!svg) return;
+  const W = 400, H = 100, pad = 8;
+  const max = Math.max(...data);
+  const bw = (W - pad * 2) / data.length;
+
+  let html = '';
+  data.forEach((v, i) => {
+    const x = pad + i * bw;
+    const bh = ((v / max) * (H - pad * 2 - 20));
+    const y = H - pad - bh - 14;
+    html += `<rect x="${x+2}" y="${y}" width="${bw-4}" height="${bh}" rx="2" fill="${color}" opacity="0.7"/>`;
+    html += `<text x="${x + bw/2}" y="${H-2}" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9">${labels[i]}</text>`;
+  });
+  svg.innerHTML = html;
+}
+
+// MEDIA GRID
+const posts = [
+  { emoji:'☕', cap:'コーヒーと朝の時間 #morning', likes:324, comments:28, reach:4820, saved:142, er:'7.3%', date:'6/27', type:'画像' },
+  { emoji:'🌿', cap:'オフィスのグリーン #インテリア', likes:287, comments:19, reach:3940, saved:98, er:'5.2%', date:'6/25', type:'カルーセル' },
+  { emoji:'📊', cap:'2026年上半期の振り返り', likes:241, comments:34, reach:5100, saved:203, er:'5.4%', date:'6/23', type:'カルーセル' },
+  { emoji:'🎯', cap:'チームMTGの裏側 #OSAKA', likes:198, comments:11, reach:2810, saved:67, er:'3.9%', date:'6/20', type:'リール' },
+  { emoji:'🌸', cap:'梅田オフィスからの夕焼け', likes:176, comments:9, reach:2340, saved:54, er:'3.1%', date:'6/18', type:'画像' },
+  { emoji:'💻', cap:'新しいWebプロジェクト始動！', likes:162, comments:22, reach:3120, saved:88, er:'4.0%', date:'6/15', type:'リール' },
+  { emoji:'🍱', cap:'ランチタイムの風景 #梅田', likes:148, comments:6, reach:1980, saved:32, er:'2.8%', date:'6/12', type:'画像' },
+  { emoji:'🎉', cap:'おかげさまで1万フォロワー！', likes:512, comments:87, reach:8400, saved:310, er:'12.1%', date:'6/10', type:'画像' },
+  { emoji:'📱', cap:'スマホ撮影のコツ5選', likes:234, comments:41, reach:4210, saved:187, er:'5.8%', date:'6/8', type:'カルーセル' },
+  { emoji:'🌆', cap:'大阪の朝 #osaka #朝活', likes:189, comments:14, reach:3050, saved:72, er:'3.9%', date:'6/5', type:'画像' },
+  { emoji:'🔥', cap:'今月のチームハイライト', likes:144, comments:8, reach:2180, saved:41, er:'2.9%', date:'6/3', type:'リール' },
+  { emoji:'✨', cap:'6月のスタート！今月の目標', likes:121, comments:17, reach:2620, saved:58, er:'3.2%', date:'6/1', type:'画像' },
+];
+
+document.getElementById('media-grid').innerHTML = posts.map((p, i) => `
+  <div class="media-card" onclick="showDetail(${i})">
+    <div class="media-thumb">
+      <span>${p.emoji}</span>
+      <div class="media-overlay"><span>❤️ ${p.likes}</span><span>💬 ${p.comments}</span></div>
+    </div>
+    <div class="media-info">
+      <div class="media-stats"><span>❤️ ${p.likes}</span><span>💬 ${p.comments}</span><span>👁 ${p.reach.toLocaleString()}</span></div>
+      <div class="media-cap">${p.cap}</div>
+      <div class="media-cap" style="font-size:10px;margin-top:2px">${p.date} · ${p.type}</div>
+    </div>
+  </div>
+`).join('');
+
+function showDetail(i) {
   const p = posts[i];
   openPanel(`
-    <div style="text-align:center;font-size:56px;padding:20px 0">${p.emoji}</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:6px">${p.date} · ${p.type}</div>
+    <div style="text-align:center;font-size:64px;padding:24px 0;background:var(--bg3);border-radius:10px;margin-bottom:16px">${p.emoji}</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">${p.date} · ${p.type}</div>
     <div style="font-size:13px;line-height:1.7;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">${p.cap}</div>
-    <div class="report-kpis" style="grid-template-columns:1fr 1fr">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
       <div class="rkpi"><div class="rkpi-val">❤️ ${p.likes}</div><div class="rkpi-lbl">いいね</div></div>
       <div class="rkpi"><div class="rkpi-val">💬 ${p.comments}</div><div class="rkpi-lbl">コメント</div></div>
       <div class="rkpi"><div class="rkpi-val">👁 ${p.reach.toLocaleString()}</div><div class="rkpi-lbl">リーチ</div></div>
       <div class="rkpi"><div class="rkpi-val">🔖 ${p.saved}</div><div class="rkpi-lbl">保存数</div></div>
     </div>
-    <div style="margin-top:16px;background:var(--bg3);border-radius:8px;padding:14px">
+    <div style="background:var(--bg3);border-radius:8px;padding:14px;text-align:center">
       <div style="font-size:11px;color:var(--muted);margin-bottom:4px">エンゲージメント率</div>
-      <div style="font-size:28px;font-weight:800;color:${parseFloat(p.er)>=3?'#4ade80':'var(--accent)'}">${p.er}</div>
+      <div style="font-size:32px;font-weight:900;color:${parseFloat(p.er)>=3?'#4ade80':'var(--accent)'}">${p.er}</div>
     </div>
   `);
 }
 
-// ===== CALENDAR =====
+// CALENDAR
 function buildCalendar() {
   const days = ['日','月','火','水','木','金','土'];
   const events = {
-    1: [{t:'12:00 📸', cls:'ev-pending'}],
-    3: [{t:'19:00 🎬', cls:'ev-reel'}],
-    5: [{t:'09:00 🗂', cls:'ev-pending'}],
-    8: [{t:'12:00 📸', cls:'ev-pending'}],
-    10: [{t:'19:00 🎬', cls:'ev-reel'}],
-    12: [{t:'09:00 📸', cls:'ev-published'}],
-    15: [{t:'12:00 📸', cls:'ev-pending'}, {t:'19:00 🎬', cls:'ev-reel'}],
-    17: [{t:'12:00 🗂', cls:'ev-pending'}],
-    19: [{t:'09:00 📸', cls:'ev-pending'}],
-    22: [{t:'12:00 🎬', cls:'ev-reel'}],
-    24: [{t:'09:00 🗂', cls:'ev-pending'}],
-    26: [{t:'12:00 📸', cls:'ev-pending'}],
-    29: [{t:'12:00 📸', cls:'ev-pending'}],
-    31: [{t:'12:00 🗂', cls:'ev-pending'}],
+    1:[{t:'12:00 📸',cls:'ev-pending'}], 3:[{t:'19:00 🎬',cls:'ev-reel'}],
+    5:[{t:'09:00 🗂',cls:'ev-pending'}], 8:[{t:'12:00 📸',cls:'ev-pending'}],
+    10:[{t:'19:00 🎬',cls:'ev-reel'}], 12:[{t:'09:00 📸',cls:'ev-published'}],
+    15:[{t:'12:00 📸',cls:'ev-pending'},{t:'19:00 🎬',cls:'ev-reel'}],
+    17:[{t:'12:00 🗂',cls:'ev-pending'}], 19:[{t:'09:00 📸',cls:'ev-pending'}],
+    22:[{t:'12:00 🎬',cls:'ev-reel'}], 24:[{t:'09:00 🗂',cls:'ev-pending'}],
+    26:[{t:'12:00 📸',cls:'ev-pending'}], 29:[{t:'12:00 📸',cls:'ev-pending'}],
+    31:[{t:'12:00 🗂',cls:'ev-pending'}],
   };
-
   let html = days.map(d => `<div class="cal-hd">${d}</div>`).join('');
-  // July 2026 starts on Wednesday (3)
   for (let i = 0; i < 3; i++) html += `<div class="cal-day other"><div class="cal-num">${28+i}</div></div>`;
   for (let d = 1; d <= 31; d++) {
-    const today = d === 28;
     const evs = events[d] || [];
-    html += `<div class="cal-day${today?' today':''}">
-      <div class="cal-num">${d}</div>
-      ${evs.map(e => `<div class="cal-ev ${e.cls}">${e.t}</div>`).join('')}
-    </div>`;
+    html += `<div class="cal-day${d===28?' today':''}"><div class="cal-num">${d}</div>${evs.map(e=>`<div class="cal-ev ${e.cls}">${e.t}</div>`).join('')}</div>`;
   }
   document.getElementById('cal-grid').innerHTML = html;
 }
-
-// ===== CHARTS =====
-const chartDefaults = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: { legend: { display: false } },
-  scales: {
-    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 10 } } },
-    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 10 } } }
-  }
-};
-
-function makeLabels(n) {
-  const labels = [];
-  const d = new Date(2026, 5, 1);
-  for (let i = 0; i < n; i++) {
-    labels.push(`${d.getMonth()+1}/${d.getDate()}`);
-    d.setDate(d.getDate() + 1);
-  }
-  return labels;
-}
-
-function lineChart(id, data, color) {
-  new Chart(document.getElementById(id), {
-    type: 'line',
-    data: {
-      labels: makeLabels(data.length),
-      datasets: [{ data, borderColor: color, backgroundColor: color+'18', borderWidth: 2, pointRadius: 2, fill: true, tension: 0.4 }]
-    },
-    options: { ...chartDefaults }
-  });
-}
-
-function buildCharts() {
-  const followerData = [12428,12446,12451,12470,12485,12502,12510,12498,12520,12548,12562,12578,12590,12610,12625,12640,12658,12671,12690,12710,12720,12736,12748,12762,12778,12792,12810,12824,12838,12840];
-  lineChart('follower-chart', followerData, '#dfd71c');
-
-  new Chart(document.getElementById('type-chart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['画像', 'カルーセル', 'リール'],
-      datasets: [{ data: [9, 6, 3], backgroundColor: ['#dfd71c', '#e1306c', '#833ab4'], borderWidth: 0 }]
-    },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: 'rgba(255,255,255,0.5)', font: { size: 11 }, padding: 12 } } } }
-  });
-
-  const reachData = [2100,2400,1800,2800,3100,2600,3400,2900,3800,3200,4100,3600,2800,3900,4200,3500,4600,3800,4900,4100,5200,4400,3700,4800,5100,4300,5400,4700,5600,5000];
-  lineChart('reach-chart', reachData, '#e1306c');
-
-  const impData = reachData.map(v => Math.round(v * 1.68 + Math.random()*200));
-  lineChart('imp-chart', impData, '#833ab4');
-
-  new Chart(document.getElementById('active-chart'), {
-    type: 'bar',
-    data: {
-      labels: ['6','8','10','12','14','16','18','20','22'],
-      datasets: [{ data: [12,28,42,68,45,52,80,96,74], backgroundColor: '#dfd71c44', borderColor: '#dfd71c', borderWidth: 1, borderRadius: 3 }]
-    },
-    options: { ...chartDefaults, scales: { x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 9 } } }, y: { display: false } } }
-  });
-
-  lineChart('report-chart', reachData, '#dfd71c');
-}
-
-// ===== INIT =====
-buildMediaGrid();
 buildCalendar();
-buildCharts();
+
+// CHARTS (SVG)
+const followerData = [12428,12446,12451,12470,12485,12502,12510,12498,12520,12548,12562,12578,12590,12610,12625,12640,12658,12671,12690,12710,12720,12736,12748,12762,12778,12792,12810,12824,12838,12840];
+const reachData = [2100,2400,1800,2800,3100,2600,3400,2900,3800,3200,4100,3600,2800,3900,4200,3500,4600,3800,4900,4100,5200,4400,3700,4800,5100,4300,5400,4700,5600,5000];
+const impData = reachData.map(v => Math.round(v * 1.68));
+
+svgLine('follower-svg', followerData, '#dfd71c', '#dfd71c');
+svgLine('reach-svg', reachData, '#e1306c', '#e1306c');
+svgLine('imp-svg', impData, '#833ab4', '#833ab4');
+svgLine('report-svg', reachData, '#dfd71c', '#dfd71c');
+svgBars('active-svg', [12,28,42,68,45,52,80,96,74], ['6時','8時','10時','12時','14時','16時','18時','20時','22時'], '#dfd71c');
 </script>
 </body>
 </html>
