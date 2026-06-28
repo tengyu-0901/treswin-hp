@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRESLINK 営業資料 | SNS運用コンサル</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+    :root {
+      --navy: #1d184a;
+      --yellow: #dfd71c;
+      --white: #ffffff;
+      --gray: #f4f4f6;
+      --light: #f9f9fb;
+      --border: #e8e8ee;
+      --text: #222;
+      --text-light: #666;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+      background: #e0e0e8;
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    /* ===== SLIDE BASE ===== */
+    .slide {
+      width: 297mm;
+      min-height: 210mm;
+      background: var(--white);
+      margin: 24px auto;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      body { background: white; }
+      .slide {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+        page-break-inside: avoid;
+        width: 100%;
+        min-height: 100vh;
+      }
+      .no-print { display: none !important; }
+    }
+
+    /* ===== TOOLBAR ===== */
+    .toolbar {
+      position: fixed;
+      top: 16px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      gap: 10px;
+    }
+    .toolbar button {
+      padding: 10px 20px;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 1px;
+      font-family: inherit;
+    }
+    .toolbar button:hover { background: var(--yellow); color: var(--navy); }
+
+    /* ===== HEADER / FOOTER STRIP ===== */
+    .slide-header {
+      background: var(--navy);
+      padding: 10px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slide-header .brand {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: var(--white);
+    }
+    .slide-header .brand span { color: var(--yellow); }
+    .slide-header .page-num {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1px;
+    }
+    .slide-footer {
+      background: var(--navy);
+      padding: 7px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+    .slide-footer span {
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 1px;
+    }
+    .slide-footer .yellow-dot {
+      width: 20px;
+      height: 3px;
+      background: var(--yellow);
+      border-radius: 2px;
+    }
+
+    /* ===== SLIDE BODY ===== */
+    .slide-body {
+      flex: 1;
+      padding: 32px 40px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== SLIDE LABELS ===== */
+    .slide-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .slide-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+    .slide-subtitle {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    /* ===== ACCENT LINE ===== */
+    .accent-line {
+      width: 40px;
+      height: 3px;
+      background: var(--yellow);
+      margin-bottom: 24px;
+    }
+
+    /* ===== COVER SLIDE ===== */
+    .slide-cover {
+      background: var(--navy);
+      min-height: 210mm;
+      display: flex;
+      flex-direction: column;
+    }
+    .cover-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover-bg-text {
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 160px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.04);
+      letter-spacing: -4px;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      padding: 6px 16px;
+      width: fit-content;
+      margin-bottom: 24px;
+    }
+    .cover-title {
+      font-size: 72px;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 2px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .cover-title span { color: var(--yellow); }
+    .cover-sub {
+      font-size: 18px;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 2px;
+      margin-bottom: 48px;
+    }
+    .cover-divider {
+      width: 60px;
+      height: 2px;
+      background: var(--yellow);
+      margin-bottom: 32px;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 40px;
+    }
+    .cover-meta-item label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 2px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .cover-meta-item span {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 1px;
+    }
+    .cover-footer {
+      background: rgba(0,0,0,0.3);
+      padding: 12px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cover-footer .logo {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.5);
+    }
+    .cover-footer .url {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+    }
+
+    /* ===== 2-COL GRID ===== */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+    /* ===== CARD ===== */
+    .card {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+    }
+    .card.navy {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: var(--white);
+    }
+    .card.yellow-border { border-left: 4px solid var(--yellow); }
+
+    /* ===== PROBLEM CARDS ===== */
+    .problem-card {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-left: 4px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 16px 18px;
+    }
+    .problem-card .num {
+      font-size: 22px;
+      font-weight: 900;
+      color: #ddd;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .problem-card h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .problem-card p { font-size: 12px; color: var(--text-light); line-height: 1.7; }
+
+    /* ===== HIGHLIGHT BOX ===== */
+    .highlight-box {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 6px;
+      padding: 20px 24px;
+      text-align: center;
+    }
+    .highlight-box .hl-num {
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--yellow);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .highlight-box .hl-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.5;
+    }
+
+    /* ===== SERVICE CARD ===== */
+    .svc-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--navy);
+      border-radius: 4px;
+      padding: 18px 16px;
+    }
+    .svc-card .icon { font-size: 24px; margin-bottom: 8px; display: block; }
+    .svc-card h4 {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .svc-card p { font-size: 12px; color: var(--text-light); line-height: 1.7; }
+
+    /* ===== FLOW STEPS ===== */
+    .flow-row {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+    }
+    .flow-item {
+      flex: 1;
+      background: var(--light);
+      border: 1px solid var(--border);
+      padding: 16px;
+      position: relative;
+    }
+    .flow-item:not(:last-child)::after {
+      content: '▶';
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: var(--yellow);
+      z-index: 2;
+      background: var(--white);
+      padding: 2px;
+    }
+    .flow-item .f-num {
+      width: 28px;
+      height: 28px;
+      background: var(--navy);
+      color: var(--yellow);
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .flow-item h5 {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .flow-item p { font-size: 11px; color: var(--text-light); line-height: 1.65; }
+    .flow-item .f-period {
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--yellow);
+      letter-spacing: 1px;
+    }
+
+    /* ===== PLAN TABLE ===== */
+    .plan-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .plan-table th {
+      background: var(--navy);
+      color: var(--white);
+      padding: 10px 14px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .plan-table th.highlight { background: #2d2870; }
+    .plan-table th .plan-badge-inline {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--navy);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 2px;
+      margin-left: 6px;
+    }
+    .plan-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-light);
+    }
+    .plan-table td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+    .plan-table tr:nth-child(even) td { background: var(--light); }
+    .plan-table .check { color: var(--navy); font-weight: 900; }
+    .plan-table .price-row td {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--navy);
+      padding-top: 14px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--navy);
+    }
+
+    /* ===== COMPARISON TABLE ===== */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .comp-table th {
+      padding: 10px 14px;
+      text-align: center;
+      font-weight: 700;
+      border-bottom: 2px solid var(--border);
+    }
+    .comp-table th.us {
+      background: var(--navy);
+      color: var(--yellow);
+    }
+    .comp-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      font-size: 12px;
+    }
+    .comp-table td:first-child { text-align: left; font-weight: 700; color: var(--navy); }
+    .comp-table .us-col { background: rgba(29,24,74,0.04); font-weight: 700; color: var(--navy); }
+    .comp-table .good { color: #1a7f4e; }
+    .comp-table .bad { color: #999; }
+
+    /* ===== TAGS ===== */
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border: 1px solid var(--navy);
+      color: var(--navy);
+      border-radius: 2px;
+      margin: 2px;
+    }
+    .tag.yellow { border-color: var(--yellow); color: #a09000; background: #fdfde8; }
+
+    /* ===== STRENGTH ITEM ===== */
+    .strength-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .strength-row:last-child { border-bottom: none; }
+    .s-icon {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      background: var(--navy);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .strength-row h5 {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 2px;
+    }
+    .strength-row p { font-size: 12px; color: var(--text-light); line-height: 1.7; }
+
+    /* ===== CLOSING ===== */
+    .closing-body {
+      flex: 1;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .closing-bg {
+      position: absolute;
+      font-size: 180px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.03);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .closing-body .label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .closing-body h2 {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 24px;
+    }
+    .closing-body p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.9;
+      max-width: 500px;
+      margin-bottom: 36px;
+    }
+    .closing-contacts {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 32px;
+    }
+    .closing-contact-item label {
+      font-size: 9px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .closing-contact-item span {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 1px;
+    }
+    .closing-cta {
+      display: inline-block;
+      padding: 14px 48px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-decoration: none;
+      border-radius: 3px;
+    }
+
+    /* ===== COMPANY INFO ===== */
+    .company-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .company-table th {
+      width: 120px;
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 700;
+      color: var(--navy);
+      background: var(--light);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .company-table td {
+      padding: 10px 14px;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ===== QUOTE ===== */
+    .big-quote {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 6px;
+      padding: 28px 32px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .big-quote p {
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.5;
+      letter-spacing: 0.03em;
+    }
+    .big-quote p span { color: var(--yellow); }
+
+  </style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar no-print">
+  <button onclick="window.print()">🖨 PDF出力 / 印刷</button>
+  <button onclick="window.history.back()">← 戻る</button>
+</div>
+
+
+<!-- ========== SLIDE 1: 表紙 ========== -->
+<div class="slide slide-cover">
+  <div class="cover-body">
+    <div class="cover-bg-text">TRESLINK</div>
+    <div class="cover-badge">SERVICE PROPOSAL</div>
+    <div class="cover-title">TRES<span>LINK</span></div>
+    <div class="cover-sub">SNS運用コンサルティング</div>
+    <div class="cover-divider"></div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <label>SERVICE BY</label>
+        <span>TRESWIN（トレスウィン）</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>CONTACT</label>
+        <span>info@tres-win.com</span>
+      </div>
+      <div class="cover-meta-item">
+        <label>AREA</label>
+        <span>全国対応（オンライン）</span>
+      </div>
+    </div>
+  </div>
+  <div class="cover-footer">
+    <div class="logo">TRESWIN</div>
+    <div class="url">https://tres-win.com</div>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 2: 目次 ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">02 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">Contents</p>
+    <h2 class="slide-title">目次</h2>
+    <div class="accent-line"></div>
+    <div class="two-col" style="gap:14px;margin-top:8px;">
+      <div>
+        <div class="card yellow-border" style="margin-bottom:12px;padding:14px 18px;">
+          <div style="font-size:11px;color:var(--text-light);margin-bottom:3px;">01</div>
+          <div style="font-weight:700;color:var(--navy);font-size:15px;">SNS運用の現状と課題</div>
+        </div>
+        <div class="card yellow-border" style="margin-bottom:12px;padding:14px 18px;">
+          <div style="font-size:11px;color:var(--text-light);margin-bottom:3px;">02</div>
+          <div style="font-weight:700;color:var(--navy);font-size:15px;">TRESLINKとは</div>
+        </div>
+        <div class="card yellow-border" style="margin-bottom:12px;padding:14px 18px;">
+          <div style="font-size:11px;color:var(--text-light);margin-bottom:3px;">03</div>
+          <div style="font-weight:700;color:var(--navy);font-size:15px;">選ばれる3つの理由</div>
+        </div>
+        <div class="card yellow-border" style="padding:14px 18px;">
+          <div style="font-size:11px;color:var(--text-light);margin-bottom:3px;">04</div>
+          <div style="font-weight:700;color:var(--navy);font-size:15px;">他社との比較</div>
+        </div>
+      </div>
+      <div>
+        <div class="card yellow-border" style="margin-bottom:12px;padding:14px 18px;">
+          <div style="font-size:11px;color:var(--text-light);margin-bottom:3px;">05</div>
+          <div style="font-weight:700;color:var(--navy);font-size:15px;">サービスメニュー</div>
+        </div>
+        <div class="card yellow-border" style="margin-bottom:12px;padding:14px 18px;">
+          <div style="font-size:11px;color:var(--text-light);margin-bottom:3px;">06</div>
+          <div style="font-weight:700;color:var(--navy);font-size:15px;">対応プラットフォーム</div>
+        </div>
+        <div class="card yellow-border" style="margin-bottom:12px;padding:14px 18px;">
+          <div style="font-size:11px;color:var(--text-light);margin-bottom:3px;">07</div>
+          <div style="font-weight:700;color:var(--navy);font-size:15px;">支援の流れ</div>
+        </div>
+        <div class="card yellow-border" style="padding:14px 18px;">
+          <div style="font-size:11px;color:var(--text-light);margin-bottom:3px;">08</div>
+          <div style="font-weight:700;color:var(--navy);font-size:15px;">料金プラン・会社概要</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 3: 課題 ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">03 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">01 — Problem</p>
+    <h2 class="slide-title">SNS運用、こんな課題ありませんか？</h2>
+    <div class="accent-line"></div>
+    <div class="two-col" style="margin-bottom:20px;">
+      <div class="problem-card">
+        <div class="num">01</div>
+        <h4>投稿しても反応がない</h4>
+        <p>フォロワーが増えず、いいねも伸びない。何を発信すればいいか分からず、運用が続かない。</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">02</div>
+        <h4>運用に時間が取られすぎる</h4>
+        <p>コンテンツ制作・投稿・コメント対応…本業の合間に続けるのが限界で、質が落ちている。</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">03</div>
+        <h4>何が正解か分からない</h4>
+        <p>アルゴリズムや流行は毎日変わる。試行錯誤はしているが、成果に繋がっているか自信がない。</p>
+      </div>
+      <div class="problem-card">
+        <div class="num">04</div>
+        <h4>SNSが売上に直結しない</h4>
+        <p>フォロワーはいるのに問い合わせや購入に結びつかない。認知と集客が繋がっていない。</p>
+      </div>
+    </div>
+    <div class="big-quote">
+      <p>SNSは「なんとなく運用する」から<br><span>「ビジネスに効く戦略」</span>に変えられる。</p>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 4: TRESLINKとは ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">04 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">02 — About</p>
+    <h2 class="slide-title">TRESLINKとは</h2>
+    <div class="accent-line"></div>
+    <div class="two-col" style="align-items:start;gap:28px;">
+      <div>
+        <p style="font-size:14px;line-height:1.9;color:var(--text-light);margin-bottom:18px;">
+          TRESLINKは、TRESWINが提供する<strong style="color:var(--navy);">SNS運用コンサルティングサービス</strong>です。<br><br>
+          SNS戦略の設計から日々の運用・データ分析・改善提案まで、一気通貫でサポート。<br>
+          「投稿するだけ」の運用から卒業し、<strong style="color:var(--navy);">ビジネスの成果に直結するSNS</strong>を構築します。
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
+          <span class="tag">Instagram</span>
+          <span class="tag">X（Twitter）</span>
+          <span class="tag">TikTok</span>
+          <span class="tag">YouTube</span>
+          <span class="tag">LinkedIn</span>
+          <span class="tag">Facebook</span>
+        </div>
+        <div class="card" style="background:var(--light);padding:16px 18px;">
+          <div style="font-size:12px;color:var(--text-light);line-height:1.8;">
+            <div>📍 大阪梅田を拠点に<strong style="color:var(--navy);">全国対応（オンライン）</strong></div>
+            <div>🤝 提案書を渡して終わりにしない<strong style="color:var(--navy);">伴走型支援</strong></div>
+            <div>📊 感覚ではなく<strong style="color:var(--navy);">データ・KPIで成果を示す</strong></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="highlight-box">
+            <div class="hl-num">4</div>
+            <div class="hl-label">主要サービスメニュー<br>（戦略〜運用〜分析）</div>
+          </div>
+          <div class="highlight-box">
+            <div class="hl-num">6</div>
+            <div class="hl-label">対応プラットフォーム数</div>
+          </div>
+          <div class="highlight-box">
+            <div class="hl-num" style="font-size:28px;">全国</div>
+            <div class="hl-label">オンライン対応<br>大阪・関西圏は対面も可</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 5: 選ばれる理由 ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">05 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">03 — Strengths</p>
+    <h2 class="slide-title">TRESLINKが選ばれる3つの理由</h2>
+    <div class="accent-line"></div>
+    <div class="strength-row">
+      <div class="s-icon">📊</div>
+      <div>
+        <h5>データドリブンな改善サイクル</h5>
+        <p>インサイト分析から投稿時間・コンテンツ構成を継続的に最適化します。「なんとなく投稿」ではなく、数字に基づいた施策で確実に成果を積み上げます。毎月の分析レポートで改善点を明確化し、次の一手を常に提案します。</p>
+      </div>
+    </div>
+    <div class="strength-row">
+      <div class="s-icon">🎯</div>
+      <div>
+        <h5>ビジネス目標に直結した戦略設計</h5>
+        <p>集客・採用・ブランディング——目的を明確にした上でKPIを設定し、SNS戦略を設計します。フォロワー数の増加だけでなく、問い合わせ・購買・採用といったビジネス成果に結びつく運用を実現します。</p>
+      </div>
+    </div>
+    <div class="strength-row">
+      <div class="s-icon">🤝</div>
+      <div>
+        <h5>伴走型の継続サポート</h5>
+        <p>「丸投げして放置」でも「提案書を渡して終わり」でもありません。月次レポートと定例ミーティングを通じて、クライアントとともに改善し続ける伴走型の支援を提供します。変化するアルゴリズムにも迅速に対応します。</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 6: 他社比較 ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">06 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">04 — Comparison</p>
+    <h2 class="slide-title">他社・他サービスとの比較</h2>
+    <div class="accent-line"></div>
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="text-align:left;background:var(--light);color:var(--navy);">比較軸</th>
+          <th>大手代理店</th>
+          <th>フリーランス</th>
+          <th>自社運用</th>
+          <th class="us">TRESLINK</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>価格帯</td>
+          <td class="bad">高単価<br>中小は対象外</td>
+          <td>バラツキあり</td>
+          <td>コスト低め</td>
+          <td class="us-col good">中小専用<br>適正価格</td>
+        </tr>
+        <tr>
+          <td>品質の安定性</td>
+          <td>高いが担当依存</td>
+          <td class="bad">個人依存<br>リスク高</td>
+          <td class="bad">スキル・<br>時間が必要</td>
+          <td class="us-col good">戦略設計から<br>一貫して対応</td>
+        </tr>
+        <tr>
+          <td>戦略設計</td>
+          <td>提案書止まり</td>
+          <td class="bad">スキル差あり</td>
+          <td class="bad">属人化しやすい</td>
+          <td class="us-col good">KPI設計から<br>実行まで一貫</td>
+        </tr>
+        <tr>
+          <td>伴走・改善</td>
+          <td class="bad">契約終了で終わり</td>
+          <td>対応に差あり</td>
+          <td class="bad">改善サイクルが<br>回りにくい</td>
+          <td class="us-col good">月次レポート＋<br>定例MTGで継続改善</td>
+        </tr>
+        <tr>
+          <td>レポーティング</td>
+          <td>あり</td>
+          <td class="bad">簡易的</td>
+          <td class="bad">なし〜簡易</td>
+          <td class="us-col good">データドリブンな<br>改善提案つき</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px;text-align:center;">
+      <span style="font-size:12px;color:var(--text-light);">※ 各社・各サービスの一般的な傾向を示したものです</span>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 7: サービスメニュー ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">07 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">05 — Services</p>
+    <h2 class="slide-title">サービスメニュー</h2>
+    <div class="accent-line"></div>
+    <div class="four-col" style="margin-bottom:20px;">
+      <div class="svc-card">
+        <span class="icon">🗺️</span>
+        <h4>SNS戦略設計</h4>
+        <p>ターゲット設定・競合分析・KPI設計・プラットフォーム選定まで、ビジネスに合った戦略を一から構築。</p>
+      </div>
+      <div class="svc-card">
+        <span class="icon">✏️</span>
+        <h4>コンテンツ制作</h4>
+        <p>「伝わる」投稿を設計。画像・動画・コピーライティングまでワンストップで対応します。</p>
+      </div>
+      <div class="svc-card">
+        <span class="icon">⚙️</span>
+        <h4>アカウント運用代行</h4>
+        <p>投稿・スケジュール管理・コメント対応・DM対応まで完全代行。本業に集中できる環境を提供。</p>
+      </div>
+      <div class="svc-card">
+        <span class="icon">📈</span>
+        <h4>データ分析・レポーティング</h4>
+        <p>毎月インサイトを分析しレポート化。次の施策を明確にした改善提案をセットで提供します。</p>
+      </div>
+    </div>
+    <div class="card" style="background:var(--light);padding:14px 20px;">
+      <div style="font-size:12px;color:var(--text-light);line-height:1.9;">
+        <strong style="color:var(--navy);">🔧 オプション対応：</strong>
+        SNS広告運用（Instagram/X/TikTok広告）　|　インフルエンサーキャスティング支援　|　LP・集客ページ制作（TRESWEB連携）
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 8: 流れ ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">08 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">06 — Process</p>
+    <h2 class="slide-title">支援の流れ</h2>
+    <div class="accent-line"></div>
+    <div class="flow-row" style="margin-bottom:20px;">
+      <div class="flow-item">
+        <div class="f-num">01</div>
+        <h5>無料相談・<br>ヒアリング</h5>
+        <p>現状・ゴール・ターゲットをオンラインでヒアリング。課題の整理と方向性を確認。</p>
+        <div class="f-period">60分 / 無料</div>
+      </div>
+      <div class="flow-item">
+        <div class="f-num">02</div>
+        <h5>戦略設計・<br>提案書提出</h5>
+        <p>競合分析・KPI・プラットフォーム選定・コンテンツ方針をまとめた提案書を提出。</p>
+        <div class="f-period">〜1週間</div>
+      </div>
+      <div class="flow-item">
+        <div class="f-num">03</div>
+        <h5>アカウント設計・<br>初期整備</h5>
+        <p>プロフィール最適化・ハッシュタグ設計・投稿カレンダー・トーン策定など基盤を整備。</p>
+        <div class="f-period">契約後 〜2週間</div>
+      </div>
+      <div class="flow-item">
+        <div class="f-num">04</div>
+        <h5>運用開始・<br>月次改善サイクル</h5>
+        <p>投稿代行・コンテンツ制作・月次レポートの定例サイクルを開始。データで継続改善。</p>
+        <div class="f-period">月次レポート＋定例MTG</div>
+      </div>
+    </div>
+    <div class="card" style="background:var(--light);padding:14px 20px;">
+      <div style="font-size:12px;color:var(--text-light);line-height:1.8;">
+        <strong style="color:var(--navy);">💡 ご注意：</strong>
+        すべてのフェーズで担当者が伴走します。途中でプランを変更・追加することも可能です。まずは無料相談からお気軽にご連絡ください。
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 9: 料金 ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">09 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">07 — Pricing</p>
+    <h2 class="slide-title">料金プラン</h2>
+    <div class="accent-line"></div>
+    <table class="plan-table" style="margin-bottom:14px;">
+      <thead>
+        <tr>
+          <th style="text-align:left;background:var(--light);color:var(--navy);">サービス内容</th>
+          <th>Starter</th>
+          <th class="highlight">Standard <span class="plan-badge-inline">POPULAR</span></th>
+          <th>Premium</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="price-row">
+          <td>月額料金（税抜）</td>
+          <td>¥50,000〜</td>
+          <td>¥100,000〜</td>
+          <td>要相談</td>
+        </tr>
+        <tr>
+          <td>SNS戦略設計</td>
+          <td class="check">✓</td>
+          <td class="check">✓ + 継続改善</td>
+          <td class="check">✓ + 継続改善</td>
+        </tr>
+        <tr>
+          <td>投稿サポート</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>画像・動画制作</td>
+          <td>画像のみ</td>
+          <td class="check">✓ 動画含む</td>
+          <td class="check">✓ 動画含む</td>
+        </tr>
+        <tr>
+          <td>コメント・DM対応</td>
+          <td class="bad">—</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>月次レポート</td>
+          <td class="check">✓</td>
+          <td class="check">✓ + 定例MTG</td>
+          <td class="check">✓ 週次 + 随時</td>
+        </tr>
+        <tr>
+          <td>対応プラットフォーム</td>
+          <td>1つ</td>
+          <td>2つまで</td>
+          <td class="check">すべて対応</td>
+        </tr>
+        <tr>
+          <td>SNS広告運用</td>
+          <td class="bad">—</td>
+          <td>オプション</td>
+          <td class="check">✓</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="font-size:11px;color:var(--text-light);text-align:center;">
+      ※ 料金はすべて税抜き表示です。初期費用・オプション費用は別途ご案内します。まずはご相談ください。
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== SLIDE 10: 会社概要 + クロージング ========== -->
+<div class="slide">
+  <div class="slide-header">
+    <div class="brand">TRES<span>LINK</span></div>
+    <div class="page-num">10 / 10</div>
+  </div>
+  <div class="slide-body">
+    <p class="slide-label">08 — Company</p>
+    <h2 class="slide-title">会社概要</h2>
+    <div class="accent-line"></div>
+    <div class="two-col" style="align-items:start;gap:28px;">
+      <div>
+        <table class="company-table">
+          <tr>
+            <th>屋号</th>
+            <td>トレスウィン（TRESWIN）</td>
+          </tr>
+          <tr>
+            <th>代表者</th>
+            <td>大槻 雄人</td>
+          </tr>
+          <tr>
+            <th>所在地</th>
+            <td>〒530-0001<br>大阪府大阪市北区梅田1丁目2番2号<br>大阪駅前第2ビル 12-12</td>
+          </tr>
+          <tr>
+            <th>設立</th>
+            <td>2024年1月</td>
+          </tr>
+          <tr>
+            <th>URL</th>
+            <td>https://tres-win.com</td>
+          </tr>
+          <tr>
+            <th>メール</th>
+            <td>info@tres-win.com</td>
+          </tr>
+          <tr>
+            <th>対応エリア</th>
+            <td>全国（オンライン）<br>対面は大阪・関西圏中心</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <div class="card navy" style="margin-bottom:14px;padding:20px 22px;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:2px;margin-bottom:10px;">TRESWIN 事業一覧</div>
+          <div style="font-size:13px;line-height:2;color:rgba(255,255,255,0.85);">
+            <div>🎯 キャリア支援事業</div>
+            <div>🌐 HP制作事業（TRESWEB）</div>
+            <div style="color:var(--yellow);font-weight:700;">📱 SNS運用コンサル（TRESLINK） ← 本資料</div>
+            <div>💼 アドバイザリー事業</div>
+          </div>
+        </div>
+        <div class="card" style="background:var(--light);padding:16px 18px;">
+          <div style="font-size:12px;color:var(--text-light);line-height:1.9;">
+            <strong style="color:var(--navy);">🌟 TRESWINのコンセプト</strong><br>
+            大阪梅田を拠点に、個人のキャリアアップから企業のWeb・SNS戦略まで、<strong style="color:var(--navy);">「伴走型」</strong>でサポートする総合ビジネス支援企業。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span>TRESWIN — TRESLINK</span>
+    <div class="yellow-dot"></div>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ========== CLOSING SLIDE ========== -->
+<div class="slide slide-cover">
+  <div class="closing-body">
+    <div class="closing-bg">CONTACT</div>
+    <p class="label">Next Step</p>
+    <h2>まずは無料相談から<br>始めましょう。</h2>
+    <p>
+      現状のSNS運用にお悩みの方、これから本格的に始めたい方、<br>
+      60分のオンライン相談で課題と方向性を整理します。<br>
+      費用のお見積もりも無料で対応いたします。
+    </p>
+    <div class="closing-contacts">
+      <div class="closing-contact-item">
+        <label>Email</label>
+        <span>info@tres-win.com</span>
+      </div>
+      <div class="closing-contact-item">
+        <label>Web</label>
+        <span>https://tres-win.com</span>
+      </div>
+    </div>
+    <a href="contact.html" class="closing-cta">無料相談を申し込む →</a>
+  </div>
+  <div class="cover-footer">
+    <div class="logo">TRESWIN</div>
+    <div class="url">© 2026 TRESWIN. All Rights Reserved.</div>
+  </div>
+</div>
+
+</body>
+</html>
