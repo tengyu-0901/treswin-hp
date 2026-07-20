@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>日本人財開発機構 J-TAD</title>
+<title>ハレマ｜心の天気図 — 個別キャリアコーチング</title>
+<meta name="description" content="頑張っているのに苦しいあなたへ。アドバイスより先に、ただ話を聞く1対1のオンラインキャリアコーチング「ハレマ」。まずは30分の無料体験をLINEから。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -45,26 +46,6 @@ body {
 .d1{transition-delay:.10s}.d2{transition-delay:.20s}.d3{transition-delay:.30s}.d4{transition-delay:.40s}
 
 /* ══════════════════════════════════
-   GOV BAND
-══════════════════════════════════ */
-.gov-band {
-  background: var(--navy3);
-  height: 34px; padding: 0 5vw;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid rgba(201,168,92,0.4);
-}
-.gov-band-left {
-  font-family: var(--mono); font-size: 10px;
-  color: rgba(255,255,255,0.38); letter-spacing: 0.15em; text-transform: uppercase;
-}
-.gov-band-right { display: flex; gap: 18px; }
-.gov-band-right a {
-  font-size: 10px; color: rgba(255,255,255,0.32);
-  text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s;
-}
-.gov-band-right a:hover { color: var(--gold-l); }
-
-/* ══════════════════════════════════
    NAV
 ══════════════════════════════════ */
 nav {
@@ -82,8 +63,8 @@ nav {
 .nav-brand { display: flex; align-items: center; gap: 13px; text-decoration: none; }
 .nav-emblem { width: 38px; height: 38px; flex-shrink: 0; }
 .nav-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
-.nav-brand-ja { font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--navy); letter-spacing: 0.05em; }
-.nav-brand-en { font-family: var(--mono); font-size: 9px; color: var(--gold); letter-spacing: 0.22em; text-transform: uppercase; }
+.nav-brand-ja { font-family: var(--serif); font-size: 15px; font-weight: 700; color: var(--navy); letter-spacing: 0.05em; }
+.nav-brand-en { font-family: var(--mono); font-size: 9px; color: var(--gold); letter-spacing: 0.16em; text-transform: uppercase; }
 .nav-sep { width: 1px; height: 26px; background: var(--rule); }
 .nav-links { display: flex; list-style: none; }
 .nav-links a {
@@ -109,7 +90,6 @@ nav {
   .nav-links, .nav-cta, .nav-sep { display: none; }
   .nav-burger { display: flex; }
 
-  /* メニューが開いた状態 */
   nav.menu-open .nav-links {
     display: flex;
     flex-direction: column;
@@ -152,7 +132,6 @@ nav {
   transition: transform 8s ease;
 }
 #hero.loaded .hero-bg { transform: scale(1); }
-/* layered overlays for depth */
 .hero-overlay-1 {
   position: absolute; inset: 0;
   background: linear-gradient(to right, rgba(10,22,40,0.88) 0%, rgba(10,22,40,0.55) 55%, rgba(10,22,40,0.25) 100%);
@@ -161,7 +140,6 @@ nav {
   position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(10,22,40,0.95) 0%, transparent 50%);
 }
-/* gold shimmer line */
 .hero-shimmer {
   position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: linear-gradient(90deg, transparent 0%, var(--gold-l) 30%, var(--gold-ll) 50%, var(--gold-l) 70%, transparent 100%);
@@ -172,12 +150,9 @@ nav {
 }
 .hero-content {
   position: relative; z-index: 2;
-  max-width: var(--max); width: 100%;
-  margin: 0 auto; padding: 0 5vw 80px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end;
+  max-width: 680px; width: 100%;
+  margin: 0 auto; padding: 0 5vw 90px;
 }
-@media(max-width:860px){ .hero-content{grid-template-columns:1fr; padding-bottom:60px;} }
-
 .hero-kicker {
   display: inline-flex; align-items: center; gap: 10px;
   margin-bottom: 24px;
@@ -189,8 +164,8 @@ nav {
 }
 .hero-headline {
   font-family: var(--serif);
-  font-size: clamp(32px, 5vw, 58px);
-  font-weight: 900; line-height: 1.25;
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 900; line-height: 1.35;
   letter-spacing: 0.02em; color: var(--white);
   margin-bottom: 24px;
 }
@@ -206,7 +181,7 @@ nav {
 }
 .hero-sub {
   font-size: 14px; color: rgba(255,255,255,0.68);
-  line-height: 2; margin-bottom: 40px; max-width: 420px;
+  line-height: 2; margin-bottom: 40px; max-width: 460px;
   border-left: 2px solid var(--gold-l); padding-left: 16px;
 }
 .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
@@ -237,20 +212,11 @@ nav {
 }
 .hero-meta-item {}
 .hero-meta-num {
-  font-family: var(--mono); font-size: 24px; font-weight: 500;
+  font-family: var(--mono); font-size: 22px; font-weight: 500;
   color: var(--white); line-height: 1;
 }
 .hero-meta-num em { font-style:normal; font-size:13px; color:var(--gold-l); margin-left:2px; }
 .hero-meta-label { font-size: 10px; color: rgba(255,255,255,0.35); margin-top:4px; letter-spacing:0.08em; }
-
-/* dot map on dark */
-.hero-right-panel { display: flex; align-items: center; justify-content: center; }
-#dot-map-canvas { width: 100%; max-width: 420px; height: auto; display: block; opacity: 0.9; }
-.map-caption {
-  font-family: var(--mono); font-size: 9px;
-  color: rgba(255,255,255,0.22); letter-spacing: 0.12em;
-  text-transform: uppercase; text-align: right; margin-top: 8px;
-}
 
 /* ══════════════════════════════════
    SECTION FRAMEWORK
@@ -271,12 +237,12 @@ section[id] { scroll-margin-top: 100px; }
   font-size: clamp(24px, 3.2vw, 38px);
   font-weight: 700; line-height: 1.4; color: var(--navy);
 }
-.sec-lead { margin-top: 14px; font-size: 14px; color: var(--mid); line-height: 2; max-width: 540px; }
+.sec-lead { margin-top: 14px; font-size: 14px; color: var(--mid); line-height: 2; max-width: 560px; }
 
 /* ══════════════════════════════════
-   MISSION — dark photo split
+   ABOUT — dark photo split
 ══════════════════════════════════ */
-#mission { padding: 0; overflow: hidden; }
+#about { padding: 0; overflow: hidden; }
 .mission-split {
   display: grid; grid-template-columns: 1fr 1fr; min-height: 600px;
 }
@@ -295,7 +261,6 @@ section[id] { scroll-margin-top: 100px; }
   position: absolute; inset: 0;
   background: linear-gradient(to right, transparent 60%, var(--navy3) 100%);
 }
-/* gold border accent */
 .mission-photo::after {
   content: '';
   position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
@@ -313,7 +278,7 @@ section[id] { scroll-margin-top: 100px; }
 .mission-kicker-text { font-family: var(--mono); font-size: 10px; color: rgba(201,168,92,0.7); letter-spacing: 0.2em; text-transform: uppercase; }
 .mission-quote {
   font-family: var(--serif);
-  font-size: clamp(18px, 2.5vw, 28px);
+  font-size: clamp(18px, 2.5vw, 27px);
   font-weight: 700; line-height: 1.65;
   color: var(--white); margin-bottom: 28px;
 }
@@ -346,13 +311,12 @@ section[id] { scroll-margin-top: 100px; }
 .mvv-cell-body { font-size: 12px; color: rgba(255,255,255,0.42); line-height: 1.8; }
 
 /* ══════════════════════════════════
-   SERVICES — glass cards + flagship photo
+   PRICING — flagship photo + table
 ══════════════════════════════════ */
-#services { background: var(--off); }
+#pricing { background: var(--off); }
 .flagship-photo-card {
   position: relative; overflow: hidden; border-radius: 4px;
   margin-bottom: 3px;
-  grid-column: 1 / -1;
 }
 .flagship-photo-card img {
   width: 100%; height: 340px;
@@ -368,7 +332,6 @@ section[id] { scroll-margin-top: 100px; }
   padding: clamp(28px,4vw,52px) clamp(24px,4vw,52px);
   display: flex; flex-direction: column; justify-content: flex-end;
 }
-/* gold top border */
 .flagship-photo-card::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 2;
@@ -382,7 +345,7 @@ section[id] { scroll-margin-top: 100px; }
 }
 .fs-badge::before { content:'●'; font-size:6px; }
 .fs-title {
-  font-family: var(--serif); font-size: clamp(22px,3vw,34px);
+  font-family: var(--serif); font-size: clamp(22px,3vw,32px);
   font-weight: 700; color: var(--white); line-height: 1.35; margin-bottom: 10px;
 }
 .fs-body { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.85; max-width: 520px; margin-bottom: 16px; }
@@ -391,125 +354,73 @@ section[id] { scroll-margin-top: 100px; }
 .fs-stat-num em { font-style:normal; font-size:11px; color:var(--gold-l); margin-left:2px; }
 .fs-stat-label { font-size: 10px; color: rgba(255,255,255,0.32); margin-top: 3px; }
 .fs-link {
-  display: inline-flex; align-items: center; gap: 5px; margin-top: 14px;
-  font-family: var(--mono); font-size: 11px; color: var(--gold-l);
-  text-decoration: none; letter-spacing: 0.08em;
-  border-bottom: 1px solid rgba(201,168,92,0.35);
-  padding-bottom: 1px; transition: border-color 0.2s;
-  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 18px;
+  font-family: var(--sans); font-size: 13px; font-weight: 700; color: var(--navy);
+  text-decoration: none; letter-spacing: 0.02em;
+  background: var(--gold-l); padding: 12px 22px; border-radius: 2px;
+  align-self: flex-start; transition: background 0.2s;
 }
-.fs-link:hover { border-color: var(--gold-l); }
+.fs-link:hover { background: var(--gold-ll); }
 
-.svc-grid {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 3px;
+.price-table { width:100%; border-collapse:collapse; margin-top:36px; font-size:14px; background: var(--white); }
+.price-table tr { border-bottom:1px solid var(--rule); }
+.price-table tr:first-child { border-top:2px solid var(--navy); }
+.price-table th {
+  padding:18px 20px; text-align:left; width:180px;
+  background:var(--off); font-family:var(--sans); font-size:13px; font-weight:700;
+  color:var(--navy); vertical-align:top; white-space:nowrap;
 }
-@media(max-width:640px){ .svc-grid{grid-template-columns:1fr;} }
+.price-table td { padding:18px 20px; color:var(--mid); line-height:1.85; vertical-align:top; }
+@media(max-width:600px){
+  .price-table th{display:block;width:100%;padding:14px 16px 4px;background:none;border-bottom:none;}
+  .price-table td{display:block;padding:4px 16px 14px;border-bottom:none;}
+  .price-table tr{display:block;border-bottom:1px solid var(--rule);padding:4px 0;}
+  .price-table tr:first-child{border-top:2px solid var(--navy);}
+}
+.price-note {
+  margin-top:28px; padding:20px 24px;
+  background: var(--white); border-left:3px solid var(--gold);
+  font-size:13px; color:var(--mid); line-height:1.9;
+}
+.price-note strong { color: var(--navy); }
+.price-note a { color: var(--gold); }
+
+/* ══════════════════════════════════
+   PROGRAM — 4 phase cards
+══════════════════════════════════ */
+#program { background: var(--white); }
+.svc-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 3px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+@media(max-width:900px){ .svc-grid{grid-template-columns:repeat(2,1fr);} }
+@media(max-width:480px){ .svc-grid{grid-template-columns:1fr;} }
 .svc-card {
   background: var(--white);
-  padding: 32px 28px;
+  padding: 32px 26px;
   transition: background 0.2s, transform 0.25s, box-shadow 0.25s;
-  border: 1px solid transparent;
 }
 .svc-card:hover {
-  background: var(--white); transform: translateY(-4px);
+  transform: translateY(-4px);
   box-shadow: 0 12px 36px rgba(11,31,58,0.10);
-  border-color: rgba(154,123,60,0.2);
 }
-.svc-num { font-family: var(--mono); font-size: 11px; color: var(--rule); margin-bottom: 14px; }
-.svc-icon { font-size: 26px; margin-bottom: 14px; }
-.svc-name { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 10px; line-height: 1.4; }
-.svc-badge {
-  display: inline-block; font-family: var(--mono); font-size: 9px;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  padding: 2px 7px; border-radius: 1px; margin-bottom: 12px;
-}
-.svc-badge.b2b { background: rgba(11,31,58,0.07); color: var(--navy2); border: 1px solid rgba(11,31,58,0.15); }
-.svc-badge.res { background: rgba(154,123,60,0.08); color: var(--gold); border: 1px solid rgba(154,123,60,0.2); }
-.svc-badge.edu { background: rgba(74,85,104,0.07); color: var(--mid); border: 1px solid rgba(74,85,104,0.15); }
+.svc-num { font-family: var(--mono); font-size: 11px; color: var(--gold); margin-bottom: 14px; }
+.svc-icon { font-size: 24px; margin-bottom: 14px; }
+.svc-name { font-family: var(--serif); font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 10px; line-height: 1.4; }
 .svc-body { font-size: 13px; color: var(--mid); line-height: 1.85; }
 
 /* ══════════════════════════════════
-   VALUES — table on white
+   FAQ
 ══════════════════════════════════ */
-#values { background: var(--white); }
-.values-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-.values-table thead tr { border-bottom: 2px solid var(--navy); }
-.values-table thead th {
-  padding: 12px 16px; font-family: var(--mono); font-size: 9px;
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--light); font-weight: 500; text-align: left;
-}
-.values-table tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.15s; }
-.values-table tbody tr:hover { background: var(--off); }
-.values-table td { padding: 22px 16px; vertical-align: top; }
-.val-code { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.1em; white-space: nowrap; }
-.val-title { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.4; }
-.val-body { font-size: 13px; color: var(--mid); line-height: 1.85; }
-@media(max-width:600px){
-  .values-table thead{display:none}
-  .values-table tbody tr{display:flex;flex-direction:column;padding:20px 0}
-  .values-table td{padding:4px 0;border:none}
-}
-
-/* ══════════════════════════════════
-   VISION — photo strip + data
-══════════════════════════════════ */
-#vision { padding: 0; overflow: hidden; }
-.vision-photo-strip {
-  position: relative; height: clamp(260px, 35vw, 440px); overflow: hidden;
-}
-.vision-photo-strip img {
-  width: 100%; height: 100%; object-fit: cover; object-position: center 55%;
-  filter: brightness(0.5) saturate(0.7);
-}
-.vision-photo-strip-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, transparent 20%, var(--navy3) 100%);
-}
-.vision-strip-text {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  max-width: var(--max); margin: 0 auto;
-  padding: 0 5vw 48px;
-}
-.vision-year {
-  font-family: var(--mono); font-size: clamp(56px,8vw,110px); font-weight: 500;
-  color: rgba(255,255,255,0.07); line-height: 1; margin-bottom: -16px;
-  user-select: none;
-}
-.vision-statement {
-  font-family: var(--serif);
-  font-size: clamp(20px,3vw,34px);
-  font-weight: 700; color: var(--white); line-height: 1.5;
-}
-
-.vision-data-sec {
-  background: var(--navy3);
-  padding: clamp(48px,6vw,80px) 5vw;
-}
-.vision-data-inner {
-  max-width: var(--max); margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
-}
-@media(max-width:760px){ .vision-data-inner{grid-template-columns:1fr;gap:48px;} }
-.vision-body-text {
-  font-size: 14px; color: rgba(255,255,255,0.5); line-height: 2; margin-top: 20px;
-}
-/* data panel */
-.data-panel { overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
-.data-panel-head {
-  background: rgba(255,255,255,0.04);
-  padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-.data-panel-title { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 0.14em; text-transform: uppercase; }
-.data-panel-tag { font-family: var(--mono); font-size: 9px; color: var(--gold-l); letter-spacing: 0.1em; }
-.data-row { display: grid; grid-template-columns: 1fr 64px; align-items: center; gap: 16px; padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.data-row:last-child { border-bottom: none; }
-.data-row-name { font-size: 12px; color: rgba(255,255,255,0.65); margin-bottom: 7px; font-weight: 500; }
-.data-bar-track { height: 3px; background: rgba(255,255,255,0.07); overflow: hidden; }
-.data-bar-fill { height: 100%; background: var(--gold-l); transform: scaleX(0); transform-origin: left; transition: transform 1.4s cubic-bezier(0.4,0,0.2,1); }
-.data-bar-fill.navy { background: rgba(201,168,92,0.45); }
-.data-row-val { font-family: var(--mono); font-size: 13px; color: var(--gold-l); font-weight: 500; text-align: right; white-space: nowrap; }
+#faq { background: var(--off); }
+.faq-list { margin-top: 8px; border-top: 1px solid var(--rule); }
+.faq-item { padding: 26px 0; border-bottom: 1px solid var(--rule); }
+.faq-q { display: flex; gap: 14px; font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--navy); line-height: 1.6; margin-bottom: 10px; }
+.faq-mark { font-family: var(--mono); flex-shrink: 0; }
+.faq-q .faq-mark { color: var(--gold); }
+.faq-a { display: flex; gap: 14px; font-size: 13px; color: var(--mid); line-height: 1.9; }
+.faq-a .faq-mark { color: var(--light); }
 
 /* ══════════════════════════════════
    FOOTER
@@ -525,7 +436,7 @@ footer {
 }
 @media(max-width:640px){ .footer-inner{grid-template-columns:1fr;gap:32px;} }
 .footer-logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.footer-name { font-family: var(--serif); font-size: 15px; font-weight: 700; color: var(--white); line-height: 1.2; }
+.footer-name { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--white); line-height: 1.2; }
 .footer-name-en { font-family: var(--mono); font-size: 9px; color: var(--gold-l); letter-spacing: 0.2em; text-transform: uppercase; display: block; margin-top: 2px; }
 .footer-desc { font-size: 12px; color: rgba(255,255,255,0.3); line-height: 1.9; max-width: 240px; }
 .footer-col-title { font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.07); }
@@ -537,9 +448,7 @@ footer {
   border-top: 1px solid rgba(255,255,255,0.05);
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
 }
-.footer-copy { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.18); letter-spacing: 0.05em; }
-.footer-policy { display: flex; gap: 16px; }
-.footer-policy a { font-size: 10px; color: rgba(255,255,255,0.22); text-decoration: none; }
+.footer-copy { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,0.32); letter-spacing: 0.05em; }
 
 /* ══════════════════════════════════
    CLOSING CTA
@@ -594,27 +503,16 @@ footer {
 </head>
 <body>
 
-<!-- GOV BAND -->
-<div class="gov-band">
-  <span class="gov-band-left">Japan Talent &amp; Ability Development Organization</span>
-  <div class="gov-band-right">
-    <a href="jtad-corp-en.html">English</a>
-    <a href="#">サイトマップ</a>
-    <a href="#">アクセシビリティ</a>
-  </div>
-</div>
-
-<!-- TRESWIN BACK BAR -->
-<div style="position:sticky;top:0;z-index:400;padding:0 24px;height:36px;display:flex;align-items:center;gap:10px;background:rgba(244,242,238,0.95);backdrop-filter:blur(20px);border-bottom:1px solid #D6D1C8;font-family:'Noto Sans JP',sans-serif;font-size:12px;">
-  <a href="https://tres-win.com/services.html" style="color:#9A7B3C;text-decoration:none;font-weight:600;letter-spacing:0.08em;display:flex;align-items:center;gap:6px;" onmouseover="this.style.color='#0B1F3A'" onmouseout="this.style.color='#9A7B3C'">← SERVICES</a>
-  <span style="color:#D6D1C8;font-size:11px;">/</span>
-  <span style="color:#4A5568;font-weight:500;letter-spacing:0.04em;">J-TAD コーポレートサイト — TRESWIN 制作実績</span>
-</div>
+<!--
+  ご確認ください（開発メモ）：
+  ページ内の href="#line" は LINE公式アカウントの友だち追加URLのプレースホルダーです。
+  URL確定後、このコメント以下すべての #line を実際のURLに置き換えてください。
+-->
 
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a href="#" class="nav-brand">
+    <a href="#hero" class="nav-brand">
       <svg class="nav-emblem" width="38" height="38" viewBox="0 0 40 40" fill="none">
         <rect width="40" height="40" fill="#0B1F3A"/>
         <rect x="6" y="6" width="12" height="12" rx="1" fill="#C9A85C"/>
@@ -623,18 +521,18 @@ footer {
         <rect x="22" y="22" width="12" height="12" rx="1" fill="#C9A85C" fill-opacity="0.55"/>
       </svg>
       <div class="nav-brand-text">
-        <span class="nav-brand-ja">日本人財開発機構</span>
-        <span class="nav-brand-en">J-TAD</span>
+        <span class="nav-brand-ja">ハレマ</span>
+        <span class="nav-brand-en">心の天気図</span>
       </div>
     </a>
     <div class="nav-sep"></div>
     <ul class="nav-links">
-      <li><a href="#mission">機構について</a></li>
-      <li><a href="#services">事業内容</a></li>
-      <li><a href="#values">行動原則</a></li>
-      <li><a href="#vision">ビジョン</a></li>
+      <li><a href="#about">ハレマとは</a></li>
+      <li><a href="#pricing">料金</a></li>
+      <li><a href="#program">コーチングの流れ</a></li>
+      <li><a href="#faq">よくある質問</a></li>
     </ul>
-    <a href="mailto:info@j-tad.jp" class="nav-cta">お問い合わせ</a>
+    <a href="#line" class="nav-cta">無料相談に申し込む</a>
     <button class="nav-burger" aria-label="メニュー" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -650,252 +548,229 @@ footer {
     <div class="reveal">
       <div class="hero-kicker">
         <div class="hero-kicker-line"></div>
-        <span class="hero-kicker-text">設立宣言 — 2025</span>
+        <span class="hero-kicker-text">個別キャリアコーチング</span>
       </div>
       <h1 class="hero-headline">
-        日本の「働く」を、<br>
-        構造から<span class="gold-word">変える。</span>
+        頑張っているのに、<br>
+        苦しい日が<span class="gold-word">続いていませんか。</span>
       </h1>
       <p class="hero-sub">
-        転職させるのでも、我慢させるのでもない。<br>
-        一人ひとりが、自分のキャリアを<br>
-        自分で選べる社会を目指して。
+        アドバイスより先に、ただ話を聞いてほしい。<br>
+        ハレマは、そんなあなたの隣に座って一緒に考える、<br>
+        1対1のオンラインキャリアコーチングです。
       </p>
       <div class="hero-btns">
-        <a href="harema-lp.html" class="btn-gold">ハレマを無料で試してみる →</a>
-        <a href="#mission" class="btn-ghost-light">機構について</a>
+        <a href="#line" class="btn-gold">LINEで30分の無料相談に申し込む →</a>
+        <a href="#pricing" class="btn-ghost-light">料金を見る</a>
       </div>
       <div class="hero-meta">
         <div class="hero-meta-item">
-          <span class="hero-meta-num">2025<em>年</em></span>
-          <span class="hero-meta-label">設立</span>
+          <span class="hero-meta-num">30<em>分</em></span>
+          <span class="hero-meta-label">無料体験セッション</span>
         </div>
         <div class="hero-meta-item">
-          <span class="hero-meta-num">4<em>事業</em></span>
-          <span class="hero-meta-label">展開領域</span>
+          <span class="hero-meta-num">月2<em>回</em></span>
+          <span class="hero-meta-label">60分の個別セッション</span>
         </div>
         <div class="hero-meta-item">
-          <span class="hero-meta-num">2035<em>年</em></span>
-          <span class="hero-meta-label">ビジョン目標年</span>
+          <span class="hero-meta-num">10,000<em>円</em></span>
+          <span class="hero-meta-label">初月限定の料金</span>
         </div>
-      </div>
-    </div>
-
-    <div class="hero-right-panel reveal d2">
-      <div>
-        <canvas id="dot-map-canvas" width="420" height="460" aria-label="日本全域カバレッジ"></canvas>
-        <p class="map-caption">Target Coverage — All 47 Prefectures</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ MISSION ══ -->
-<section id="mission">
+<!-- ══ ABOUT ══ -->
+<section id="about">
   <div class="mission-split">
     <div class="mission-photo reveal">
-      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&q=80&fit=crop" alt="オフィスの朝、窓から差し込む光" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&q=80&fit=crop" alt="オンラインで静かに対話するイメージ" loading="lazy">
       <div class="mission-photo-overlay"></div>
     </div>
     <div class="mission-text">
       <div class="mission-kicker reveal">
         <div class="mission-kicker-line"></div>
-        <span class="mission-kicker-text">§ 01 — Mission</span>
+        <span class="mission-kicker-text">§ 01 — About Harema</span>
       </div>
       <blockquote class="mission-quote reveal d1">
-        働くすべての人に、<br>
-        自分のキャリアを<span class="gline">自分で選ぶ権利</span>を。
+        「甘えてるだけかも」と、<br>
+        誰にも<span class="gline">相談できなかった</span>気持ちに。
       </blockquote>
       <p class="mission-body reveal d2">
-        日本の労働市場は長らく、「転職させる側」と「我慢させる側」の二項対立で動いてきた。どちらの側にも、個人の「納得」を守ろうとする存在がいなかった。J-TADは、その空白を埋めるために設立された。
+        転職するべきか、今のまま頑張るべきか。答えを急かされるのがつらくて、誰にも話せずにいる方へ。私は、すぐに答えを出すことよりも、まずあなたの話をちゃんと聞くことから始めたいと思っています。ハレマは、そんな距離感で伴走する個別のキャリアコーチングです。
       </p>
       <div class="mvv-cells reveal d3">
         <div class="mvv-cell">
-          <div class="mvv-cell-tag">Mission</div>
-          <div class="mvv-cell-title">今、何をするために存在するか</div>
-          <p class="mvv-cell-body">AIと人間が並走し、一人ひとりが自分の言葉でキャリアを選べるようになるための伴走者であり続ける。</p>
+          <div class="mvv-cell-tag">Stance 01</div>
+          <div class="mvv-cell-title">中立であること</div>
+          <p class="mvv-cell-body">転職を勧めることも、今の場所に留まることを勧めることもしません。あなたが納得できる答えを、一緒に探します。</p>
         </div>
         <div class="mvv-cell">
-          <div class="mvv-cell-tag">Vision</div>
-          <div class="mvv-cell-title">2035年に実現する社会</div>
-          <p class="mvv-cell-body">日本のどこに住んでいても、どんな収入でも、キャリアの壁打ちができる存在がそばにいる社会。</p>
+          <div class="mvv-cell-tag">Stance 02</div>
+          <div class="mvv-cell-title">感情を否定しないこと</div>
+          <p class="mvv-cell-body">モヤモヤやしんどさは、弱さではなく大切なサインだと思っています。まずはその気持ちごと受け止めます。</p>
         </div>
         <div class="mvv-cell">
-          <div class="mvv-cell-tag">Position</div>
-          <div class="mvv-cell-title">誰のための機構か</div>
-          <p class="mvv-cell-body">地方・低収入層・中小企業従業員。これまで支援の届かなかった「空白」にいる人々のために。</p>
+          <div class="mvv-cell-tag">Stance 03</div>
+          <div class="mvv-cell-title">変化を急がせないこと</div>
+          <p class="mvv-cell-body">話すペースも、決めるタイミングも、あなたに委ねます。無理に前に進めることはしません。</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ SERVICES ══ -->
-<section id="services" class="sec">
+<!-- ══ PRICING ══ -->
+<section id="pricing" class="sec">
   <div class="sec-inner">
     <div class="sec-header">
       <div class="sec-kicker reveal">
         <div class="sec-kicker-line"></div>
         <span class="sec-kicker-num">§ 02</span>
-        <span class="sec-kicker-text">事業内容</span>
+        <span class="sec-kicker-text">サービス内容</span>
       </div>
-      <h2 class="sec-title reveal d1">J-TADが展開する事業領域</h2>
-      <p class="sec-lead reveal d2">個人のキャリア支援から組織開発、政策提言まで。「労働市場の空白」に複数の角度からアプローチします。</p>
+      <h2 class="sec-title reveal d1">個別キャリアコーチング「ハレマ」</h2>
+      <p class="sec-lead reveal d2">月2回、1対1のオンラインセッションで、あなたのキャリアの整理を伴走します。まずは30分の無料体験から。</p>
     </div>
 
-    <!-- Flagship photo card -->
     <div class="flagship-photo-card reveal">
-      <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&q=80&fit=crop" alt="ハレマ — AIキャリア伴走サービス" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&q=80&fit=crop" alt="オンラインセッションのイメージ" loading="lazy">
       <div class="flagship-overlay">
-        <div class="fs-badge">旗艦プロダクト</div>
-        <div class="fs-title">キャリア伴走サービス「ハレマ」</div>
-        <p class="fs-body">転職を急かさない、中立のAIキャリア伴走サービス。個人が自分のモヤモヤを言語化し、納得のいくキャリア選択ができるよう、24時間365日AIが並走する。</p>
+        <div class="fs-badge">個別コーチング</div>
+        <div class="fs-title">ハレマ｜心の天気図</div>
+        <p class="fs-body">転職を急かさない、1対1のオンラインキャリアコーチング。あなたの「なんとなくのモヤモヤ」を、セッションの中で一緒に言葉にしていきます。</p>
         <div class="fs-stats">
           <div>
-            <div class="fs-stat-num">24/7<em>対応</em></div>
-            <div class="fs-stat-label">AIによる常時伴走</div>
+            <div class="fs-stat-num">月2<em>回</em></div>
+            <div class="fs-stat-label">60分のオンラインセッション</div>
           </div>
           <div>
-            <div class="fs-stat-num">中立<em>設計</em></div>
-            <div class="fs-stat-label">転職を急かさない唯一のポジション</div>
+            <div class="fs-stat-num">10,000<em>円</em></div>
+            <div class="fs-stat-label">初月限定の料金</div>
           </div>
           <div>
-            <div class="fs-stat-num">無料<em>体験可</em></div>
-            <div class="fs-stat-label">トライアルから始められる</div>
+            <div class="fs-stat-num">30<em>分</em></div>
+            <div class="fs-stat-label">無料体験セッションあり</div>
           </div>
         </div>
-        <a href="harema-lp.html" class="fs-link">harema.jp を開く →</a>
+        <a href="#line" class="fs-link">LINEで無料体験に申し込む →</a>
       </div>
     </div>
 
-    <!-- 3 service cards -->
-    <div class="svc-grid">
-      <div class="svc-card reveal d1">
-        <div class="svc-num">02</div>
-        <div class="svc-icon">🏢</div>
-        <span class="svc-badge b2b">法人向け</span>
-        <div class="svc-name">HRソリューション</div>
-        <p class="svc-body">人的資本開示への対応、エンゲージメント向上、オフボーディング支援。AIと行動データで、人事部門の意思決定をデータドリブンに支援する。</p>
-      </div>
-      <div class="svc-card reveal d2">
-        <div class="svc-num">03</div>
-        <div class="svc-icon">📊</div>
-        <span class="svc-badge res">調査・研究</span>
-        <div class="svc-name">労働市場リサーチ &amp; 政策提言</div>
-        <p class="svc-body">匿名・集計データをもとに「日本の労働不満白書」を定期発行。地方・中小企業・低収入層の実態を可視化し、政策議論に貢献する。</p>
-      </div>
-      <div class="svc-card reveal d3">
-        <div class="svc-num">04</div>
-        <div class="svc-icon">🎓</div>
-        <span class="svc-badge edu">教育</span>
-        <div class="svc-name">キャリア自律教育プログラム</div>
-        <p class="svc-body">大学・専門学校向けのキャリア教育カリキュラム。就職活動より前の段階から、自分の価値観と向き合う力を育てる次世代型プログラム。</p>
-      </div>
+    <table class="price-table reveal d1">
+      <tbody>
+        <tr>
+          <th>サービス名</th>
+          <td>個別キャリアコーチング「ハレマ」</td>
+        </tr>
+        <tr>
+          <th>提供内容</th>
+          <td>月2回・1回60分のオンライン個別セッション</td>
+        </tr>
+        <tr>
+          <th>料金（通常）</th>
+          <td>月額12,000円</td>
+        </tr>
+        <tr>
+          <th>料金（初月限定）</th>
+          <td>10,000円</td>
+        </tr>
+        <tr>
+          <th>契約形態</th>
+          <td>月次契約（いつでも解約可能）／半年一括プランあり（割引条件の詳細はLINEにてご案内しています）</td>
+        </tr>
+        <tr>
+          <th>提供者</th>
+          <td>現在は運営メンバーが直接担当しています（外部委託コーチは現状おりません）</td>
+        </tr>
+        <tr>
+          <th>無料体験</th>
+          <td>初回30分の無料コーチング体験あり（LINEよりお申し込みください）</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="price-note reveal d2">
+      <strong>ご注意：</strong> 半年一括プランの割引条件は現在調整中です。詳細はLINEにてお気軽にお問い合わせください。お支払い・解約に関する詳細は<a href="tokusho.html">特定商取引法に基づく表記</a>をご確認ください。
     </div>
   </div>
 </section>
 
-<!-- ══ VALUES ══ -->
-<section id="values" class="sec">
+<!-- ══ PROGRAM ══ -->
+<section id="program" class="sec">
   <div class="sec-inner">
     <div class="sec-header">
       <div class="sec-kicker reveal">
         <div class="sec-kicker-line"></div>
         <span class="sec-kicker-num">§ 03</span>
-        <span class="sec-kicker-text">行動原則</span>
+        <span class="sec-kicker-text">コーチングの流れ</span>
       </div>
-      <h2 class="sec-title reveal d1">私たちが大切にする、5つの行動原則</h2>
+      <h2 class="sec-title reveal d1">4つのフェーズで、キャリアを一緒に整理する</h2>
+      <p class="sec-lead reveal d2">全12ステップを、セッションの中で一緒に進めていきます。一人で抱え込まず、ゆっくりで大丈夫です。</p>
     </div>
-    <table class="values-table reveal">
-      <thead>
-        <tr>
-          <th style="width:80px">Code</th>
-          <th style="width:200px">原則</th>
-          <th>内容</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="val-code">V-01</span></td>
-          <td><span class="val-title">中立であり続ける</span></td>
-          <td><span class="val-body">「転職させること」「留まらせること」どちらにも加担しない。個人の納得だけを最優先にする。利益相反の排除は、機構の存在意義そのものである。</span></td>
-        </tr>
-        <tr>
-          <td><span class="val-code">V-02</span></td>
-          <td><span class="val-title">不満を資産にする</span></td>
-          <td><span class="val-body">モヤモヤや怒りは問題ではなく、自己理解の入口だと信じる。感情はデータであり、行動の羅針盤である。個人の感情を軽視しない。</span></td>
-        </tr>
-        <tr>
-          <td><span class="val-code">V-03</span></td>
-          <td><span class="val-title">AIは道具、伴走は人間的行為</span></td>
-          <td><span class="val-body">テクノロジーはアクセスの敷居を下げるために使う。しかし「寄り添う」という行為の本質は人間的でなければならない。AIと人間の役割を混同しない。</span></td>
-        </tr>
-        <tr>
-          <td><span class="val-code">V-04</span></td>
-          <td><span class="val-title">成長を見えるものにする</span></td>
-          <td><span class="val-body">「なんとなく良くなった気がする」で終わらせない。スコアと認定で個人の変化を社会に証明する。変化の不可視化は支援の失敗である。</span></td>
-        </tr>
-        <tr>
-          <td><span class="val-code">V-05</span></td>
-          <td><span class="val-title">届かない場所に届ける</span></td>
-          <td><span class="val-body">地方、低収入層、中小企業従業員。支援の空白にこそ、私たちがいる。インフラは、使えない人がいる時点で未完成である。</span></td>
-        </tr>
-      </tbody>
-    </table>
+
+    <div class="svc-grid">
+      <div class="svc-card reveal d1">
+        <div class="svc-num">01</div>
+        <div class="svc-icon">🧭</div>
+        <div class="svc-name">現在地の把握</div>
+        <p class="svc-body">今のモヤモヤや、これまで頑張ってきたこと、感じている違和感を、セッションの中で一緒に言葉にしていきます。</p>
+      </div>
+      <div class="svc-card reveal d2">
+        <div class="svc-num">02</div>
+        <div class="svc-icon">🌅</div>
+        <div class="svc-name">目的地の設定</div>
+        <p class="svc-body">「本当はどうありたいか」を、焦らず、否定せずに一緒に探っていきます。</p>
+      </div>
+      <div class="svc-card reveal d3">
+        <div class="svc-num">03</div>
+        <div class="svc-icon">🗺️</div>
+        <div class="svc-name">ルートの設計</div>
+        <p class="svc-body">理想と現実の間にある選択肢を整理し、次の一歩を具体的に考えます。</p>
+      </div>
+      <div class="svc-card reveal d4">
+        <div class="svc-num">04</div>
+        <div class="svc-icon">⛵</div>
+        <div class="svc-name">出航と自律</div>
+        <p class="svc-body">一人で歩いていけるように、伴走しながら少しずつ後ろに下がっていきます。</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ══ VISION ══ -->
-<section id="vision">
-  <!-- Full-bleed photo strip -->
-  <div class="vision-photo-strip reveal">
-    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1600&q=80&fit=crop" alt="日本の都市と働く人々" loading="lazy">
-    <div class="vision-photo-strip-overlay"></div>
-    <div class="vision-strip-text reveal d1">
-      <div class="vision-year">2035</div>
-      <h2 class="vision-statement">「仕事がしんどい」を、<br>一人で抱える社会を終わらせる。</h2>
-    </div>
-  </div>
-
-  <!-- Data section on dark -->
-  <div class="vision-data-sec">
-    <div class="vision-data-inner">
-      <div class="reveal">
-        <div class="sec-kicker" style="margin-bottom:14px;">
-          <div class="sec-kicker-line"></div>
-          <span class="sec-kicker-num" style="color:var(--gold-l)">§ 04</span>
-          <span class="sec-kicker-text" style="color:var(--gold-l)">Vision 2035</span>
-        </div>
-        <h2 class="sec-title" style="color:var(--white);">支援の空白を、<br>なくしていく。</h2>
-        <p class="vision-body-text">日本のどこに住んでいても、どんな収入でも、自分のキャリアについて壁打ちできる存在がそばにいる社会。J-TADはその社会インフラとなることを目指し、すべての事業を展開する。</p>
+<!-- ══ FAQ ══ -->
+<section id="faq" class="sec">
+  <div class="sec-inner" style="max-width:800px;">
+    <div class="sec-header">
+      <div class="sec-kicker reveal">
+        <div class="sec-kicker-line"></div>
+        <span class="sec-kicker-num">§ 04</span>
+        <span class="sec-kicker-text">よくある質問</span>
       </div>
-      <div class="data-panel reveal d2" id="data-board">
-        <div class="data-panel-head">
-          <span class="data-panel-title">支援対象カバレッジ目標</span>
-          <span class="data-panel-tag">Target 2035</span>
-        </div>
-        <div>
-          <div class="data-row">
-            <div><div class="data-row-name">三大都市圏 就業者</div><div class="data-bar-track"><div class="data-bar-fill" data-pct="0.78"></div></div></div>
-            <span class="data-row-val">78%</span>
-          </div>
-          <div class="data-row">
-            <div><div class="data-row-name">地方都市 就業者</div><div class="data-bar-track"><div class="data-bar-fill navy" data-pct="0.60"></div></div></div>
-            <span class="data-row-val">60%</span>
-          </div>
-          <div class="data-row">
-            <div><div class="data-row-name">中小企業従業員（300名以下）</div><div class="data-bar-track"><div class="data-bar-fill" data-pct="0.65"></div></div></div>
-            <span class="data-row-val">65%</span>
-          </div>
-          <div class="data-row">
-            <div><div class="data-row-name">年収300万円以下 層</div><div class="data-bar-track"><div class="data-bar-fill navy" data-pct="0.45"></div></div></div>
-            <span class="data-row-val">45%</span>
-          </div>
-          <div class="data-row">
-            <div><div class="data-row-name">女性就業者</div><div class="data-bar-track"><div class="data-bar-fill" data-pct="0.72"></div></div></div>
-            <span class="data-row-val">72%</span>
-          </div>
-        </div>
+      <h2 class="sec-title reveal d1">よくある質問</h2>
+    </div>
+
+    <div class="faq-list reveal d2">
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-mark">Q.</span><span>どんな人におすすめですか？</span></div>
+        <div class="faq-a"><span class="faq-mark">A.</span><span>「転職すべきか、今のまま頑張るべきか分からない」「頑張っているのに苦しい」と感じている方に向いています。答えを押し付けることはありません。</span></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-mark">Q.</span><span>何を話せばいいか分からなくても大丈夫ですか？</span></div>
+        <div class="faq-a"><span class="faq-mark">A.</span><span>はい、大丈夫です。うまく話そうとしなくて構いません。整理されていない気持ちのまま、お話しください。</span></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-mark">Q.</span><span>誰が担当してくれますか？</span></div>
+        <div class="faq-a"><span class="faq-mark">A.</span><span>現在は運営メンバーが直接、コーチングを担当しています。外部委託のコーチは現状おりません。</span></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-mark">Q.</span><span>契約に縛りはありますか？</span></div>
+        <div class="faq-a"><span class="faq-mark">A.</span><span>月次契約のため、いつでも解約可能です。半年一括プランもご用意していますが、割引条件の詳細はLINEにてご案内しています。</span></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-mark">Q.</span><span>セッションはどのように行いますか？</span></div>
+        <div class="faq-a"><span class="faq-mark">A.</span><span>すべてオンラインで完結します。ビデオ通話を使い、月2回・1回60分のペースで進めます。</span></div>
       </div>
     </div>
   </div>
@@ -910,16 +785,15 @@ footer {
       <div class="closing-cta-kicker-line"></div>
     </div>
     <h2 class="closing-cta-headline reveal d1">
-      あなたのキャリアの壁打ちを、<br>今日から始めよう。
+      まずは30分、<br>無料で話してみませんか。
     </h2>
     <p class="closing-cta-sub reveal d2">
-      転職を急かさない、中立のAIキャリア伴走サービス「ハレマ」は無料で体験できます。<br>
-      法人・メディアの方は、お問い合わせからご連絡ください。
+      頑張っているあなたの話を、私が聞きます。<br>
+      LINEから、気軽にご連絡ください。
     </p>
     <div class="closing-cta-btns reveal d3">
-      <a href="harema-lp.html" class="btn-gold">ハレマを無料で試してみる →</a>
-      <a href="whitepaper.html" class="btn-outline-gold">白書をダウンロード</a>
-      <a href="mailto:info@j-tad.jp" class="btn-outline-gold">法人・メディアの方はこちら</a>
+      <a href="#line" class="btn-gold">LINEで無料相談に申し込む →</a>
+      <a href="#pricing" class="btn-outline-gold">料金をもう一度確認する</a>
     </div>
   </div>
 </section>
@@ -938,39 +812,33 @@ footer {
         </svg>
         <div>
           <div class="footer-name">
-            日本人財開発機構
-            <span class="footer-name-en">J-TAD</span>
+            ハレマ
+            <span class="footer-name-en">心の天気図</span>
           </div>
         </div>
       </div>
-      <p class="footer-desc">働くすべての人に、自分のキャリアを自分で選ぶ権利を。2025年設立。</p>
+      <p class="footer-desc">頑張っているあなたの、キャリアの壁打ち相手。個別キャリアコーチング「ハレマ」。</p>
     </div>
     <div>
-      <div class="footer-col-title">事業・組織</div>
+      <div class="footer-col-title">サービス</div>
       <ul class="footer-links">
-        <li><a href="#mission">機構について</a></li>
-        <li><a href="#services">事業内容</a></li>
-        <li><a href="#values">行動原則</a></li>
-        <li><a href="#vision">ビジョン2035</a></li>
-        <li><a href="careers.html">採用情報</a></li>
+        <li><a href="#about">ハレマとは</a></li>
+        <li><a href="#pricing">料金</a></li>
+        <li><a href="#program">コーチングの流れ</a></li>
+        <li><a href="#faq">よくある質問</a></li>
       </ul>
     </div>
     <div>
-      <div class="footer-col-title">関連リンク</div>
+      <div class="footer-col-title">サポート</div>
       <ul class="footer-links">
-        <li><a href="harema-lp.html">ハレマ（toC）</a></li>
-        <li><a href="whitepaper.html">調査・白書</a></li>
-        <li><a href="presskit.html">プレスキット</a></li>
         <li><a href="mailto:info@j-tad.jp">お問い合わせ</a></li>
+        <li><a href="privacy.html">プライバシーポリシー</a></li>
+        <li><a href="tokusho.html">特定商取引法に基づく表記</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span class="footer-copy">© 2025 Japan Talent &amp; Ability Development Organization (J-TAD). All rights reserved.</span>
-    <div class="footer-policy">
-      <a href="privacy.html">プライバシーポリシー</a>
-      <a href="tokusho.html">特定商取引法</a>
-    </div>
+    <span class="footer-copy">© 2026 ハレマ　運営：日本人財開発機構（J-TAD）</span>
   </div>
 </footer>
 
@@ -992,76 +860,6 @@ window.addEventListener('scroll',()=>{
   }
 },{passive:true});
 
-/* ── dot map ── */
-(function(){
-  const cv = document.getElementById('dot-map-canvas');
-  if(!cv) return;
-  const ctx = cv.getContext('2d');
-  const W=420, H=460;
-  const regions=[
-    [[0.38,0.10],[0.47,0.06],[0.60,0.08],[0.70,0.14],[0.80,0.20],[0.86,0.26],[0.88,0.32],
-     [0.82,0.37],[0.76,0.43],[0.70,0.49],[0.65,0.55],[0.60,0.61],[0.57,0.67],[0.54,0.71],
-     [0.50,0.68],[0.47,0.63],[0.44,0.57],[0.40,0.52],[0.35,0.46],[0.29,0.42],[0.24,0.37],
-     [0.21,0.30],[0.23,0.22],[0.27,0.16],[0.32,0.12]],
-    [[0.52,0.04],[0.64,0.01],[0.76,0.04],[0.82,0.10],[0.76,0.16],[0.66,0.18],[0.55,0.15],[0.50,0.09]],
-    [[0.27,0.72],[0.35,0.68],[0.42,0.71],[0.45,0.78],[0.42,0.84],[0.35,0.87],[0.28,0.84],[0.24,0.77]],
-    [[0.43,0.60],[0.50,0.57],[0.56,0.61],[0.53,0.67],[0.46,0.68],[0.40,0.65]],
-  ];
-  function pip(px,py,poly){
-    let ins=false;
-    for(let i=0,j=poly.length-1;i<poly.length;j=i++){
-      const xi=poly[i][0],yi=poly[i][1],xj=poly[j][0],yj=poly[j][1];
-      if(((yi>py)!==(yj>py))&&(px<(xj-xi)*(py-yi)/(yj-yi)+xi)) ins=!ins;
-    }
-    return ins;
-  }
-  const STEP=13, dots=[];
-  for(let x=STEP/2;x<W;x+=STEP) for(let y=STEP/2;y<H;y+=STEP){
-    const nx=x/W,ny=y/H;
-    let land=false;
-    for(const r of regions) if(pip(nx,ny,r)){land=true;break;}
-    if(land){
-      const hotspots=[{cx:0.54,cy:0.50,r:0.07},{cx:0.48,cy:0.57,r:0.05},{cx:0.30,cy:0.42,r:0.04},{cx:0.35,cy:0.72,r:0.04},{cx:0.62,cy:0.08,r:0.04}];
-      let hot=false;
-      hotspots.forEach(h=>{const dx=nx-h.cx,dy=ny-h.cy;if(dx*dx+dy*dy<h.r*h.r)hot=true;});
-      dots.push({x,y,alpha:0,target:Math.random()*0.22+0.06,phase:Math.random()*Math.PI*2,hot});
-    }
-  }
-  let t=0;
-  (function draw(){
-    ctx.clearRect(0,0,W,H); t++;
-    dots.forEach(d=>{
-      d.alpha+=(d.target-d.alpha)*0.03;
-      const pulse=Math.sin(t*0.012+d.phase)*0.07;
-      if(d.hot){
-        ctx.fillStyle=`rgba(201,168,92,${Math.min(1,d.alpha*3+pulse+0.3)})`;
-        ctx.beginPath(); ctx.arc(d.x,d.y,3.0,0,Math.PI*2); ctx.fill();
-        // glow
-        ctx.fillStyle=`rgba(232,201,122,${(d.alpha+pulse)*0.3})`;
-        ctx.beginPath(); ctx.arc(d.x,d.y,5.5,0,Math.PI*2); ctx.fill();
-      } else {
-        ctx.fillStyle=`rgba(255,255,255,${d.alpha+pulse})`;
-        ctx.beginPath(); ctx.arc(d.x,d.y,1.6,0,Math.PI*2); ctx.fill();
-      }
-    });
-    requestAnimationFrame(draw);
-  })();
-})();
-
-/* ── data bars ── */
-const dbObs=new IntersectionObserver(es=>{
-  es.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.querySelectorAll('.data-bar-fill').forEach(b=>{
-        b.style.transform=`scaleX(${parseFloat(b.dataset.pct||0)})`;
-      });
-      dbObs.unobserve(e.target);
-    }
-  });
-},{threshold:0.2});
-const db=document.getElementById('data-board');
-if(db) dbObs.observe(db);
-
 /* ── hamburger menu ── */
 const burger = document.querySelector('.nav-burger');
 const navEl  = document.querySelector('nav');
@@ -1071,18 +869,10 @@ if (burger && navEl) {
     const isOpen = navEl.classList.contains('menu-open');
     burger.setAttribute('aria-expanded', isOpen);
   });
-  // ナビリンクをタップしたら閉じる
   document.querySelectorAll('.nav-links a').forEach(a => {
     a.addEventListener('click', () => navEl.classList.remove('menu-open'));
   });
 }
-
-/* ── responsive ── */
-function fixLayout(){
-  const hi=document.querySelector('.hero-content');
-  if(hi) hi.style.gridTemplateColumns=window.innerWidth<=860?'1fr':'1fr 1fr';
-}
-fixLayout(); window.addEventListener('resize',fixLayout);
 </script>
 </body>
 </html>
