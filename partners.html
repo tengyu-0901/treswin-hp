@@ -218,6 +218,16 @@
         @media (max-width: 480px) {
             .apply-form { padding: 26px; }
         }
+
+        /* スパム対策：画面外に飛ばす（display:noneは回避されやすいため使わない） */
+        .tw-hp-field {
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -428,7 +438,15 @@
                             <p class="form-hint">PDF・Word・PowerPoint・Excel・画像・zip形式、8MBまで</p>
                         </div>
 
+                        <!-- ▼ スパム対策：人間には見えない欄。絶対に消さないこと ▼ -->
+                        <div class="tw-hp-field" aria-hidden="true">
+                            <label for="tw_website">ウェブサイト（この欄は入力しないでください）</label>
+                            <input type="text" id="tw_website" name="tw_website" tabindex="-1" autocomplete="off">
+                        </div>
+                        <!-- ▲ スパム対策ここまで ▲ -->
+
                         <input type="hidden" name="source_page" value="partners.html">
+                        <input type="hidden" name="tw_ts" id="tw_ts" value="">
                         <button type="submit" class="submit-btn" id="submitBtn">この内容で応募する</button>
 
                     </form>
@@ -476,6 +494,9 @@
         if (params.get('error') === '1') {
             document.getElementById('errorMsg').style.display = 'block';
         }
+
+        // タイムスタンプ（スパム対策：ページ表示時刻をセット）
+        document.getElementById('tw_ts').value = Math.floor(Date.now() / 1000);
 
         // フォーム送信中のボタン状態
         document.getElementById('partnerForm').addEventListener('submit', function() {

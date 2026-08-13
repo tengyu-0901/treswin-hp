@@ -10,6 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit('Method Not Allowed');
 }
 
+// ──── source_page ホワイトリスト（オープンリダイレクト対策） ────
+// ※ スパム対策のリダイレクト先としても使うため先頭で確定させる
+$allowed_pages = ['contact.html', 'service-hp.html', 'services.html', 'service-advisory.html', 'partners.html'];
+$raw_source    = trim($_POST['source_page'] ?? 'contact.html');
+$source_page   = in_array($raw_source, $allowed_pages) ? $raw_source : 'contact.html';
+
 // ============================================
 // TRESWIN フォームスパム対策
 // ※ メール送信処理より前に必ず実行すること
@@ -19,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // 人間には見えない欄に値が入っている = bot
 if (!empty($_POST['tw_website'])) {
     error_log('[TRESWIN] spam blocked (honeypot) IP=' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-    header('Location: contact.html?sent=1');
+    header("Location: {$source_page}?sent=1");
     exit;
 }
 
@@ -28,7 +34,7 @@ if (!empty($_POST['tw_website'])) {
 $tw_ts = isset($_POST['tw_ts']) ? (int)$_POST['tw_ts'] : 0;
 if ($tw_ts === 0 || (time() - $tw_ts) < 3) {
     error_log('[TRESWIN] spam blocked (too fast) IP=' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-    header('Location: contact.html?sent=1');
+    header("Location: {$source_page}?sent=1");
     exit;
 }
 
@@ -39,7 +45,7 @@ if (!is_dir($lockDir)) { @mkdir($lockDir, 0700, true); }
 $lockFile = $lockDir . '/' . hash('sha256', $_ip);
 if (file_exists($lockFile) && (time() - filemtime($lockFile)) < 60) {
     error_log('[TRESWIN] spam blocked (rate limit) IP=' . $_ip);
-    header('Location: contact.html?sent=1');
+    header("Location: {$source_page}?sent=1");
     exit;
 }
 @touch($lockFile);
@@ -48,7 +54,7 @@ if (file_exists($lockFile) && (time() - filemtime($lockFile)) < 60) {
 $_body_raw = $_POST['message'] ?? '';
 if (preg_match_all('#https?://#i', $_body_raw) >= 3) {
     error_log('[TRESWIN] spam blocked (too many links) IP=' . $_ip);
-    header('Location: contact.html?sent=1');
+    header("Location: {$source_page}?sent=1");
     exit;
 }
 
@@ -73,11 +79,6 @@ header('Content-Type: application/json; charset=utf-8');
 // 送信先
 define('TO_EMAIL', 'info@tres-win.com');
 define('SITE_NAME', 'TRESWIN');
-
-// ──── source_page ホワイトリスト（オープンリダイレクト対策） ────
-$allowed_pages = ['contact.html', 'service-hp.html', 'services.html', 'service-advisory.html', 'partners.html'];
-$raw_source    = trim($_POST['source_page'] ?? 'contact.html');
-$source_page   = in_array($raw_source, $allowed_pages) ? $raw_source : 'contact.html';
 
 // ──── 入力値の取得・サニタイズ ────
 function clean($v) {
