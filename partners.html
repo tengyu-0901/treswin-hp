@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パートナー募集 | TRESWIN（トレスウィン）業務委託・代理店紹介・事業提携</title>
+    <meta name="description" content="TRESWIN（トレスウィン）は大阪梅田を拠点に、業務委託パートナー・代理店/紹介パートナー・事業提携パートナーを募集しています。キャリア支援・HP制作・SNS運用代行・経営支援の4事業を共に広げる仲間を探しています。">
+    <meta name="keywords" content="TRESWIN パートナー募集,トレスウィン 業務委託,代理店 紹介 パートナー 大阪,事業提携 大阪,フリーランス 業務委託 大阪">
+    <link rel="canonical" href="https://tres-win.com/partners.html">
+    <!-- OGP -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TRESWIN（トレスウィン）">
+    <meta property="og:title" content="パートナー募集 | TRESWIN（トレスウィン）">
+    <meta property="og:description" content="キャリア支援・HP制作・SNS運用代行・経営支援の4事業を、あなたの力で一緒に広げませんか。業務委託・代理店紹介・事業提携の3タイプでパートナーを募集しています。">
+    <meta property="og:url" content="https://tres-win.com/partners.html">
+    <meta property="og:image" content="https://tres-win.com/treswinlogo2.png">
+    <meta property="og:locale" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="パートナー募集 | TRESWIN（トレスウィン）">
+    <meta name="twitter:description" content="大阪梅田発。TRESWINと共に事業をつくるパートナーを募集しています。">
+    <meta name="twitter:image" content="https://tres-win.com/treswinlogo2.png">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #ffffff;
+            color: #333; line-height: 1.8;
+            overflow-x: hidden; display: flex; flex-direction: column; min-height: 100vh;
+        }
+
+        /* ヘッダー */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+        }
+        .logo-area { display: flex; align-items: center; text-decoration: none; color: #1a1a1a; z-index: 1001; }
+        .logo-svg { width: 40px; height: 40px; margin-right: 12px; object-fit: contain; }
+        .logo-text { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; }
+        nav ul { display: flex; list-style: none; }
+        nav ul li { margin-left: 30px; }
+        nav ul li a { text-decoration: none; color: #1a1a1a; font-size: 14px; font-weight: 600; letter-spacing: 1px; transition: color 0.3s; }
+        nav ul li a:hover, nav ul li a.active { color: #dfd71c; }
+
+        /* ハンバーガー */
+        .hamburger { display: none; background: transparent; border: none; cursor: pointer; width: 30px; height: 22px; position: relative; z-index: 1001; }
+        .hamburger span { position: absolute; left: 0; width: 100%; height: 2px; background-color: #1a1a1a; transition: all 0.3s ease; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { top: 10px; }
+        .hamburger span:nth-child(3) { bottom: 0; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            nav { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background-color: rgba(255,255,255,0.98); box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.3s ease; display: flex; align-items: center; justify-content: center; }
+            nav.active { right: 0; }
+            nav ul { flex-direction: column; text-align: center; }
+            nav ul li { margin: 20px 0; }
+            nav ul li a { font-size: 18px; display: block; padding: 10px; }
+            .hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+        }
+
+        /* ヒーロー */
+        .hero {
+            min-height: 560px;
+            display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+            padding: 120px 5% 60px;
+            position: relative;
+            background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+            color: #ffffff;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 12, 40, 0.62); z-index: 1;
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 720px; }
+        .hero-content h1 {
+            font-size: clamp(26px, 4.4vw, 44px);
+            font-weight: 900; letter-spacing: 1px; line-height: 1.5;
+            margin-bottom: 20px; text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .hero-content p {
+            font-size: clamp(14px, 1.8vw, 16px);
+            letter-spacing: 0.5px; margin-bottom: 34px; color: rgba(255,255,255,0.85);
+        }
+        .hero-cta-btn {
+            display: inline-block; padding: 16px 44px;
+            background-color: #dfd71c; color: #1d184a;
+            text-decoration: none; border-radius: 4px;
+            font-size: 15px; font-weight: bold; letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+        }
+        .hero-cta-btn:hover { background-color: #ffffff; transform: translateY(-2px); }
+
+        /* 共通セクション */
+        .section { padding: 80px 5%; }
+        .section-inner { max-width: 1100px; margin: 0 auto; }
+        .section-alt { background-color: #f7f6f3; }
+        .section-dark { background-color: #1d184a; color: #ffffff; }
+        .section-kicker {
+            display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 2px;
+            color: #a89b1a; margin-bottom: 12px; text-transform: uppercase;
+        }
+        .section-dark .section-kicker { color: #dfd71c; }
+        .section-title {
+            font-size: clamp(22px, 3vw, 30px); font-weight: 800; color: #1d184a;
+            margin-bottom: 20px; letter-spacing: 0.5px;
+        }
+        .section-dark .section-title { color: #ffffff; }
+        .section-lead { font-size: 15px; color: #555; max-width: 680px; line-height: 2; }
+        .section-dark .section-lead { color: rgba(255,255,255,0.75); }
+
+        /* パートナー種別カード */
+        .type-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px; margin-top: 44px;
+        }
+        .type-card {
+            background: #ffffff; border: 1px solid #eee; border-radius: 8px;
+            padding: 34px 30px; position: relative; overflow: hidden;
+            transition: all 0.3s ease; display: flex; flex-direction: column;
+        }
+        .type-card:hover { transform: translateY(-8px); box-shadow: 0 12px 28px rgba(0,0,0,0.08); border-color: #dfd71c; }
+        .type-card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background-color: #1d184a;
+        }
+        .type-num {
+            font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #a89b1a; margin-bottom: 10px;
+        }
+        .type-card h3 { font-size: 19px; color: #1d184a; margin-bottom: 18px; letter-spacing: 0.5px; }
+        .type-row { margin-bottom: 16px; }
+        .type-row:last-child { margin-bottom: 0; }
+        .type-row-label {
+            font-size: 11px; font-weight: 700; color: #dfd71c; background-color: #1d184a;
+            display: inline-block; padding: 2px 10px; border-radius: 3px; letter-spacing: 1px; margin-bottom: 6px;
+        }
+        .type-row p { font-size: 13.5px; color: #555; line-height: 1.85; }
+
+        /* 提供価値リスト */
+        .benefit-list { list-style: none; margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .benefit-list li {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 6px; padding: 22px 24px; font-size: 14px; line-height: 1.8;
+            position: relative; padding-left: 46px;
+        }
+        .benefit-list li::before {
+            content: "✓"; position: absolute; left: 18px; top: 22px;
+            color: #dfd71c; font-weight: 900; font-size: 16px;
+        }
+
+        /* 応募条件・プロセス */
+        .req-list { margin-top: 24px; padding-left: 20px; }
+        .req-list li { font-size: 14px; color: #555; margin-bottom: 10px; line-height: 1.8; }
+
+        .process-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+            border: 1px solid #eee; margin-top: 44px; border-radius: 8px; overflow: hidden;
+        }
+        @media (max-width: 720px) { .process-grid { grid-template-columns: 1fr 1fr; } }
+        .process-step { padding: 28px 24px; border-right: 1px solid #eee; border-bottom: 1px solid #eee; background: #fff; }
+        .process-step:nth-child(4) { border-right: none; }
+        @media (max-width: 720px) { .process-step:nth-child(2) { border-right: none; } }
+        .process-step-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; border-radius: 50%; background-color: #1d184a; color: #dfd71c;
+            font-size: 13px; font-weight: 700; margin-bottom: 14px;
+        }
+        .process-step h4 { font-size: 15px; color: #1d184a; margin-bottom: 8px; }
+        .process-step p { font-size: 12.5px; color: #666; line-height: 1.8; }
+
+        /* 応募フォーム */
+        .apply-form-wrap { max-width: 760px; margin: 44px auto 0; }
+        .apply-form {
+            background: #ffffff; padding: 44px; border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-top: 5px solid #1d184a;
+        }
+        .form-group { margin-bottom: 24px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #1a1a1a; font-size: 14px; }
+        .form-group label .required { background-color: #dfd71c; color: #1d184a; font-size: 11px; padding: 2px 8px; border-radius: 3px; margin-left: 8px; vertical-align: middle; }
+        .form-group label .optional { color: #999; font-size: 11px; font-weight: normal; margin-left: 8px; }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="file"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 4px;
+            font-size: 15px; font-family: inherit; background-color: #fff; transition: border-color 0.3s;
+        }
+        .form-group select { cursor: pointer; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #1d184a; }
+        .form-group textarea { resize: vertical; min-height: 130px; }
+        .form-hint { font-size: 12px; color: #999; margin-top: 6px; }
+        .submit-btn {
+            display: block; width: 100%; max-width: 320px; margin: 36px auto 0;
+            padding: 16px 0; background-color: #1d184a; color: #ffffff; border: none;
+            border-radius: 4px; font-size: 16px; font-weight: bold; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .submit-btn:hover { background-color: #dfd71c; color: #1d184a; }
+
+        /* フッター */
+        .decoration-footer { position: relative; width: 100%; background-color: #1d184a; margin-top: auto; overflow: hidden; padding-top: 50px; }
+        .slanted-line { position: absolute; top: -50px; left: -5%; width: 110%; height: 100px; background-color: #ffffff; transform: rotate(-3deg); border-bottom: 12px solid #dfd71c; z-index: 2; }
+        .footer-content { position: relative; z-index: 3; text-align: center; color: #fff; padding-bottom: 30px; }
+        .footer-content .logo-text { margin-bottom: 14px; display: block; font-size: 22px; font-weight: 800; letter-spacing: 1.5px; }
+        .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 22px; margin-bottom: 16px; }
+        .footer-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 13px; letter-spacing: 0.5px; transition: color 0.3s; }
+        .footer-links a:hover { color: #dfd71c; }
+        .footer-address { font-size: 12px; color: rgba(255,255,255,0.55); margin-bottom: 14px; line-height: 1.8; }
+        .footer-content .copyright { font-size: 12px; color: #888; margin-top: 10px; }
+
+        @media (max-width: 480px) {
+            .apply-form { padding: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-area">
+            <img src="treswinlogo2.png" alt="TRESWIN" class="logo-svg">
+            <div class="logo-text">TRESWIN</div>
+        </a>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="company.html">COMPANY</a></li>
+                <li><a href="partners.html" class="active">PARTNER</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ヒーロー -->
+    <div class="hero" id="top">
+        <div class="hero-content">
+            <h1>TRESWINと、共に事業をつくる<br>パートナーを募集します</h1>
+            <p>キャリア支援・Web制作・SNS運用・経営支援。4つの事業を、あなたの力で一緒に広げませんか。</p>
+            <a href="#apply" class="hero-cta-btn">応募フォームへ</a>
+        </div>
+    </div>
+
+    <!-- 募集背景・ビジョン -->
+    <section class="section" id="vision">
+        <div class="section-inner">
+            <span class="section-kicker">Why Now</span>
+            <h2 class="section-title">なぜ今、パートナーを募集するのか</h2>
+            <p class="section-lead">
+                TRESWINは大阪・梅田を拠点に、キャリア支援、TRESWEB制作、SNS運用代行、中小企業経営支援の4事業を展開しています。事業拡大のスピードを上げるには、社内だけでなく社外の力を掛け合わせることが不可欠だと考えています。<br><br>
+                ひとつの会社が抱え込むのではなく、得意分野を持つ個人・法人と手を組み、それぞれの強みを最大化する。そんな関係を築けるパートナーを求めています。
+            </p>
+        </div>
+    </section>
+
+    <!-- パートナー種別 -->
+    <section class="section section-alt" id="types">
+        <div class="section-inner">
+            <span class="section-kicker">Partner Types</span>
+            <h2 class="section-title">募集するパートナー種別</h2>
+            <p class="section-lead">3つのタイプでパートナーを募集しています。あなたの強みが活かせる形をお選びください。</p>
+
+            <div class="type-grid">
+                <div class="type-card">
+                    <div class="type-num">TYPE 01</div>
+                    <h3>業務委託パートナー</h3>
+                    <div class="type-row">
+                        <span class="type-row-label">対象</span>
+                        <p>Web制作、SNS運用、ライティング、デザイン、経営コンサル等の実務を担ってもらえる個人・法人</p>
+                    </div>
+                    <div class="type-row">
+                        <span class="type-row-label">こんな方に</span>
+                        <p>フリーランス／小規模事務所で、案件を安定的に受けたい方</p>
+                    </div>
+                    <div class="type-row">
+                        <span class="type-row-label">提供価値</span>
+                        <p>継続案件の紹介、TRESWINブランドでの実績構築、業務範囲に応じた柔軟な契約</p>
+                    </div>
+                </div>
+
+                <div class="type-card">
+                    <div class="type-num">TYPE 02</div>
+                    <h3>代理店・紹介パートナー</h3>
+                    <div class="type-row">
+                        <span class="type-row-label">対象</span>
+                        <p>TRESWINのサービスを自社の顧客や取引先に紹介・販売できる個人・法人</p>
+                    </div>
+                    <div class="type-row">
+                        <span class="type-row-label">こんな方に</span>
+                        <p>既存顧客基盤を持ち、追加の提案メニューを探している方</p>
+                    </div>
+                    <div class="type-row">
+                        <span class="type-row-label">提供価値</span>
+                        <p>紹介手数料（レベニューシェア）、営業資料・トークスクリプトの提供、TRESWIN側での商談同席サポート</p>
+                    </div>
+                </div>
+
+                <div class="type-card">
+                    <div class="type-num">TYPE 03</div>
+                    <h3>事業提携パートナー</h3>
+                    <div class="type-row">
+                        <span class="type-row-label">対象</span>
+                        <p>共同で新規事業・アライアンス企画を立ち上げたい法人</p>
+                    </div>
+                    <div class="type-row">
+                        <span class="type-row-label">こんな方に</span>
+                        <p>TRESWINの4事業と親和性のある事業を持ち、共創で市場を広げたい企業</p>
+                    </div>
+                    <div class="type-row">
+                        <span class="type-row-label">提供価値</span>
+                        <p>共同商品開発、相互送客、共同マーケティング、資本提携等の柔軟な協業形態を協議可能</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 提供価値（共通） -->
+    <section class="section section-dark" id="benefits">
+        <div class="section-inner">
+            <span class="section-kicker">Why TRESWIN</span>
+            <h2 class="section-title">TRESWINと組むメリット</h2>
+            <p class="section-lead">パートナー種別を問わず、共通してご提供できる価値です。</p>
+            <ul class="benefit-list">
+                <li>4事業の顧客基盤・実績を活用できる</li>
+                <li>大阪拠点の中小企業ネットワークにアクセスできる</li>
+                <li>案件のマッチング・契約周りをTRESWIN側でサポート</li>
+                <li>成果に応じた報酬・レベニューシェア設計</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 応募条件・プロセス -->
+    <section class="section" id="process">
+        <div class="section-inner">
+            <span class="section-kicker">Requirements &amp; Process</span>
+            <h2 class="section-title">応募条件・プロセス</h2>
+            <p class="section-lead">以下の条件に当てはまる方は、お気軽にご応募ください。</p>
+            <ul class="req-list">
+                <li>対象3タイプいずれかに該当する個人・法人</li>
+                <li>継続的にコミュニケーションが取れる方</li>
+                <li>（業務委託の場合）実績・ポートフォリオを提示できる方</li>
+            </ul>
+
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="process-step-num">1</div>
+                    <h4>応募フォーム送信</h4>
+                    <p>下記フォームより必要事項をご入力の上、送信してください。</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-num">2</div>
+                    <h4>書類確認・日程調整</h4>
+                    <p>内容を確認の上、オンライン面談の日程をご案内します。</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-num">3</div>
+                    <h4>オンライン面談</h4>
+                    <p>30〜60分程度、お互いの理解を深める面談を実施します。</p>
+                </div>
+                <div class="process-step">
+                    <div class="process-step-num">4</div>
+                    <h4>条件すり合わせ・契約</h4>
+                    <p>報酬・契約形態をすり合わせの上、契約を締結します。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 応募フォーム -->
+    <section class="section section-alt" id="apply">
+        <div class="section-inner">
+            <span class="section-kicker">Apply</span>
+            <h2 class="section-title">まずはお気軽にご応募ください</h2>
+            <p class="section-lead">下記フォームに必要事項をご入力の上、送信してください。3営業日以内に担当者よりご連絡いたします。</p>
+
+            <div class="apply-form-wrap">
+                <div class="apply-form">
+                    <form action="mail.php" method="POST" id="partnerForm" enctype="multipart/form-data">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">お名前 <span class="required">必須</span></label>
+                                <input type="text" id="name" name="name" placeholder="例：山田 太郎" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="company">会社名 <span class="optional">任意</span></label>
+                                <input type="text" id="company" name="company" placeholder="例：株式会社トレスウィン">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">メールアドレス <span class="required">必須</span></label>
+                                <input type="email" id="email" name="email" placeholder="例：info@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">電話番号 <span class="optional">任意</span></label>
+                                <input type="tel" id="phone" name="phone" placeholder="例：090-1234-5678">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="partner_type">希望するパートナー種別 <span class="required">必須</span></label>
+                            <select id="partner_type" name="partner_type" required>
+                                <option value="" disabled selected>選択してください</option>
+                                <option value="業務委託パートナー">業務委託パートナー</option>
+                                <option value="代理店・紹介パートナー">代理店・紹介パートナー</option>
+                                <option value="事業提携パートナー">事業提携パートナー</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">自己紹介・実績 <span class="required">必須</span></label>
+                            <textarea id="message" name="message" placeholder="ご自身・貴社の実績、得意分野、TRESWINと取り組みたいことなどをご記入ください" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="attachment">添付ファイル <span class="optional">任意・ポートフォリオ等</span></label>
+                            <input type="file" id="attachment" name="attachment" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.zip">
+                            <p class="form-hint">PDF・Word・PowerPoint・Excel・画像・zip形式、8MBまで</p>
+                        </div>
+
+                        <input type="hidden" name="source_page" value="partners.html">
+                        <button type="submit" class="submit-btn" id="submitBtn">この内容で応募する</button>
+
+                    </form>
+
+                    <!-- 送信完了メッセージ -->
+                    <div id="successMsg" style="display:none; text-align:center; padding:40px 20px;">
+                        <div style="font-size:48px; margin-bottom:16px;">✅</div>
+                        <h3 style="font-size:20px; color:#1d184a; margin-bottom:12px;">ご応募ありがとうございます</h3>
+                        <p style="color:#666; line-height:1.8;">応募内容を受け付けました。<br>3営業日以内に担当者よりご連絡いたします。<br>自動返信メールをご確認ください。</p>
+                    </div>
+                    <div id="errorMsg" style="display:none; text-align:center; padding:20px; background:#fff0f0; border-radius:8px; color:#c00; margin-top:20px;">
+                        送信に失敗しました。時間をおいて再度お試しいただくか、<a href="mailto:info@tres-win.com" style="color:#1d184a;">info@tres-win.com</a> まで直接ご連絡ください。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="decoration-footer">
+        <div class="slanted-line"></div>
+        <div class="footer-content">
+            <span class="logo-text">TRESWIN</span>
+            <div class="footer-links">
+                <a href="company.html">会社概要</a>
+                <a href="services.html">事業内容</a>
+                <a href="partners.html">パートナー募集</a>
+                <a href="contact.html">お問い合わせ</a>
+            </div>
+            <div class="footer-address">〒530-0001 大阪府大阪市北区梅田1丁目2番2号 大阪駅前第2ビル12-12</div>
+            <div class="copyright">&copy; 2026 TRESWIN. All Rights Reserved.</div>
+        </div>
+    </div>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => { hamburger.classList.toggle('active'); navMenu.classList.toggle('active'); });
+
+        // URLパラメータで送信完了表示
+        const params = new URLSearchParams(location.search);
+        if (params.get('sent') === '1') {
+            document.querySelector('.apply-form form').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'block';
+        }
+        if (params.get('error') === '1') {
+            document.getElementById('errorMsg').style.display = 'block';
+        }
+
+        // フォーム送信中のボタン状態
+        document.getElementById('partnerForm').addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            btn.textContent = '送信中...';
+            btn.disabled = true;
+        });
+    </script>
+</body>
+</html>

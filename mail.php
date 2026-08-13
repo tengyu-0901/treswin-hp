@@ -31,7 +31,7 @@ define('TO_EMAIL', 'info@tres-win.com');
 define('SITE_NAME', 'TRESWIN');
 
 // ──── source_page ホワイトリスト（オープンリダイレクト対策） ────
-$allowed_pages = ['contact.html', 'service-hp.html', 'services.html', 'service-advisory.html'];
+$allowed_pages = ['contact.html', 'service-hp.html', 'services.html', 'service-advisory.html', 'partners.html'];
 $raw_source    = trim($_POST['source_page'] ?? 'contact.html');
 $source_page   = in_array($raw_source, $allowed_pages) ? $raw_source : 'contact.html';
 
@@ -43,7 +43,9 @@ function clean($v) {
 $name          = clean($_POST['name']          ?? '');
 $company       = clean($_POST['company']       ?? '');
 $email         = clean($_POST['email']         ?? '');
+$phone         = clean($_POST['phone']         ?? '');
 $inquiry_type  = clean($_POST['inquiry_type']  ?? $_POST['ctype'] ?? '');
+$partner_type  = clean($_POST['partner_type']  ?? '');
 $customer_type = clean($_POST['customer_type'] ?? '');
 $message_raw   = $_POST['message'] ?? '';
 
@@ -67,9 +69,47 @@ if (!empty($errors)) {
     exit;
 }
 
+// ──── 添付ファイル（任意） ────
+$has_attachment    = false;
+$attachment_name   = '';
+$attachment_b64    = '';
+$attachment_mime   = 'application/octet-stream';
+
+if (!empty($_FILES['attachment']['name']) && $_FILES['attachment']['error'] !== UPLOAD_ERR_NO_FILE) {
+    if ($_FILES['attachment']['error'] !== UPLOAD_ERR_OK) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'errors' => ['添付ファイルのアップロードに失敗しました。']]);
+        exit;
+    }
+
+    $allowed_ext = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'jpg', 'jpeg', 'png', 'zip'];
+    $max_size    = 8 * 1024 * 1024; // 8MB
+    $orig_name   = $_FILES['attachment']['name'];
+    $ext         = strtolower(pathinfo($orig_name, PATHINFO_EXTENSION));
+
+    if (!in_array($ext, $allowed_ext, true)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'errors' => ['添付ファイルの形式が対応していません。']]);
+        exit;
+    }
+    if ($_FILES['attachment']['size'] > $max_size) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'errors' => ['添付ファイルは8MB以内でアップロードしてください。']]);
+        exit;
+    }
+
+    $file_content = file_get_contents($_FILES['attachment']['tmp_name']);
+    if ($file_content !== false) {
+        $has_attachment  = true;
+        $attachment_name = preg_replace('/[^a-zA-Z0-9_.\-]/', '_', $orig_name);
+        $attachment_b64  = chunk_split(base64_encode($file_content));
+    }
+}
+
 // ──── メール本文の組み立て ────
+$is_partner = ($source_page === 'partners.html');
 $body_lines = [
-    "【" . SITE_NAME . "】お問い合わせが届きました",
+    "【" . SITE_NAME . "】" . ($is_partner ? "パートナー応募が届きました" : "お問い合わせが届きました"),
     "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
     "",
 ];
@@ -78,10 +118,16 @@ if ($customer_type) $body_lines[] = "【区分】 {$customer_type}";
 if ($company)       $body_lines[] = "【会社名】 {$company}";
 $body_lines[] = "【お名前】 {$name}";
 $body_lines[] = "【メール】 {$email}";
-if ($inquiry_type)  $body_lines[] = "【種別】 {$inquiry_type}";
+if ($phone)          $body_lines[] = "【電話番号】 {$phone}";
+if ($inquiry_type)   $body_lines[] = "【種別】 {$inquiry_type}";
+if ($partner_type)   $body_lines[] = "【希望パートナー種別】 {$partner_type}";
 $body_lines[] = "";
-$body_lines[] = "【お問い合わせ内容】";
+$body_lines[] = $is_partner ? "【自己紹介・実績】" : "【お問い合わせ内容】";
 $body_lines[] = $message ?: "（内容なし）";
+if ($has_attachment) {
+    $body_lines[] = "";
+    $body_lines[] = "【添付ファイル】 {$attachment_name}";
+}
 $body_lines[] = "";
 $body_lines[] = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
 $body_lines[] = "送信元ページ: https://tres-win.com/{$source_page}";
@@ -90,38 +136,63 @@ $body_lines[] = "送信日時: " . date('Y-m-d H:i:s');
 $body = implode("\n", $body_lines);
 
 // ──── メールヘッダー（PHPバージョン非公開） ────
-$subject   = mb_encode_mimeheader("【" . SITE_NAME . "】お問い合わせ：{$name} 様", 'UTF-8', 'B');
-$from_name = mb_encode_mimeheader(SITE_NAME . " お問い合わせフォーム", 'UTF-8', 'B');
-$headers   = implode("\r\n", [
-    "From: {$from_name} <no-reply@tres-win.com>",
-    "Reply-To: {$email}",
-    "MIME-Version: 1.0",
-    "Content-Type: text/plain; charset=UTF-8",
-    "Content-Transfer-Encoding: base64",
-]);
+$subject_text = $is_partner ? "【" . SITE_NAME . "】パートナー応募：{$name} 様" : "【" . SITE_NAME . "】お問い合わせ：{$name} 様";
+$subject      = mb_encode_mimeheader($subject_text, 'UTF-8', 'B');
+$from_name    = mb_encode_mimeheader(SITE_NAME . " お問い合わせフォーム", 'UTF-8', 'B');
 
-$body_encoded = base64_encode($body);
+if ($has_attachment) {
+    $boundary = '----=_TRESWIN_' . md5(uniqid((string)microtime(), true));
+    $headers  = implode("\r\n", [
+        "From: {$from_name} <no-reply@tres-win.com>",
+        "Reply-To: {$email}",
+        "MIME-Version: 1.0",
+        "Content-Type: multipart/mixed; boundary=\"{$boundary}\"",
+    ]);
 
-// ──── 送信 ────
-$sent = mail(TO_EMAIL, $subject, $body_encoded, $headers);
+    $mime_body  = "--{$boundary}\r\n";
+    $mime_body .= "Content-Type: text/plain; charset=UTF-8\r\n";
+    $mime_body .= "Content-Transfer-Encoding: base64\r\n\r\n";
+    $mime_body .= base64_encode($body) . "\r\n\r\n";
+    $mime_body .= "--{$boundary}\r\n";
+    $mime_body .= "Content-Type: {$attachment_mime}; name=\"{$attachment_name}\"\r\n";
+    $mime_body .= "Content-Transfer-Encoding: base64\r\n";
+    $mime_body .= "Content-Disposition: attachment; filename=\"{$attachment_name}\"\r\n\r\n";
+    $mime_body .= $attachment_b64 . "\r\n";
+    $mime_body .= "--{$boundary}--";
+
+    $sent = mail(TO_EMAIL, $subject, $mime_body, $headers);
+} else {
+    $headers = implode("\r\n", [
+        "From: {$from_name} <no-reply@tres-win.com>",
+        "Reply-To: {$email}",
+        "MIME-Version: 1.0",
+        "Content-Type: text/plain; charset=UTF-8",
+        "Content-Transfer-Encoding: base64",
+    ]);
+    $body_encoded = base64_encode($body);
+
+    // ──── 送信 ────
+    $sent = mail(TO_EMAIL, $subject, $body_encoded, $headers);
+}
 
 // ──── 自動返信（送信者へ） ────
 if ($sent) {
     $reply_body = implode("\n", [
         "{$name} 様",
         "",
-        "お問い合わせいただきありがとうございます。",
+        $is_partner ? "パートナーへのご応募ありがとうございます。" : "お問い合わせいただきありがとうございます。",
         "TRESWIN（トレスウィン）です。",
         "",
-        "以下の内容でお問い合わせを受け付けました。",
+        $is_partner ? "以下の内容でご応募を受け付けました。" : "以下の内容でお問い合わせを受け付けました。",
         "3営業日以内に担当者よりご返信いたします。",
         "",
         "━━━━━━━━━━━━━━━━━━━━━━━━",
+        ($partner_type ? "【希望パートナー種別】 {$partner_type}\n" : "") .
         ($inquiry_type ? "【種別】 {$inquiry_type}\n" : "") .
         "【お名前】 {$name}",
         "【メール】 {$email}",
         "",
-        "【お問い合わせ内容】",
+        $is_partner ? "【自己紹介・実績】" : "【お問い合わせ内容】",
         $message ?: "（内容なし）",
         "━━━━━━━━━━━━━━━━━━━━━━━━",
         "",
@@ -132,7 +203,7 @@ if ($sent) {
         "Mail: info@tres-win.com",
     ]);
 
-    $reply_subject = mb_encode_mimeheader("【TRESWIN】お問い合わせを受け付けました", 'UTF-8', 'B');
+    $reply_subject = mb_encode_mimeheader($is_partner ? "【TRESWIN】パートナー応募を受け付けました" : "【TRESWIN】お問い合わせを受け付けました", 'UTF-8', 'B');
     $reply_from    = mb_encode_mimeheader("TRESWIN", 'UTF-8', 'B');
     $reply_headers = implode("\r\n", [
         "From: {$reply_from} <info@tres-win.com>",
