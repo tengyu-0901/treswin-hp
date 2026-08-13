@@ -10,6 +10,50 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit('Method Not Allowed');
 }
 
+// ============================================
+// TRESWIN フォームスパム対策
+// ※ メール送信処理より前に必ず実行すること
+// ============================================
+
+// --- 判定1：ハニーポット ---
+// 人間には見えない欄に値が入っている = bot
+if (!empty($_POST['tw_website'])) {
+    error_log('[TRESWIN] spam blocked (honeypot) IP=' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+    header('Location: contact.html?sent=1');
+    exit;
+}
+
+// --- 判定2：送信までの経過時間 ---
+// フォーム表示から3秒未満での送信 = botの速度
+$tw_ts = isset($_POST['tw_ts']) ? (int)$_POST['tw_ts'] : 0;
+if ($tw_ts === 0 || (time() - $tw_ts) < 3) {
+    error_log('[TRESWIN] spam blocked (too fast) IP=' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+    header('Location: contact.html?sent=1');
+    exit;
+}
+
+// --- 判定3：同一IPのレート制限（60秒に1通まで） ---
+$_ip      = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+$lockDir  = sys_get_temp_dir() . '/tw_formlock';
+if (!is_dir($lockDir)) { @mkdir($lockDir, 0700, true); }
+$lockFile = $lockDir . '/' . hash('sha256', $_ip);
+if (file_exists($lockFile) && (time() - filemtime($lockFile)) < 60) {
+    error_log('[TRESWIN] spam blocked (rate limit) IP=' . $_ip);
+    header('Location: contact.html?sent=1');
+    exit;
+}
+@touch($lockFile);
+
+// --- 判定4：本文へのURL大量混入（3件以上 = 宣伝スパム）---
+$_body_raw = $_POST['message'] ?? '';
+if (preg_match_all('#https?://#i', $_body_raw) >= 3) {
+    error_log('[TRESWIN] spam blocked (too many links) IP=' . $_ip);
+    header('Location: contact.html?sent=1');
+    exit;
+}
+
+// ============================================
+
 // ──── レート制限（同一IPから1分に5回まで） ────
 session_start();
 $ip  = $_SERVER['REMOTE_ADDR'] ?? 'unknown';

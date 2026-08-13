@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRESLINK 商談台本 | クリニック院長向け</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+    :root {
+      --navy: #1d184a;
+      --yellow: #dfd71c;
+      --white: #ffffff;
+      --gray: #f5f5f7;
+      --border: #e5e5ea;
+      --text: #1a1a1a;
+      --text-light: #666;
+      --green: #1a7f4e;
+      --red: #c0392b;
+      --blue: #1a5fa8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+      background: var(--gray);
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    /* ===== TOOLBAR ===== */
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--navy);
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+    .toolbar .brand {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: 2px;
+    }
+    .toolbar .brand span { color: var(--yellow); }
+    .toolbar .meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+    }
+    .toolbar button {
+      padding: 8px 18px;
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .toolbar button:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+
+    /* ===== LEGEND ===== */
+    .legend {
+      max-width: 860px;
+      margin: 80px auto 0;
+      padding: 16px 24px;
+      background: var(--white);
+      border-radius: 8px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .legend strong { color: var(--navy); font-size: 12px; letter-spacing: 1px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 3px;
+    }
+    .badge-speak { background: #e8f0fe; color: #1a5fa8; }
+    .badge-slide { background: #fef9e0; color: #a09000; }
+    .badge-tip { background: #e8f7ef; color: #1a7f4e; }
+    .badge-qa { background: #fde8e8; color: #c0392b; }
+
+    /* ===== MAIN ===== */
+    main {
+      max-width: 860px;
+      margin: 20px auto 60px;
+      padding: 0 16px;
+    }
+
+    /* ===== PHASE HEADER ===== */
+    .phase {
+      margin-bottom: 32px;
+    }
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      padding: 14px 20px;
+      background: var(--navy);
+      border-radius: 6px;
+    }
+    .phase-num {
+      width: 36px;
+      height: 36px;
+      background: var(--yellow);
+      color: var(--navy);
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .phase-header h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: 1px;
+    }
+    .phase-header .phase-time {
+      margin-left: auto;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1px;
+    }
+
+    /* ===== BLOCK ===== */
+    .block {
+      background: var(--white);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    /* ===== SLIDE INDICATOR ===== */
+    .slide-indicator {
+      background: #fef9e0;
+      border-bottom: 1px solid #f0e87a;
+      padding: 8px 18px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #a09000;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ===== SPEECH ===== */
+    .speech-block {
+      padding: 20px 24px;
+      border-left: 4px solid #1a5fa8;
+    }
+    .speech-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #1a5fa8;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .speech-text {
+      font-size: 15px;
+      line-height: 2.0;
+      color: var(--text);
+    }
+    .speech-text .pause {
+      display: inline-block;
+      font-size: 11px;
+      color: #999;
+      background: #f0f0f0;
+      padding: 1px 8px;
+      border-radius: 3px;
+      margin: 0 4px;
+      font-style: normal;
+      vertical-align: middle;
+    }
+    .speech-text .emphasis {
+      font-weight: 800;
+      color: var(--navy);
+      border-bottom: 2px solid var(--yellow);
+    }
+    .speech-text .soft {
+      color: var(--text-light);
+      font-size: 14px;
+    }
+
+    /* ===== TIP ===== */
+    .tip-block {
+      padding: 14px 20px;
+      background: #e8f7ef;
+      border-left: 4px solid #1a7f4e;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+    .tip-block p { font-size: 13px; color: #1a5c38; line-height: 1.8; }
+    .tip-block strong { font-weight: 700; }
+
+    /* ===== Q&A BLOCK ===== */
+    .qa-block {
+      border-left: 4px solid var(--red);
+    }
+    .qa-question {
+      padding: 14px 20px;
+      background: #fde8e8;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--red);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .qa-question .q-icon { font-size: 16px; flex-shrink: 0; }
+    .qa-answer {
+      padding: 16px 24px;
+    }
+    .qa-answer-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--navy);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .qa-answer p { font-size: 14px; line-height: 1.9; color: var(--text); }
+
+    /* ===== NOTE ===== */
+    .note-block {
+      padding: 12px 18px;
+      background: var(--gray);
+      border-radius: 4px;
+      margin: 8px 0;
+    }
+    .note-block p { font-size: 13px; color: var(--text-light); line-height: 1.8; }
+
+    /* ===== CLOSING SUMMARY ===== */
+    .summary-box {
+      background: var(--navy);
+      color: var(--white);
+      border-radius: 8px;
+      padding: 28px 32px;
+      margin-top: 32px;
+    }
+    .summary-box h3 {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--yellow);
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+    .summary-box ul {
+      list-style: none;
+      font-size: 14px;
+      line-height: 2.0;
+    }
+    .summary-box li::before { content: '✓ '; color: var(--yellow); font-weight: 900; }
+
+    @media print {
+      .toolbar { position: static; }
+      .legend { margin-top: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="brand">TRES<span>LINK</span> <span style="font-weight:400;font-size:12px;color:rgba(255,255,255,0.4);margin-left:12px;">商談台本 / クリニック院長向け</span></div>
+  <div class="meta">対面・オンライン商談 / 約15〜20分</div>
+  <button onclick="window.print()">🖨 印刷</button>
+</div>
+
+<div class="legend">
+  <strong>凡例</strong>
+  <div class="legend-item"><span class="legend-badge badge-speak">話す内容</span><span>実際に口に出すセリフ</span></div>
+  <div class="legend-item"><span class="legend-badge badge-slide">スライド</span><span>このタイミングで開くページ</span></div>
+  <div class="legend-item"><span class="legend-badge badge-tip">ポイント</span><span>意識すること・所作のヒント</span></div>
+  <div class="legend-item"><span class="legend-badge badge-qa">想定Q&A</span><span>よく出る質問と返し方</span></div>
+</div>
+
+<main>
+
+<!-- ==============================
+     PHASE 0: アイスブレイク
+     ============================== -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">0</div>
+    <h2>アイスブレイク・自己紹介</h2>
+    <span class="phase-time">〜2分</span>
+  </div>
+
+  <div class="block">
+    <div class="slide-indicator">📄 スライド表示なし（手ぶらで話す）</div>
+    <div class="speech-block">
+      <div class="speech-label">話す内容</div>
+      <div class="speech-text">
+        本日はお時間をいただき、ありがとうございます。<br>
+        大阪梅田でビジネス支援をしております、TRESWINの大槻と申します。<span class="pause">一息</span><br><br>
+        今日は先生のクリニックのSNSについて、<span class="emphasis">「もっとうまく活用できるかもしれない」</span>というご提案をさせていただけたらと思っています。<br>
+        難しいことは抜きで、まずは先生が今どんな状況か聞かせていただきながら進めていきますね。
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="tip-block">
+      <div class="tip-icon">💡</div>
+      <p><strong>「難しいことは抜きで」</strong>は必ず言う。院長先生はSNSに詳しくない方が多い。最初に「難しくない」という安心感を作る。</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==============================
+     PHASE 1: ヒアリング
+     ============================== -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">1</div>
+    <h2>現状ヒアリング（先生に話してもらう）</h2>
+    <span class="phase-time">〜5分</span>
+  </div>
+
+  <div class="block">
+    <div class="slide-indicator">📄 スライドはまだ開かない / メモを取りながら聞く</div>
+    <div class="speech-block">
+      <div class="speech-label">話す内容</div>
+      <div class="speech-text">
+        まず少し教えてください。<br><br>
+        今、クリニックのSNSって、どなたかが動かしていますか？<span class="pause">待つ</span><br><br>
+        <span class="soft">（「スタッフが投稿している」「自分でやっている」「ほとんどできていない」など回答が出たら）</span><br><br>
+        なるほど。ちなみに、そこに一番困っていることってどんなことですか？<span class="pause">待つ</span><br><br>
+        <span class="soft">（答えが出たら深掘り）</span><br><br>
+        たとえば、患者さんが「インスタ見て来ました」みたいなことって、最近ありますか？<span class="pause">待つ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="tip-block">
+      <div class="tip-icon">💡</div>
+      <p><strong>ここは絶対に喋りすぎない。</strong>先生が話している間はうなずき続ける。「なるほど」「そうなんですね」を繰り返す。ここで得た情報を後半の提案に織り込むと刺さる。</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==============================
+     PHASE 2: 課題共感
+     ============================== -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">2</div>
+    <h2>課題の共感・整理</h2>
+    <span class="phase-time">〜3分</span>
+  </div>
+
+  <div class="block">
+    <div class="slide-indicator">📄 スライド03ページ「こんな課題ありませんか？」を開く</div>
+    <div class="speech-block">
+      <div class="speech-label">話す内容</div>
+      <div class="speech-text">
+        先生、おっしゃった内容、実はクリニックさんにすごく多いんです。<span class="pause">一息</span><br><br>
+        ここを見てください。<br><br>
+        「投稿しても反応がない」「運用に時間が取られすぎる」——これ、まさに先生がさっきおっしゃっていたことと一緒ですよね。<span class="pause">確認する</span><br><br>
+        クリニックって、診療という本業があるじゃないですか。SNSのためにスタッフさんや先生の時間を使うのって、正直もったいないと思うんですよ。<br><br>
+        しかも<span class="emphasis">「とりあえず投稿している」状態だと、患者さんの新規獲得につながらない</span>ケースが多くて。<br>
+        それがすごくもったいないな、と感じていて今日来ました。
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="tip-block">
+      <div class="tip-icon">💡</div>
+      <p>ヒアリングで出た言葉を<strong>そのまま返す</strong>のがポイント。「さっきおっしゃっていた〜」と繋げると「この人は話を聞いてくれている」という信頼感が生まれる。</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==============================
+     PHASE 3: サービス紹介
+     ============================== -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">3</div>
+    <h2>TRESLINKのサービス紹介</h2>
+    <span class="phase-time">〜5分</span>
+  </div>
+
+  <div class="block">
+    <div class="slide-indicator">📄 スライド04ページ「TRESLINKとは」を開く</div>
+    <div class="speech-block">
+      <div class="speech-label">話す内容</div>
+      <div class="speech-text">
+        私たちのサービス「TRESLINK」は、SNSを<span class="emphasis">丸ごとお任せいただける</span>サービスです。<span class="pause">一息</span><br><br>
+        先生や受付スタッフさんが「何を投稿しよう」って悩む時間、ゼロにするのが目標なんです。<br><br>
+        具体的には、戦略を立てるところから始まって——どのSNSを使うか、どんな患者さんに見てほしいか——それを決めた上で、コンテンツも私たちが作って、投稿も代行します。<span class="pause">一息</span><br><br>
+        毎月、「先月どうだったか・来月何をするか」をレポートと一緒にご報告するので、先生はそれを見ていただくだけでいい。そういうイメージです。
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="slide-indicator">📄 スライド05ページ「選ばれる3つの理由」を開く</div>
+    <div class="speech-block">
+      <div class="speech-label">話す内容</div>
+      <div class="speech-text">
+        よくあるSNS代行と何が違うかというと、<span class="emphasis">「投稿するだけ」じゃない</span>、というところです。<span class="pause">一息</span><br><br>
+        たとえばインスタって、ただ写真を上げてもほとんど誰にも届かないんですよ。アルゴリズムという仕組みがあって、投稿のしかたで見える人が全然変わるんです。<span class="pause">一息</span><br><br>
+        うちは毎月データを分析して、「今月はこの投稿が伸びました。なぜかというと〜」「来月はこういうコンテンツに変えましょう」って、改善を繰り返していきます。<br><br>
+        クリニックでいうと、診察→検査→治療って流れがあるじゃないですか。SNSもそれと同じで、データ見て→分析して→次に活かす、この繰り返しが大事なんです。
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="tip-block">
+      <div class="tip-icon">💡</div>
+      <p>院長先生には<strong>医療に例えた比喩</strong>がよく刺さる。「診察→検査→治療」の繰り返しとSNS改善サイクルを重ねると「なるほど」となりやすい。</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==============================
+     PHASE 4: 医療特有の話
+     ============================== -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">4</div>
+    <h2>クリニック特有のSNS活用</h2>
+    <span class="phase-time">〜3分</span>
+  </div>
+
+  <div class="block">
+    <div class="slide-indicator">📄 スライドはいったん閉じて、直接話す</div>
+    <div class="speech-block">
+      <div class="speech-label">話す内容</div>
+      <div class="speech-text">
+        ちょっと余談みたいな話なんですが、クリニックのSNSって実は特殊で。<span class="pause">一息</span><br><br>
+        患者さんって、病院を選ぶとき今インターネットで調べるんです。「この先生、信頼できそう？」「どんな雰囲気の病院？」って。<br>
+        それを決めるのが、ホームページよりも<span class="emphasis">SNSになってきている</span>んですよ。<span class="pause">一息</span><br><br>
+        特にインスタとか、Googleと連動していて、クリニックを検索したときに投稿が出てきたりします。<br><br>
+        だから「認知してもらう」「信頼してもらう」「来院につなげる」——この3段階をSNSで作れると、広告費を使わなくても新患さんが増えていくんです。<span class="pause">一息</span><br><br>
+        先生のクリニックの強みとか、先生のお人柄がSNSで伝わったら、それって最強のブランドになると思うんですよね。
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="tip-block">
+      <div class="tip-icon">💡</div>
+      <p>「先生のお人柄」というワードは院長先生の自尊心に響く。クリニックの強みが<strong>先生自身にある</strong>という文脈にすると前のめりになりやすい。</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==============================
+     PHASE 5: 料金・クロージング
+     ============================== -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">5</div>
+    <h2>料金提示・クロージング</h2>
+    <span class="phase-time">〜3分</span>
+  </div>
+
+  <div class="block">
+    <div class="slide-indicator">📄 スライド09ページ「料金プラン」を開く</div>
+    <div class="speech-block">
+      <div class="speech-label">話す内容</div>
+      <div class="speech-text">
+        料金についてですが、月額でお付き合いいただく形になっています。<span class="pause">一息</span><br><br>
+        まず試してみたいという先生には、<span class="emphasis">スタータープランから始めていただくのがおすすめ</span>です。1つのSNSから、投稿から分析まで全部込みで動かしてみましょう、というプランです。<br><br>
+        「慣れてきたら増やしたい」「複数SNSをやりたい」となったタイミングでプランを上げていただいても大丈夫です。<span class="pause">一息</span><br><br>
+        もし今日すぐ決めなくても全然大丈夫です。まず<span class="emphasis">無料で一度ヒアリングの場を設けて</span>、先生のクリニックに合った提案書を作らせてください。<br>
+        それを見ていただいてから判断していただければ十分です。
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="tip-block">
+      <div class="tip-icon">💡</div>
+      <p>院長先生はその場で即決しないことが多い。<strong>「今日決めなくていい」と先に言う</strong>ことで警戒心が解ける。次のアクション（無料ヒアリング）に誘導するのがゴール。</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="speech-block">
+      <div class="speech-label">クロージングセリフ</div>
+      <div class="speech-text">
+        今日お話しした内容の資料、このあとメールでお送りしてもいいですか？<span class="pause">待つ</span><br><br>
+        あと、もし可能であれば、今のクリニックのインスタとかXのアカウント、一度見せていただけますか？<br>
+        その場で「こういうふうにしたらいいかも」というのを、2〜3個だけ簡単にお伝えできます。<span class="pause">待つ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="tip-block">
+      <div class="tip-icon">💡</div>
+      <p>アカウントを見せてもらうことで<strong>その場で具体的な改善案を話せる</strong>。「プロに見てもらった」という体験が信頼につながり、次回ヒアリングのアポを取りやすくなる。</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==============================
+     PHASE 6: 想定Q&A
+     ============================== -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-num">Q</div>
+    <h2>想定される質問と返し方</h2>
+    <span class="phase-time">随時</span>
+  </div>
+
+  <div class="block">
+    <div class="qa-block">
+      <div class="qa-question">
+        <span class="q-icon">❓</span>
+        「医療のことは分かりますか？医療広告ガイドラインとか大丈夫？」
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-label">返し方</div>
+        <p>
+          はい、医療広告ガイドラインについては当然把握した上で対応します。クリニックのSNSは、一般企業と違って「効果・効能を謳ってはいけない」など制約があります。だからこそ、慣れていない代行業者に任せると怖いんです。うちは最初の戦略設計の段階でガイドラインに沿ったコンテンツルールを一緒に作りますので、そこはご安心ください。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="qa-block">
+      <div class="qa-question">
+        <span class="q-icon">❓</span>
+        「スタッフが自分たちでやれば無料でできるじゃないですか？」
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-label">返し方</div>
+        <p>
+          おっしゃる通りです。ただ、スタッフさんがSNS対応に使う時間って、実は結構かかっていませんか？投稿内容を考えて、画像を作って、文章書いて……それって本来は医療事務や受付に使えた時間ですよね。うちに任せることで、スタッフさんは本来の業務に集中できます。時間コストとして考えると、実は合理的な選択だと思っています。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="qa-block">
+      <div class="qa-question">
+        <span class="q-icon">❓</span>
+        「SNSって本当に患者さん増えるんですか？」
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-label">返し方</div>
+        <p>
+          即効性はあまり期待しないでください、正直に言うと。ただ、3〜6ヶ月続けると「インスタ見ました」「ネットで先生の投稿を見て」という患者さんが少しずつ増えてくる傾向があります。SNSは広告と違って、やめても資産として残るんです。投稿したものは蓄積されていくので、長期的に見ると費用対効果はすごく高い。焦らず一緒に育てていきましょう、というご提案です。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="qa-block">
+      <div class="qa-question">
+        <span class="q-icon">❓</span>
+        「いつでも解約できますか？」
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-label">返し方</div>
+        <p>
+          はい、月次契約ですので、1ヶ月前にご連絡いただければいつでも解約できます。ただ、SNSは継続してこそ効果が出るものなので、最低3ヶ月は一緒にやらせてください、とはお願いしています。それくらいのタイムラインでデータが揃ってきて、改善の手応えが出てきますので。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="qa-block">
+      <div class="qa-question">
+        <span class="q-icon">❓</span>
+        「忙しくて打ち合わせの時間が取れない」
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-label">返し方</div>
+        <p>
+          それは全然大丈夫です。月に1回、30分のオンラインでのご報告だけで回せるように設計しています。それ以外は基本的にこちらで動かします。最初の1〜2回だけ少し多めにお時間をいただくかもしれませんが、軌道に乗ってしまえば先生のご負担はほぼゼロになります。
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==============================
+     CLOSING SUMMARY
+     ============================== -->
+<div class="summary-box">
+  <h3>📋 商談後のチェックリスト</h3>
+  <ul>
+    <li>当日中に資料（treslink-pitch.html）をメールで送付する</li>
+    <li>ヒアリングで出た課題・キーワードをメモしておく</li>
+    <li>可能であれば現在のSNSアカウントを確認し、改善提案を一言添える</li>
+    <li>次回ヒアリング（60分・無料）のアポを提案する</li>
+    <li>「いつまでに提案書をお出しできます」と期日を伝える</li>
+  </ul>
+</div>
+
+</main>
+
+</body>
+</html>
