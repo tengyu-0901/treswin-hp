@@ -1,34 +1,37 @@
-import React from 'react';
-import {AbsoluteFill} from 'remotion';
-import {TitleCall} from '../components/TitleCall';
-import {TelopText} from '../components/TelopText';
+// src/compositions/Script2_HardWorkVsResults.tsx
+// 台本2「『頑張ってる人』と『空回りしてる人』の違い」
 
-const telopLines: {text: string; startFrame: number; durationInFrames: number}[] = [
-	{text: '「頑張っているのに評価されない」', startFrame: 120, durationInFrames: 90},
-	{text: 'その原因は、努力の"方向"かもしれません', startFrame: 210, durationInFrames: 90},
-	{text: '結果につながる努力には共通点があります', startFrame: 330, durationInFrames: 90},
-	{text: 'それは「何を」ではなく「誰のために」やるか', startFrame: 450, durationInFrames: 90},
-	{text: '努力の量より、成果の質にフォーカスする', startFrame: 570, durationInFrames: 90},
-	{text: 'TRESWINは、あなたの努力を成果に変える伴走者です', startFrame: 690, durationInFrames: 120},
+import React from 'react';
+import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
+import {TelopText} from '../components/TelopText';
+import {TitleCall} from '../components/TitleCall';
+
+const FPS = 30;
+const frame = (sec: number) => Math.round(sec * FPS);
+
+const cuts = [
+	{id: 1, startSec: 0, endSec: 3, text: '同じ「頑張ってる」でも、\n結果が出る人と出ない人がいます', style: 'hookRed' as const},
+	{id: 2, startSec: 3, endSec: 7, text: '空回り：とにかく資格を取る', style: 'compareLeft' as const},
+	{id: 3, startSec: 7, endSec: 12, text: '結果が出る：何のために取るか決めてから動く', style: 'compareRight' as const},
+	{id: 4, startSec: 12, endSec: 20, text: '差は才能じゃなくて、順番です', style: 'calm' as const},
+	{id: 5, startSec: 20, endSec: 25, text: 'その順番、12ステップにしてあります', style: 'cta' as const},
 ];
 
-export const Script2_HardWorkVsResults: React.FC = () => {
-	return (
-		<AbsoluteFill style={{backgroundColor: '#000000'}}>
-			<TitleCall
-				title={'努力'}
-				subtitle={'それは、成果につながっているか？'}
-				startFrame={0}
-				durationInFrames={100}
-			/>
-			{telopLines.map((line, index) => (
-				<TelopText
-					key={index}
-					text={line.text}
-					startFrame={line.startFrame}
-					durationInFrames={line.durationInFrames}
-				/>
-			))}
-		</AbsoluteFill>
-	);
-};
+const TITLE_CALL_START = 25;
+const TITLE_CALL_END = 28;
+
+export const Script2_HardWorkVsResults: React.FC = () => (
+	<AbsoluteFill style={{backgroundColor: '#111111'}}>
+		<Audio src={staticFile('bgm.mp3')} volume={0.25} />
+		{cuts.map((cut) => (
+			<Sequence key={cut.id} from={frame(cut.startSec)} durationInFrames={frame(cut.endSec - cut.startSec)}>
+				<TelopText text={cut.text} style={cut.style} />
+			</Sequence>
+		))}
+		<Sequence from={frame(TITLE_CALL_START)} durationInFrames={frame(TITLE_CALL_END - TITLE_CALL_START)}>
+			<TitleCall />
+		</Sequence>
+	</AbsoluteFill>
+);
+
+// Root.tsx登録用: durationInFrames={28 * 30}, fps={30}, width={1080}, height={1920}

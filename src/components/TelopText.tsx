@@ -1,76 +1,57 @@
 import React from 'react';
-import {interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 
-export type TelopTextProps = {
+export type TelopStyle =
+	| 'hookRed'
+	| 'checkbox'
+	| 'calm'
+	| 'cta'
+	| 'compareLeft'
+	| 'compareRight';
+
+type TelopTextProps = {
 	text: string;
-	startFrame?: number;
-	durationInFrames?: number;
-	fontSize?: number;
-	color?: string;
-	backgroundColor?: string;
-	top?: number | string;
+	style: TelopStyle;
 };
 
-export const TelopText: React.FC<TelopTextProps> = ({
-	text,
-	startFrame = 0,
-	durationInFrames = 90,
-	fontSize = 56,
-	color = '#ffffff',
-	backgroundColor = '#111111',
-	top = '78%',
-}) => {
-	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
-	const localFrame = frame - startFrame;
+const marks: Partial<Record<TelopStyle, string>> = {
+	compareLeft: '✕ ',
+	compareRight: '◯ ',
+};
 
-	if (localFrame < 0 || localFrame > durationInFrames) {
-		return null;
-	}
-
-	const enter = spring({
-		frame: localFrame,
-		fps,
-		config: {damping: 200},
+export const TelopText: React.FC<TelopTextProps> = ({text, style}) => {
+	const localFrame = useCurrentFrame();
+	const opacity = interpolate(localFrame, [0, 8], [0, 1], {
+		extrapolateRight: 'clamp',
+	});
+	const translateY = interpolate(localFrame, [0, 8], [10, 0], {
+		extrapolateRight: 'clamp',
 	});
 
-	const exitStart = durationInFrames - 15;
-	const opacity = interpolate(
-		localFrame,
-		[0, 10, exitStart, durationInFrames],
-		[0, 1, 1, 0],
-		{extrapolateLeft: 'clamp', extrapolateRight: 'clamp'},
-	);
+	const baseStyle: React.CSSProperties = {
+		fontFamily: '"Noto Sans JP", sans-serif',
+		fontWeight: 700,
+		textAlign: 'center',
+		whiteSpace: 'pre-line',
+		padding: '0 60px',
+		opacity,
+		transform: `translateY(${translateY}px)`,
+	};
 
-	const translateX = interpolate(enter, [0, 1], [-40, 0]);
+	const variants: Record<TelopStyle, React.CSSProperties> = {
+		hookRed: {...baseStyle, fontSize: 64, color: '#FF3B30'},
+		checkbox: {...baseStyle, fontSize: 48, color: '#FFFFFF', textAlign: 'left'},
+		calm: {...baseStyle, fontSize: 44, color: '#E8C97A'}, // ブランドゴールド
+		cta: {...baseStyle, fontSize: 52, color: '#FFFFFF'},
+		compareLeft: {...baseStyle, fontSize: 48, color: '#FF3B30'},
+		compareRight: {...baseStyle, fontSize: 48, color: '#E8C97A'},
+	};
 
 	return (
-		<div
-			style={{
-				position: 'absolute',
-				top,
-				left: '50%',
-				transform: `translate(-50%, 0) translateX(${translateX}px)`,
-				opacity,
-				padding: '16px 40px',
-				backgroundColor,
-				borderRadius: 12,
-				maxWidth: '90%',
-			}}
-		>
-			<span
-				style={{
-					fontSize,
-					fontWeight: 700,
-					color,
-					fontFamily: '"Noto Sans JP", sans-serif',
-					whiteSpace: 'pre-wrap',
-					textAlign: 'center',
-					display: 'block',
-				}}
-			>
-				{text}
-			</span>
-		</div>
+		<AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
+			<div style={variants[style]}>
+				{marks[style] ? `${marks[style]}${text}` : text}
+			</div>
+		</AbsoluteFill>
 	);
 };
