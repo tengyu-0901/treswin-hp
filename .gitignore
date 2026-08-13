@@ -8,3 +8,8 @@ Drop Box/
 
 # ログ
 *.log
+
+# Remotion / Node
+node_modules/
+out/
+.remotion/
