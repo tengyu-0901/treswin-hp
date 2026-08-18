@@ -10,12 +10,12 @@ const FPS = 30;
 const frame = (sec: number) => Math.round(sec * FPS);
 
 const cuts = [
-	{id: 1, startSec: 0.0, endSec: 2.8, text: 'これ、3つ当てはまったらヤバいです', style: 'hookRed' as const},
-	{id: 2, startSec: 3.9, endSec: 6.2, text: '☐ 転職サイトを毎日見てるのに応募はしない', style: 'checkbox' as const},
-	{id: 3, startSec: 7.3, endSec: 12.0, text: '☐『今の仕事が嫌』は言えても『何がしたいか』は言えない', style: 'checkbox' as const},
-	{id: 4, startSec: 13.0, endSec: 14.6, text: '☐『とりあえず頑張る』が口癖', style: 'checkbox' as const},
-	{id: 5, startSec: 15.5, endSec: 20.0, text: 'これ、「やる気がない」んじゃなくて、\n迷いを言葉にする手順を知らないだけです', style: 'calm' as const},
-	{id: 6, startSec: 21.1, endSec: 23.4, text: 'その手順、プロフィールに置いてます', style: 'cta' as const},
+	{id: 1, startSec: 0.0, endSec: 2.8, text: 'これ、すべて当てはまったら危険です。', style: 'hookRed' as const},
+	{id: 2, startSec: 3.9, endSec: 6.2, text: '☐ 転職サイトを毎日みてるのに応募はしない。', style: 'checkbox' as const},
+	{id: 3, startSec: 7.3, endSec: 12.0, text: '☐「今の仕事が嫌だ」は言えても「何がしたいか」は言えない。', style: 'checkbox' as const},
+	{id: 4, startSec: 13.0, endSec: 14.6, text: '☐「とりあえず頑張る」が口癖。', style: 'checkbox' as const},
+	{id: 5, startSec: 15.5, endSec: 20.0, text: 'これ、やる気がないんじゃなくて、\n迷いをことばにする手順を知らないだけです。', style: 'calm' as const},
+	{id: 6, startSec: 21.1, endSec: 23.4, text: 'その手順、コメント欄に置いてます。', style: 'cta' as const},
 ];
 
 const TITLE_CALL_START = 23.4;
