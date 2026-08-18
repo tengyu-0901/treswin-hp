@@ -14,7 +14,7 @@ export const RemotionRoot: React.FC = () => {
 				fps={30}
 				width={1080}
 				height={1920}
-				durationInFrames={21 * 30}
+				durationInFrames={883}
 			/>
 			<Composition
 				id="Script2-HardWorkVsResults"
