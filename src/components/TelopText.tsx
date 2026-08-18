@@ -12,6 +12,8 @@ export type TelopStyle =
 type TelopTextProps = {
 	text: string;
 	style: TelopStyle;
+	// 台本ごとに背景テーマが異なる場合の文字色の上書き（hookRed/compareLeftの赤は維持）
+	textColor?: string;
 };
 
 const marks: Partial<Record<TelopStyle, string>> = {
@@ -19,7 +21,7 @@ const marks: Partial<Record<TelopStyle, string>> = {
 	compareRight: '◯ ',
 };
 
-export const TelopText: React.FC<TelopTextProps> = ({text, style}) => {
+export const TelopText: React.FC<TelopTextProps> = ({text, style, textColor}) => {
 	const localFrame = useCurrentFrame();
 	const opacity = interpolate(localFrame, [0, 8], [0, 1], {
 		extrapolateRight: 'clamp',
@@ -40,11 +42,11 @@ export const TelopText: React.FC<TelopTextProps> = ({text, style}) => {
 
 	const variants: Record<TelopStyle, React.CSSProperties> = {
 		hookRed: {...baseStyle, fontSize: 64, color: '#FF3B30'},
-		checkbox: {...baseStyle, fontSize: 48, color: '#FFFFFF', textAlign: 'left'},
-		calm: {...baseStyle, fontSize: 44, color: '#E8C97A'}, // ブランドゴールド
-		cta: {...baseStyle, fontSize: 52, color: '#FFFFFF'},
+		checkbox: {...baseStyle, fontSize: 48, color: textColor ?? '#FFFFFF', textAlign: 'left'},
+		calm: {...baseStyle, fontSize: 44, color: textColor ?? '#E8C97A'}, // ブランドゴールド
+		cta: {...baseStyle, fontSize: 52, color: textColor ?? '#FFFFFF'},
 		compareLeft: {...baseStyle, fontSize: 48, color: '#FF3B30'},
-		compareRight: {...baseStyle, fontSize: 48, color: '#E8C97A'},
+		compareRight: {...baseStyle, fontSize: 48, color: textColor ?? '#E8C97A'},
 	};
 
 	return (

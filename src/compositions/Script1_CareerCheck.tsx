@@ -5,9 +5,13 @@ import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile} from 'remotion';
 import {TelopText} from '../components/TelopText';
 import {TitleCall} from '../components/TitleCall';
+import {LogoWatermark} from '../components/LogoWatermark';
 
 const FPS = 30;
 const frame = (sec: number) => Math.round(sec * FPS);
+
+const BG_COLOR = '#FAF6EE'; // オフホワイト
+const TEXT_COLOR = '#10284A'; // ネイビー（フックの赤文字は維持）
 
 const cuts = [
 	{id: 1, startSec: 0.0, endSec: 2.8, text: 'これ、すべて当てはまったら危険です。', style: 'hookRed' as const},
@@ -22,13 +26,16 @@ const TITLE_CALL_START = 23.4;
 const TOTAL_DURATION = 883; // 29.44秒 × 30fps
 
 export const Script1_CareerCheck: React.FC = () => (
-	<AbsoluteFill style={{backgroundColor: '#111111'}}>
+	<AbsoluteFill style={{backgroundColor: BG_COLOR}}>
 		<Audio src={staticFile('script1-narration.mp3')} />
 		{cuts.map((cut) => (
 			<Sequence key={cut.id} from={frame(cut.startSec)} durationInFrames={frame(cut.endSec - cut.startSec)}>
-				<TelopText text={cut.text} style={cut.style} />
+				<TelopText text={cut.text} style={cut.style} textColor={TEXT_COLOR} />
 			</Sequence>
 		))}
+		<Sequence from={0} durationInFrames={frame(TITLE_CALL_START)}>
+			<LogoWatermark />
+		</Sequence>
 		<Sequence from={frame(TITLE_CALL_START)} durationInFrames={TOTAL_DURATION - frame(TITLE_CALL_START)}>
 			<TitleCall />
 		</Sequence>
