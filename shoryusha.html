@@ -56,8 +56,8 @@
     /* ===== HEADER ===== */
     header {
       position: fixed; top: 0; width: 100%; z-index: 1000;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 5%; height: 76px;
+      display: flex; align-items: stretch; justify-content: space-between;
+      padding: 0 0 0 5%; height: 76px;
       background: rgba(20,18,15,0.0);
       border-bottom: 1px solid transparent;
       transition: background 0.3s ease, border-color 0.3s ease;
@@ -67,25 +67,28 @@
       backdrop-filter: blur(10px);
       border-bottom-color: rgba(236,230,216,0.08);
     }
-    .logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-    .logo-img { width: 30px; height: 30px; object-fit: contain; filter: grayscale(1) brightness(1.6); opacity: 0.9; }
-    .logo-text { font-family: var(--sans); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: var(--text-inv); }
-    .logo-sub { font-size: 10px; font-weight: 500; letter-spacing: 0.3em; color: var(--gold); margin-left: 4px; padding-left: 12px; border-left: 1px solid rgba(236,230,216,0.25); text-transform: uppercase; }
+    .logo-area { display: flex; align-items: center; gap: 10px; text-decoration: none; opacity: 0.85; }
+    .logo-img { width: 24px; height: 24px; object-fit: contain; filter: grayscale(1) brightness(1.6); opacity: 0.9; }
+    .logo-text { font-family: var(--sans); font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; color: var(--text-inv); }
+    .logo-sub { font-size: 9px; font-weight: 500; letter-spacing: 0.3em; color: var(--gold); margin-left: 4px; padding-left: 10px; border-left: 1px solid rgba(236,230,216,0.25); text-transform: uppercase; }
 
-    nav ul { display: flex; list-style: none; align-items: center; gap: 34px; }
+    /* ナビはヘッダー右側にクラスター、CONTACTは角にフラッシュする塗りブロック */
+    nav { display: flex; align-items: stretch; }
+    nav ul { display: flex; list-style: none; align-items: center; gap: 30px; padding-right: 34px; }
     nav ul li a {
       text-decoration: none; color: var(--text-inv-mid);
-      font-size: 11.5px; font-weight: 500; letter-spacing: 0.14em;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.16em;
       transition: color 0.25s;
     }
     nav ul li a:hover { color: var(--text-inv); }
     .nav-cta {
-      display: inline-flex; align-items: center; gap: 8px;
-      border: 1px solid var(--gold); color: var(--gold) !important;
-      padding: 9px 20px; font-size: 11px !important; letter-spacing: 0.16em !important;
-      text-transform: uppercase;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--gold); color: var(--ink) !important;
+      width: 108px; font-size: 10.5px !important; font-weight: 700;
+      letter-spacing: 0.18em !important; text-transform: uppercase;
+      text-decoration: none; transition: background 0.25s;
     }
-    .nav-cta:hover { background: var(--gold-soft); color: var(--gold) !important; }
+    .nav-cta:hover { background: #c4a066; color: var(--ink) !important; }
 
     .hamburger {
       display: none; background: var(--gold); border: none; cursor: pointer;
@@ -103,29 +106,30 @@
     .hero {
       position: relative;
       min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 120px 5% 80px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 100px 5% 90px;
       overflow: hidden;
       background: var(--ink);
     }
     .hero-media {
       position: absolute; inset: 0;
       background: url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
-      filter: saturate(0.55) brightness(0.5) blur(1px);
+      filter: saturate(0.5) brightness(0.42) blur(1.5px);
       transform: scale(1.06);
     }
     .hero-media::after {
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 55% 60% at 18% 20%, rgba(173,138,82,0.16) 0%, transparent 70%),
-        linear-gradient(180deg, rgba(20,18,15,0.75) 0%, rgba(20,18,15,0.55) 40%, rgba(20,18,15,0.92) 100%);
+        radial-gradient(ellipse 60% 65% at 50% 45%, rgba(20,18,15,0.35) 0%, transparent 70%),
+        linear-gradient(180deg, rgba(20,18,15,0.55) 0%, rgba(20,18,15,0.5) 45%, rgba(20,18,15,0.88) 100%);
     }
+
+    /* 縦のライン装飾（右端） */
     .hero-frame {
-      position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
-      width: 1px; height: 220px;
-      background: linear-gradient(180deg, transparent, rgba(173,138,82,0.55) 30%, rgba(173,138,82,0.55) 70%, transparent);
-      z-index: 1;
+      position: absolute; right: 6%; top: 50%; transform: translateY(-50%);
+      width: 1px; height: 200px; z-index: 1;
+      background: linear-gradient(180deg, transparent, rgba(173,138,82,0.5) 30%, rgba(173,138,82,0.5) 70%, transparent);
     }
     .hero-frame::before, .hero-frame::after {
       content: ''; position: absolute; left: 50%; transform: translateX(-50%);
@@ -134,28 +138,37 @@
     .hero-frame::before { top: -3px; }
     .hero-frame::after { bottom: -3px; }
 
-    .hero-content { position: relative; z-index: 2; max-width: 720px; }
+    /* ヒーロー中央のコンポジション：エンブレム＋テキスト */
+    .hero-composition {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+      gap: clamp(20px, 5vw, 64px);
+      max-width: 1040px; width: 100%;
+    }
+    .hero-emblem { flex-shrink: 0; width: clamp(90px, 11vw, 130px); opacity: 0.92; }
+    .hero-emblem svg { width: 100%; height: auto; display: block; }
+
+    .hero-text { text-align: left; max-width: 560px; }
     .hero-eyebrow {
       display: flex; align-items: center; gap: 12px;
       font-size: 11.5px; letter-spacing: 0.32em; color: rgba(236,230,216,0.55);
-      text-transform: uppercase; margin-bottom: 26px;
+      text-transform: uppercase; margin-bottom: 24px;
     }
     .hero-eyebrow::before { content: ''; width: 26px; height: 1px; background: var(--gold); }
     .hero h1 {
       font-family: var(--serif); font-weight: 700;
-      font-size: clamp(48px, 8vw, 92px);
-      color: var(--text-inv); line-height: 1.15; letter-spacing: 0.05em;
-      margin-bottom: 22px;
-      position: relative;
+      font-size: clamp(44px, 7vw, 78px);
+      color: var(--text-inv); line-height: 1.15; letter-spacing: 0.08em;
+      margin-bottom: 18px;
     }
     .hero h1 .mark { color: var(--gold); }
     .hero-sub {
       font-size: 11px; letter-spacing: 0.28em; color: var(--text-inv-mid);
-      text-transform: uppercase; margin-bottom: 34px;
+      text-transform: uppercase; margin-bottom: 30px;
     }
     .hero-lead {
-      font-size: 15.5px; color: rgba(236,230,216,0.72); line-height: 2.05;
-      max-width: 480px; margin-bottom: 44px;
+      font-size: 14.5px; color: rgba(236,230,216,0.68); line-height: 2.05;
+      max-width: 460px; margin-bottom: 40px;
     }
     .hero-lead strong { color: var(--gold); font-weight: 500; }
     .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -175,13 +188,22 @@
       transition: border-color 0.25s, color 0.25s;
     }
     .btn-line:hover { border-color: var(--gold); color: var(--gold); }
-    .hero-scroll {
-      position: absolute; bottom: 40px; left: 5%; z-index: 2;
-      display: flex; align-items: center; gap: 12px;
-      font-size: 10px; letter-spacing: 0.28em; color: rgba(236,230,216,0.4);
+
+    /* 下部マーキー（スクロール誘導） */
+    .hero-marquee {
+      position: absolute; bottom: 0; left: 0; width: 100%; z-index: 2;
+      overflow: hidden; white-space: nowrap;
+      padding: 16px 0;
+      border-top: 1px solid rgba(236,230,216,0.1);
+      background: rgba(20,18,15,0.35);
+    }
+    .hero-marquee span {
+      display: inline-block; padding-left: 100%;
+      animation: marquee 26s linear infinite;
+      font-size: 10.5px; letter-spacing: 0.3em; color: rgba(236,230,216,0.4);
       text-transform: uppercase;
     }
-    .hero-scroll::after { content: ''; width: 34px; height: 1px; background: rgba(236,230,216,0.35); }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-100%); } }
 
     /* ===== SECTION COMMON ===== */
     section { padding: clamp(72px, 9vw, 128px) 5%; }
@@ -293,17 +315,23 @@
     @media (max-width: 900px) {
       .about-inner { grid-template-columns: 1fr; gap: 40px; }
       .hero-frame { display: none; }
+      .hero-composition { flex-direction: column; text-align: center; }
+      .hero-text { text-align: center; }
+      .hero-eyebrow, .hero-btns { justify-content: center; }
+      .hero-lead { margin-left: auto; margin-right: auto; }
+      .hero-emblem { width: 70px; }
     }
     @media (max-width: 768px) {
       nav {
         position: fixed; top: 0; right: -100%; width: 78%; height: 100vh;
         background: rgba(20,18,15,0.98); backdrop-filter: blur(10px);
-        display: flex; align-items: center; justify-content: center;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
         transition: right 0.35s ease;
       }
       nav.active { right: 0; }
-      nav ul { flex-direction: column; gap: 32px; }
+      nav ul { flex-direction: column; gap: 32px; padding-right: 0; margin-bottom: 36px; }
       nav ul li a { font-size: 15px; }
+      .nav-cta { width: 180px; height: 48px; }
       .hamburger { display: block; }
       .hero-lead { max-width: 100%; }
       .hero { padding: 110px 6% 60px; }
@@ -323,8 +351,8 @@
         <li><a href="index.html">HOME</a></li>
         <li><a href="services.html">SERVICES</a></li>
         <li><a href="company.html">COMPANY</a></li>
-        <li><a href="contact.html" class="nav-cta">CONTACT</a></li>
       </ul>
+      <a href="contact.html" class="nav-cta">CONTACT</a>
     </nav>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </header>
@@ -333,20 +361,34 @@
   <div class="hero">
     <div class="hero-media"></div>
     <div class="hero-frame"></div>
-    <div class="hero-content">
-      <p class="hero-eyebrow">Success-Fee Matching</p>
-      <h1>商<span class="mark">流</span>舎</h1>
-      <p class="hero-sub">TRESWIN GROUP ・ OSAKA</p>
-      <p class="hero-lead">
-        <strong>初期費用ゼロ。</strong>売れたら払う、新しい販路開拓のカタチ。<br>
-        専門性の高い商材と、それを必要としている現場を、静かに橋渡しする。
-      </p>
-      <div class="hero-btns">
-        <a href="contact.html" class="btn-gold">無料相談はこちら</a>
-        <a href="#service" class="btn-line">サービス詳細を見る</a>
+    <div class="hero-composition">
+      <div class="hero-emblem">
+        <svg viewBox="0 0 140 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="22,8 118,8 70,268" stroke="url(#emblemGrad)" stroke-width="1.2"/>
+          <line x1="14" y1="118" x2="92" y2="118" stroke="#ad8a52" stroke-width="3"/>
+          <defs>
+            <linearGradient id="emblemGrad" x1="70" y1="8" x2="70" y2="268" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#ece6d8" stop-opacity="0.85"/>
+              <stop offset="1" stop-color="#ece6d8" stop-opacity="0.1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="hero-text">
+        <p class="hero-eyebrow">Success-Fee Matching</p>
+        <h1>商<span class="mark">流</span>舎</h1>
+        <p class="hero-sub">TRESWIN GROUP ・ OSAKA</p>
+        <p class="hero-lead">
+          <strong>初期費用ゼロ。</strong>売れたら払う、新しい販路開拓のカタチ。<br>
+          専門性の高い商材と、それを必要としている現場を、静かに橋渡しする。
+        </p>
+        <div class="hero-btns">
+          <a href="contact.html" class="btn-gold">無料相談はこちら</a>
+          <a href="#service" class="btn-line">サービス詳細を見る</a>
+        </div>
       </div>
     </div>
-    <span class="hero-scroll">Scroll</span>
+    <div class="hero-marquee"><span>SCROLL DOWN — SCROLL DOWN — SCROLL DOWN — SCROLL DOWN — SCROLL DOWN — </span></div>
   </div>
 
   <!-- PROBLEM -->
