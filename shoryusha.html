@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商流舎 | 成功報酬型 商流マッチング — TRESWIN</title>
+  <meta name="description" content="TRESWINの商流マッチング事業「商流舎」。初期費用ゼロ・完全成功報酬型で、専門性の高い商材と現場をつなぐ販路開拓サービス。大阪・全国対応。">
+  <meta name="keywords" content="商流舎,商流マッチング,販路開拓,成功報酬型,営業代行,TRESWIN,大阪">
+  <link rel="canonical" href="https://tres-win.com/shoryusha.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TRESWIN（トレスウィン）">
+  <meta property="og:title" content="商流舎 | 成功報酬型 商流マッチング — TRESWIN">
+  <meta property="og:description" content="初期費用ゼロ。売れたら払う、新しい販路開拓のカタチ。専門商材と現場をつなぐ成功報酬型マッチング「商流舎」。">
+  <meta property="og:url" content="https://tres-win.com/shoryusha.html">
+  <meta property="og:image" content="https://tres-win.com/treswinlogo2.png">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="商流舎 | 成功報酬型 商流マッチング — TRESWIN">
+  <meta name="twitter:description" content="初期費用ゼロ。売れたら払う、新しい販路開拓のカタチ。専門商材と現場をつなぐ成功報酬型マッチング「商流舎」。">
+  <meta name="twitter:image" content="https://tres-win.com/treswinlogo2.png">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1d184a;
+      --yellow: #dfd71c;
+      --white: #ffffff;
+      --gray: #f5f5f7;
+      --text: #333;
+      --text-light: #666;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      line-height: 1.8;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 5%;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: #1a1a1a;
+      z-index: 1001;
+    }
+    .logo-img { width: 40px; height: 40px; object-fit: contain; margin-right: 12px; }
+    .logo-text { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; }
+    .logo-sub {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--yellow);
+      margin-left: 8px;
+      border-left: 1px solid #ddd;
+      padding-left: 10px;
+    }
+    nav ul { display: flex; list-style: none; }
+    nav ul li { margin-left: 30px; }
+    nav ul li a {
+      text-decoration: none;
+      color: #1a1a1a;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover { color: var(--yellow); }
+    .hamburger {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      width: 30px;
+      height: 22px;
+      position: relative;
+      z-index: 1001;
+    }
+    .hamburger span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #1a1a1a;
+      transition: all 0.3s ease;
+    }
+    .hamburger span:nth-child(1) { top: 0; }
+    .hamburger span:nth-child(2) { top: 10px; }
+    .hamburger span:nth-child(3) { bottom: 0; }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 100px 5% 60px;
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+      color: var(--white);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(29,24,74,0.90) 0%, rgba(29,24,74,0.62) 60%, rgba(0,0,0,0.3) 100%);
+      z-index: 1;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 700px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      padding: 6px 16px;
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(38px, 7vw, 68px);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+    .hero-tagline {
+      font-size: clamp(15px, 2vw, 20px);
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 1px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .hero-tagline strong { color: var(--yellow); font-weight: 700; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block;
+      padding: 16px 48px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+    .btn-primary:hover { background: #fff; }
+    .btn-outline {
+      display: inline-block;
+      padding: 14px 36px;
+      border: 2px solid rgba(255,255,255,0.6);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: all 0.3s;
+    }
+    .btn-outline:hover { border-color: var(--yellow); color: var(--yellow); }
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 5%;
+      z-index: 2;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.5);
+    }
+    .hero-scroll::after { content: ' ↓'; }
+
+    /* ===== SECTION COMMON ===== */
+    section { padding: 80px 5%; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+    .section-lead {
+      font-size: 15px;
+      color: var(--text-light);
+      line-height: 1.9;
+      max-width: 640px;
+      margin-bottom: 52px;
+    }
+
+    /* ===== PROBLEM ===== */
+    .problem { background: var(--gray); }
+    .problem-inner { max-width: 1100px; margin: 0 auto; }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .problem-card {
+      background: var(--white);
+      padding: 32px;
+      border-radius: 8px;
+      border-left: 4px solid var(--yellow);
+      position: relative;
+    }
+    .problem-card .num {
+      font-size: 36px;
+      font-weight: 900;
+      color: #eee;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .problem-card h4 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .problem-card p {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.8;
+    }
+
+    /* ===== ABOUT / SOLUTION ===== */
+    .about { background: var(--white); }
+    .about-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .about-visual {
+      position: relative;
+      aspect-ratio: 4/3;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .about-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .about-visual-badge {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--navy);
+      color: var(--yellow);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      padding: 10px 20px;
+    }
+    .about-strengths {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 36px;
+    }
+    .strength-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .strength-icon {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      background: var(--navy);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .strength-item h5 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .strength-item p { font-size: 13px; color: var(--text-light); }
+
+    /* ===== VALUE (提供価値) ===== */
+    .value { background: var(--navy); color: var(--white); }
+    .value-inner { max-width: 1100px; margin: 0 auto; }
+    .value .section-title { color: var(--white); }
+    .value .section-lead { color: rgba(255,255,255,0.65); }
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2px;
+    }
+    .value-card {
+      background: rgba(255,255,255,0.04);
+      padding: 40px 32px;
+      border-top: 3px solid transparent;
+      transition: all 0.3s;
+    }
+    .value-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-top-color: var(--yellow);
+    }
+    .value-card .icon {
+      font-size: 32px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .value-card h4 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .value-card p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.85;
+    }
+
+    /* ===== TARGET ===== */
+    .target { background: var(--gray); }
+    .target-inner { max-width: 1100px; margin: 0 auto; }
+    .target-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .target-card {
+      background: var(--white);
+      padding: 36px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+    .target-card .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--navy);
+      background: rgba(223,215,28,0.25);
+      padding: 5px 14px;
+      border-radius: 3px;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+    }
+    .target-card h4 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .target-card p {
+      font-size: 14px;
+      color: var(--text-light);
+      line-height: 1.85;
+    }
+    .target-note {
+      margin-top: 32px;
+      font-size: 13px;
+      color: var(--text-light);
+      background: var(--white);
+      border-left: 4px solid var(--yellow);
+      padding: 20px 24px;
+      border-radius: 4px;
+      line-height: 1.9;
+    }
+
+    /* ===== FLOW ===== */
+    .flow { background: var(--white); }
+    .flow-inner { max-width: 900px; margin: 0 auto; }
+    .flow-steps { display: flex; flex-direction: column; gap: 0; }
+    .flow-step {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      align-items: stretch;
+      padding: 32px 0;
+      border-bottom: 1px solid #eee;
+      position: relative;
+    }
+    .flow-step:last-child { border-bottom: none; }
+    .step-num-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--yellow);
+      font-size: 18px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-line {
+      width: 2px;
+      flex: 1;
+      background: #eee;
+      margin-top: 8px;
+    }
+    .flow-step:last-child .step-line { display: none; }
+    .step-body { padding-top: 8px; }
+    .step-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .step-body h4 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .step-body p { font-size: 14px; color: var(--text-light); line-height: 1.8; }
+
+    /* ===== NOTE (規制商材について) ===== */
+    .compliance { background: var(--gray); }
+    .compliance-inner { max-width: 900px; margin: 0 auto; }
+    .compliance-box {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 36px 40px;
+      border: 1px solid #eee;
+    }
+    .compliance-box h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+    .compliance-box p {
+      font-size: 13.5px;
+      color: var(--text-light);
+      line-height: 1.95;
+    }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      background: linear-gradient(135deg, var(--navy) 0%, #2d2870 100%);
+      padding: 100px 5%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '商流舎';
+      position: absolute;
+      font-size: 200px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.03);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+    .cta-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .cta-title {
+      font-size: clamp(26px, 5vw, 46px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+    .cta-text {
+      font-size: 15px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.9;
+      margin-bottom: 40px;
+    }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ===== FOOTER ===== */
+    .decoration-footer {
+      position: relative;
+      width: 100%;
+      height: 210px;
+      background: var(--navy);
+      margin-top: auto;
+      overflow: hidden;
+    }
+    .slanted-line {
+      position: absolute;
+      top: -50px;
+      left: -5%;
+      width: 110%;
+      height: 100px;
+      background: var(--white);
+      transform: rotate(-3deg);
+      border-bottom: 12px solid var(--yellow);
+      z-index: 2;
+    }
+    .footer-content {
+      position: absolute;
+      bottom: 26px;
+      width: 100%;
+      text-align: center;
+      color: var(--white);
+      z-index: 3;
+    }
+    .footer-content .logo-text { color: var(--white); margin-bottom: 4px; display: block; }
+    .footer-content .footer-org { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 1px; margin-bottom: 10px; }
+    .footer-content .footer-nav {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .footer-content .footer-nav a {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: color 0.2s;
+    }
+    .footer-content .footer-nav a:hover { color: var(--yellow); }
+    .footer-content .copyright { font-size: 11px; color: #666; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hamburger { display: block; }
+      nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: rgba(255,255,255,0.98);
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        transition: right 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      nav.active { right: 0; }
+      nav ul { flex-direction: column; text-align: center; }
+      nav ul li { margin: 20px 0; }
+      nav ul li a { font-size: 18px; display: block; padding: 10px; }
+      .hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+      .hamburger.active span:nth-child(2) { opacity: 0; }
+      .hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+      .about-inner { grid-template-columns: 1fr; gap: 36px; }
+      .about-visual { aspect-ratio: 16/9; }
+      .logo-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="logo-area">
+      <img src="treswinlogo2.png" alt="TRESWIN" class="logo-img">
+      <div class="logo-text">TRESWIN</div>
+      <span class="logo-sub">商流舎</span>
+    </a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    <nav id="nav-menu">
+      <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="services.html">SERVICES</a></li>
+        <li><a href="company.html">COMPANY</a></li>
+        <li><a href="contact.html">CONTACT</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">成功報酬型 商流マッチング</div>
+      <h1>商流舎</h1>
+      <p class="hero-tagline">
+        <strong>初期費用ゼロ。売れたら払う</strong>、新しい販路開拓のカタチ。<br>
+        専門性の高い商材と、それを必要としている現場を、TRESWINが橋渡しします。
+      </p>
+      <div class="hero-btns">
+        <a href="contact.html" class="btn-primary">無料相談はこちら</a>
+        <a href="#service" class="btn-outline">サービス詳細を見る</a>
+      </div>
+    </div>
+    <span class="hero-scroll">Scroll Down</span>
+  </div>
+
+  <!-- PROBLEM -->
+  <section class="problem">
+    <div class="problem-inner">
+      <p class="section-label">Problem</p>
+      <h2 class="section-title">こんな課題、ありませんか？</h2>
+      <p class="section-lead">専門性の高い商材ほど、良さを分かってくれる相手に出会いにくい。営業リソース不足に悩む商材保有者の共通課題に、商流舎は成功報酬型で向き合います。</p>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="num">01</div>
+          <h4>営業人員を採用する余裕がない</h4>
+          <p>良い商材があっても、専任の営業担当を雇用・固定費化するリスクは取りづらい。</p>
+        </div>
+        <div class="problem-card">
+          <div class="num">02</div>
+          <h4>専門商材ゆえ、既存チャネルが薄い</h4>
+          <p>専門性が高いほど「刺さる相手」は限られる。マス向けの営業手法では届かない。</p>
+        </div>
+        <div class="problem-card">
+          <div class="num">03</div>
+          <h4>成果が読めない営業投資は避けたい</h4>
+          <p>広告費や人件費を先に払って、成果が出るかは分からない——その賭けをしたくない。</p>
+        </div>
+        <div class="problem-card">
+          <div class="num">04</div>
+          <h4>現場のリアルな引き合いに接点がない</h4>
+          <p>本当に商材を必要としている現場は、Web広告や展示会だけでは見つからないことが多い。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / SOLUTION -->
+  <section class="about" id="service">
+    <div class="about-inner">
+      <div class="about-visual">
+        <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1200&auto=format&fit=crop" alt="商流マッチングのイメージ">
+        <div class="about-visual-badge">SUCCESS-FEE ONLY</div>
+      </div>
+      <div class="about-text">
+        <p class="section-label">About 商流舎</p>
+        <h2 class="section-title">売れたら払う。<br>それだけの、シンプルな仕組み。</h2>
+        <p class="section-lead">商流舎は、販路開拓に課題を持つ商材保有者と、その商材を必要とする現場を、成功報酬型でつなぐ商流仲介サービスです。TRESWINは在庫も営業部隊も持たず、橋渡し役に徹します。</p>
+        <div class="about-strengths">
+          <div class="strength-item">
+            <div class="strength-icon">💴</div>
+            <div>
+              <h5>初期費用ゼロ・完全成功報酬型</h5>
+              <p>着手金や月額固定費は一切不要。成約が確認できた時点で、はじめてマージンが発生します。</p>
+            </div>
+          </div>
+          <div class="strength-item">
+            <div class="strength-icon">🔗</div>
+            <div>
+              <h5>TRESWINの独自ネットワーク</h5>
+              <p>既存事業のクライアント接点と、代表の人的ネットワークを通じて、現場に近い引き合いをつなぎます。</p>
+            </div>
+          </div>
+          <div class="strength-item">
+            <div class="strength-icon">📝</div>
+            <div>
+              <h5>シンプルな単一マージン設計</h5>
+              <p>複雑な料金プランは組みません。案件ごとに単一のマージン率をご提示し、個別に合意します。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE -->
+  <section class="value">
+    <div class="value-inner">
+      <p class="section-label">Value</p>
+      <h2 class="section-title">それぞれにとっての価値</h2>
+      <p class="section-lead">商材を持つ側、紹介する側、その両方に無理のない形で価値が生まれる設計です。</p>
+      <div class="value-grid">
+        <div class="value-card">
+          <span class="icon">📦</span>
+          <h4>商材提供者様へ</h4>
+          <p>初期費用ゼロで新規販路を開拓できます。営業人員を採用・固定費化することなく、成果が出た分だけご負担いただく仕組みです。</p>
+        </div>
+        <div class="value-card">
+          <span class="icon">🤝</span>
+          <h4>紹介いただく現場の方へ</h4>
+          <p>良質な商材を必要としている先へ紹介するだけで、成約時に紹介料をお受け取りいただけます。雇用関係のない単発契約ベースです。</p>
+        </div>
+        <div class="value-card">
+          <span class="icon">🏢</span>
+          <h4>TRESWINとして</h4>
+          <p>既存事業でのクライアント接点を起点に、新たな収益源を生み出します。在庫・固定費を持たない、身軽な仲介機能に徹します。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TARGET -->
+  <section class="target">
+    <div class="target-inner">
+      <p class="section-label">Target</p>
+      <h2 class="section-title">こんな商材・お悩みを想定しています</h2>
+      <p class="section-lead">現時点では実績を積み重ねている段階のため、対象は幅広くご案内しています。</p>
+      <div class="target-grid">
+        <div class="target-card">
+          <span class="tag">Supplier</span>
+          <h4>専門性の高い商材をお持ちの事業者様</h4>
+          <p>既存の営業チャネルが薄く、「売れたら払う」型の提案に前向きな事業者様。業種は限定せず、専門性の高い商材全般を対象としています。</p>
+        </div>
+        <div class="target-card">
+          <span class="tag">Network</span>
+          <h4>良質な商材を必要とする現場</h4>
+          <p>専門商材を必要としている現場・法人様。TRESWINの独自ネットワークを通じて、案件に合った商材をご紹介します。</p>
+        </div>
+      </div>
+      <p class="target-note">紹介元となる実働ネットワークの個人名・所属先は、対外的には非公開とさせていただいております。すべて「TRESWINの独自ネットワークによる紹介」として取り扱います。</p>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section class="flow">
+    <div class="flow-inner">
+      <p class="section-label">Process</p>
+      <h2 class="section-title">ご相談から成約までの流れ</h2>
+      <p class="section-lead">ヒアリングから成約後の精算まで、一貫してTRESWINが伴走します。</p>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-num-wrap">
+            <div class="step-num">01</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-tag">Free</div>
+            <h4>お問い合わせ・ヒアリング</h4>
+            <p>商材の内容、想定される販路、希望されるマージン率などをお伺いします。費用は一切発生しません。</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num-wrap">
+            <div class="step-num">02</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-tag">Proposal</div>
+            <h4>ご提案</h4>
+            <p>ヒアリング内容をもとに、単一のマージン率でシンプルなご提案を行います。複雑な価格プランは組みません。</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num-wrap">
+            <div class="step-num">03</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-tag">Matching</div>
+            <h4>マッチング実行</h4>
+            <p>TRESWINが橋渡し役となり、商談設定・資料提供など、現場とのマッチングを進めます。</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="step-num-wrap">
+            <div class="step-num">04</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <div class="step-tag">Settlement</div>
+            <h4>成約・精算</h4>
+            <p>成約確認後、都度マージンを精算します。紹介いただいた方への紹介料も同時に按分いたします。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPLIANCE -->
+  <section class="compliance">
+    <div class="compliance-inner">
+      <p class="section-label">Note</p>
+      <h2 class="section-title">規制対象商材をお持ちの方へ</h2>
+      <div class="compliance-box">
+        <h4>医療機器等、法令上の留意が必要な商材について</h4>
+        <p>
+          医療機器等、薬機法をはじめとする各種法令の対象となる商材につきましては、TRESWINは商流の仲介（商談設定・資料提供等）のみを行い、広告表示・効能効果の説明・販売行為そのものには一切関与いたしません。契約締結時には、対象外業務の範囲を書面にて明確にいたします。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <p class="cta-label">Contact</p>
+      <h2 class="cta-title">まずは無料相談から<br>始めましょう。</h2>
+      <p class="cta-text">
+        「販路を広げたいが、営業体制を作る余裕がない」——<br>
+        そんなお悩みを、まずは60分の無料相談でお聞かせください。<br>
+        契約前の費用は一切かかりません。
+      </p>
+      <div class="cta-btns">
+        <a href="contact.html" class="btn-primary">無料相談を申し込む</a>
+        <a href="services.html" class="btn-outline">他のサービスを見る</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="decoration-footer">
+    <div class="slanted-line"></div>
+    <div class="footer-content">
+      <span class="logo-text">TRESWIN</span>
+      <span class="footer-org">TRESWIN／商流舎事業部</span>
+      <nav class="footer-nav">
+        <a href="index.html">HOME</a>
+        <a href="services.html">SERVICES</a>
+        <a href="company.html">COMPANY</a>
+        <a href="privacy.html">PRIVACY</a>
+        <a href="contact.html">CONTACT</a>
+      </nav>
+      <div class="copyright">&copy; 2026 TRESWIN. All Rights Reserved.</div>
+    </div>
+  </div>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
