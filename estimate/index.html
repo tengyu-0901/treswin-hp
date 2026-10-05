@@ -552,7 +552,7 @@ const PRINT_CSS = `@page{size:A4;margin:14mm 16mm}body{margin:0;font-family:"Not
 .d-h{font-weight:700;border-bottom:1px solid #222;margin:12pt 0 4pt;padding-bottom:1pt}.r{text-align:right}.c{text-align:center}.d-items td{height:17pt}.d-tot{width:46%;margin-left:auto;margin-top:5pt}.d-tot th{text-align:left;width:55%}.d-pre{white-space:pre-wrap;margin:0}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}@media screen{body{max-width:180mm;margin:24px auto;padding:0 16px}}`;
 
-function fileBase() { const e = cur; return `御見積書_${e.no || '未確定'}${e.client ? '_' + e.client.replace(/[\\/:*?"<>|]/g, '') : ''}`; }
+function fileBase() { const e = cur; return `御見積書_${e.no || '未確定'}${e.client ? '_' + e.client.replace(/[\\/:*?"<>|]/g, '').trim() + '様' : ''}`; }
 function download(filename, data, type) {
   const url = URL.createObjectURL(new Blob([data], { type }));
   const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
