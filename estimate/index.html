@@ -171,12 +171,12 @@ a { color: var(--accent); }
         <h2>明細</h2>
         <div class="presets" id="presets"></div>
         <div class="items">
-          <div class="item item-h"><span>品目・内容</span><span>数量</span><span>単位</span><span>単価（円）</span><span class="hide-sm" style="text-align:right">金額</span><span></span></div>
+          <div class="item item-h"><span>品目・内容</span><span>数量</span><span>単位</span><span>単価（税込）</span><span class="hide-sm" style="text-align:right">金額（税込）</span><span></span></div>
           <div id="items" class="items"></div>
         </div>
         <div><button type="button" class="btn small" id="add-row">＋ 行を追加</button></div>
         <div class="totals">
-          <div><span>小計</span><span class="num" id="t-sub">0</span></div>
+          <div><span>税抜金額</span><span class="num" id="t-sub">0</span></div>
           <div><span>消費税（10%）</span><span class="num" id="t-tax">0</span></div>
           <div class="grand"><span>合計（税込）</span><span class="num" id="t-total">0</span></div>
         </div>
@@ -289,8 +289,10 @@ function blankEstimate() {
 }
 function calc(e) {
   const sub = e.items.reduce((a, it) => a + toNum(it.qty) * toNum(it.price), 0);
-  const tax = Math.floor(sub * 0.1);
-  return { sub, tax, total: sub + tax };
+  // 単価・金額はすべて税込。合計（税込）から消費税（10%）を内訳として逆算する
+  const total = sub;
+  const tax = Math.floor(total * 10 / 110);
+  return { sub: total - tax, tax, total };
 }
 function nextNo(dateStr) {
   const prefix = 'TW-' + dateStr.replace(/-/g, '') + '-';
@@ -339,11 +341,11 @@ function docHTML(e, s) {
   </table>
   <div class="d-h">明細</div>
   <table class="d-tbl d-items">
-    <tr><th style="width:6%">No.</th><th>品目・内容</th><th style="width:9%">数量</th><th style="width:9%">単位</th><th style="width:15%">単価（円）</th><th style="width:16%">金額（円）</th></tr>
+    <tr><th style="width:6%">No.</th><th>品目・内容</th><th style="width:9%">数量</th><th style="width:9%">単位</th><th style="width:15%">単価（税込）</th><th style="width:16%">金額（税込）</th></tr>
     ${body}
   </table>
   <table class="d-tbl d-tot">
-    <tr><th>小計</th><td class="r">${yen(sub)}</td></tr>
+    <tr><th>税抜金額</th><td class="r">${yen(sub)}</td></tr>
     <tr><th>消費税（10%）</th><td class="r">${yen(tax)}</td></tr>
     <tr><th>合計（税込）</th><td class="r"><b>${yen(total)}</b></td></tr>
   </table>
@@ -585,12 +587,12 @@ function docsHTML(e, s) {
 </table>
 <p><b>明細</b></p>
 <table style="width:100%;border-collapse:collapse;">
-<tr>${['No.', '品目・内容', '数量', '単位', '単価（円）', '金額（円）'].map((h, i) => `<td style="${H}width:${w[i]};text-align:center;">${h}</td>`).join('')}</tr>
+<tr>${['No.', '品目・内容', '数量', '単位', '単価（税込）', '金額（税込）'].map((h, i) => `<td style="${H}width:${w[i]};text-align:center;">${h}</td>`).join('')}</tr>
 ${body}
 </table>
 <p></p>
 <table style="width:100%;border-collapse:collapse;">
-<tr><td style="width:55%;"></td><td style="${H}width:25%;">小計</td><td style="${B}width:20%;text-align:right;">${yen(sub)}</td></tr>
+<tr><td style="width:55%;"></td><td style="${H}width:25%;">税抜金額</td><td style="${B}width:20%;text-align:right;">${yen(sub)}</td></tr>
 <tr><td></td><td style="${H}">消費税（10%）</td><td style="${B}text-align:right;">${yen(tax)}</td></tr>
 <tr><td></td><td style="${H}">合計（税込）</td><td style="${B}text-align:right;"><b>${yen(total)}</b></td></tr>
 </table>
@@ -625,7 +627,7 @@ function buildDocx(e, s) {
   b += tbl([2600, 7038], [sr('件名', e.subject || ''), sr('御見積金額（税込）', '¥' + yen(total) + '－', { b: 1, sz: 30 }), sr('納期・期間', e.delivery || ''), sr('見積有効期限', jdate(e.valid)), sr('お支払条件', e.payment || '')]);
   b += para('明細', { b: 1, sz: 22, before: 200, after: 80, border: 1, keep: 1 });
   const dc = [600, 4238, 900, 900, 1500, 1500];
-  const head = ['No.', '品目・内容', '数量', '単位', '単価（円）', '金額（円）'].map((h, i) => cell(dc[i], para(h, { b: 1, align: 'center' }), { fill: 1 })).join('');
+  const head = ['No.', '品目・内容', '数量', '単位', '単価（税込）', '金額（税込）'].map((h, i) => cell(dc[i], para(h, { b: 1, align: 'center' }), { fill: 1 })).join('');
   const rows = e.items.filter(it => it.name || toNum(it.price));
   const n = Math.max(8, rows.length); const body = [head];
   for (let i = 0; i < n; i++) {
@@ -637,7 +639,7 @@ function buildDocx(e, s) {
   b += tbl(dc, body);
   b += para('', { after: 60 });
   const tr = (k, v, bold) => cell(5638, '', { nob: 1 }) + cell(2500, para(k, { b: 1 }), { fill: 1 }) + cell(1500, para(v, { align: 'right', b: bold }));
-  b += tbl([5638, 2500, 1500], [tr('小計', yen(sub)), tr('消費税（10%）', yen(tax)), tr('合計（税込）', yen(total), 1)]);
+  b += tbl([5638, 2500, 1500], [tr('税抜金額', yen(sub)), tr('消費税（10%）', yen(tax)), tr('合計（税込）', yen(total), 1)]);
   if (e.notes) { b += para('備考', { b: 1, sz: 22, before: 200, after: 80, border: 1, keep: 1 }); b += lines(e.notes); }
   if (s.bank || s.holder) { b += para('お振込先', { b: 1, sz: 22, before: 200, after: 80, border: 1, keep: 1 }); b += lines(s.bank); if (s.holder) b += para('口座名義：' + s.holder); }
   const doc = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${b}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="851" w:right="1134" w:bottom="851" w:left="1134" w:header="0" w:footer="0" w:gutter="0"/></w:sectPr></w:body></w:document>`;
