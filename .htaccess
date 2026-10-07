@@ -29,7 +29,7 @@
 </IfModule>
 
 # ──── 機密ファイルへの直接アクセス禁止 ────
-<FilesMatch "\.(env|json|log|md|yml|yaml|git)$">
+<FilesMatch "\.(env|json|log|md|yml|yaml|git|docx)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
