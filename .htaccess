@@ -33,3 +33,9 @@
     Order allow,deny
     Deny from all
 </FilesMatch>
+
+# ──── 終了した事業ページ（啓道塾／アドバイザリー）をトップへ転送 ────
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(service-advisory|keidojuku)\.html$ / [R=301,L]
+</IfModule>

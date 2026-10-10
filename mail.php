@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // ──── source_page ホワイトリスト（オープンリダイレクト対策） ────
 // ※ スパム対策のリダイレクト先としても使うため先頭で確定させる
-$allowed_pages = ['contact.html', 'service-hp.html', 'services.html', 'service-advisory.html', 'partners.html'];
+$allowed_pages = ['contact.html', 'service-hp.html', 'services.html', 'partners.html'];
 $raw_source    = trim($_POST['source_page'] ?? 'contact.html');
 $source_page   = in_array($raw_source, $allowed_pages) ? $raw_source : 'contact.html';
 
