@@ -463,6 +463,7 @@ function calc(items,incl=false){
   return r;
 }
 const calcQ=q=>calc(q.items,!!q.taxIncl);
+const calcI=i=>calc(i.items,!!i.taxIncl);
 // LOGO_SRC は src/logo.js で定義
 const LOGO_URL_PUBLIC="https://tres-win.com/treswinlogo2.png";
 const DEF_NOTES="・本見積に記載のない作業が発生した場合は、別途お見積りいたします。\n・お振込手数料はお客様のご負担にてお願いいたします。";
@@ -495,6 +496,12 @@ async function save(col,obj){
 }
 async function removeDoc(col,id){ if(!DB) return; await DB.collection(col).doc(id).delete(); }
 
+// 以前の不具合で、取り込んだ見積の番号に「-01」が付いてしまったものを元に戻す（1回だけ）
+let repaired=false;
+function repairQuoteNos(){
+  if(repaired||!S.quotes.length) return; repaired=true;
+  S.quotes.filter(q=>q.base&&/^TW-\d{8}-\d{3}$/.test(q.base)&&q.no===q.base+"-01").forEach(q=>{save("quotes",{...q,no:q.base}).catch(()=>{})});
+}
 async function boot(){
   render();
   DB = await claude.use("db").catch(()=>null);
@@ -504,7 +511,7 @@ async function boot(){
   DL = await claude.use("downloads").catch(()=>null);
   MCP = await claude.use("mcp").catch(()=>null);
   COLS.forEach(col=>{
-    DB.collection(col).onSnapshot(snap=>{S[col]=snap.docs.map(d=>({id:d.id,...clone(d.data())}));S.loaded[col]=true;render()},
+    DB.collection(col).onSnapshot(snap=>{S[col]=snap.docs.map(d=>({id:d.id,...clone(d.data())}));S.loaded[col]=true;if(col==="quotes")repairQuoteNos();render()},
       e=>{S.dbState="err";render()});
   });
   DB.doc("settings/company").onSnapshot(s=>{S.company=s.exists?clone(s.data()):{};S.loaded.company=true;render()},()=>{});
@@ -547,8 +554,8 @@ V.home=()=>{
   const sent=S.quotes.filter(q=>q.status==="提出済");
   const sentAmt=sent.reduce((s,q)=>{const r=calcQ(q);return s+r.once+r.monthly*12},0);
   const unpaid=S.invoices.filter(i=>i.status!=="入金済");
-  const unpaidAmt=unpaid.reduce((s,i)=>s+calc(i.items).onceTotal,0);
-  const thisMonthBilled=S.invoices.filter(i=>i.month===mon).reduce((s,i)=>s+calc(i.items).once,0);
+  const unpaidAmt=unpaid.reduce((s,i)=>s+calcI(i).onceTotal,0);
+  const thisMonthBilled=S.invoices.filter(i=>i.month===mon).reduce((s,i)=>s+calcI(i).once,0);
   const won=S.quotes.filter(q=>q.status==="受注").length, lost=S.quotes.filter(q=>q.status==="失注").length;
   const rate=won+lost?Math.round(won/(won+lost)*100):null;
   // by division
@@ -559,7 +566,7 @@ V.home=()=>{
   sent.forEach(q=>{if(q.validUntil&&q.validUntil<t)todo.push({k:"期限超過",t:`見積 ${q.no} ${clientName(q.clientId)}：有効期限切れ`,a:`data-act="edit" data-col="quotes" data-id="${q.id}"`});else if(q.validUntil&&q.validUntil<=addDays(t,7))todo.push({k:"期限間近",t:`見積 ${q.no} ${clientName(q.clientId)}：${jdate(q.validUntil)}まで`,a:`data-act="edit" data-col="quotes" data-id="${q.id}"`})});
   S.quotes.filter(q=>q.status==="受注"&&!S.contracts.some(c=>c.quoteId===q.id)).forEach(q=>todo.push({k:"受注",t:`見積 ${q.no} ${clientName(q.clientId)}：契約書がまだありません`,a:`data-act="q2c" data-id="${q.id}"`}));
   S.contracts.filter(c=>c.status==="送付済").forEach(c=>todo.push({k:"送付済",t:`契約 ${c.no} ${clientName(c.clientId)}：締結待ち`,a:`data-act="edit" data-col="contracts" data-id="${c.id}"`}));
-  unpaid.forEach(i=>{if(i.dueDate&&i.dueDate<t&&i.status==="送付済")todo.push({k:"期限超過",t:`請求 ${i.no} ${clientName(i.clientId)}：入金期限超過 ${yen(calc(i.items).onceTotal)}`,a:`data-act="edit" data-col="invoices" data-id="${i.id}"`})});
+  unpaid.forEach(i=>{if(i.dueDate&&i.dueDate<t&&i.status==="送付済")todo.push({k:"期限超過",t:`請求 ${i.no} ${clientName(i.clientId)}：入金期限超過 ${yen(calcI(i).onceTotal)}`,a:`data-act="edit" data-col="invoices" data-id="${i.id}"`})});
   const needBill=active.filter(c=>Number(c.monthly)>0&&!S.invoices.some(i=>i.contractId===c.id&&i.month===mon));
   if(needBill.length) todo.push({k:"未送付",t:`${jym(t)}分の月額請求が ${needBill.length} 件未作成です`,a:`data-act="go" data-v="invoices"`});
   return head("ホーム",`${jdate(t)}時点`,`<button class="btn pri" data-act="new" data-col="quotes">見積を作成</button>`)+
@@ -619,7 +626,7 @@ V.invoices=()=>{
   if(!S.invoices.length) return head("請求","請求書の作成と入金管理",acts)+emptyBox("請求書はまだありません","締結済の契約書から、月額分の請求書を毎月まとめて作れます。");
   const list=sortNew(flt("i",S.invoices));
   return head("請求",`${S.invoices.length} 件`,acts)+`<div class="tools">${chips("i",I_ST)}</div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>番号</th><th>宛先</th><th>対象月</th><th class="num">請求額（税込）</th><th>支払期限</th><th>状態</th></tr></thead><tbody>${
-    list.map(i=>{const over=i.status==="送付済"&&i.dueDate&&i.dueDate<today();return `<tr data-act="edit" data-col="invoices" data-id="${i.id}"><td class="mono">${esc(i.no)}</td><td>${esc(clientName(i.clientId))}</td><td class="mono">${esc(i.month||"")}</td><td class="num">${yen(calc(i.items).onceTotal)}</td><td class="mono">${esc(i.dueDate||"")}</td><td>${pill(i.status||"未送付")}${over?" "+pill("期限超過"):""}</td></tr>`}).join("")
+    list.map(i=>{const over=i.status==="送付済"&&i.dueDate&&i.dueDate<today();return `<tr data-act="edit" data-col="invoices" data-id="${i.id}"><td class="mono">${esc(i.no)}</td><td>${esc(clientName(i.clientId))}</td><td class="mono">${esc(i.month||"")}</td><td class="num">${yen(calcI(i).onceTotal)}</td><td class="mono">${esc(i.dueDate||"")}</td><td>${pill(i.status||"未送付")}${over?" "+pill("期限超過"):""}</td></tr>`}).join("")
   }</tbody></table></div>`;
 };
 
@@ -718,7 +725,7 @@ function itemsEditor(showKind=true){
   const d=S.ed.data; const items=d.items||[];
   const prodOpts="";
   const presets=S.products.length?`<div class="presets">${DIVS.map(dv=>{const ps=S.products.filter(p=>p.division===dv).sort((a,b)=>(a.order||0)-(b.order||0));return ps.length?`<div class="pgroup"><b>${dv}</b>${ps.map(p=>`<button type="button" class="pchip" data-act="addp" data-id="${p.id}" title="${p.kind==="monthly"?"月額":"一括"} ${p.price?yen(p.price):"単価は都度入力"}">${esc(p.name)}</button>`).join("")}</div>`:""}).join("")}</div>`:"";
-  const incl=S.ed.col==="quotes"&&d.taxIncl;
+  const incl=(S.ed.col==="quotes"||S.ed.col==="invoices")&&d.taxIncl;
   return `<fieldset><legend>明細</legend>${presets}<div class="items">
     <div class="item head"><span>品名・内容</span><span>数量</span><span>単位</span><span>単価（${incl?"税込":"税別"}）</span><span class="kind">${showKind?"区分":""}</span><span></span></div>
     ${items.map((it,i)=>`<div class="item">
@@ -731,7 +738,7 @@ function itemsEditor(showKind=true){
   </div><div class="tools"><button class="btn sm" data-act="itadd">行を追加</button>${prodOpts}</div><div id="e-totals">${totalsHTML(showKind)}</div></fieldset>`;
 }
 function totalsHTML(showKind=true){
-  const r=S.ed.col==="quotes"?calcQ(S.ed.data):calc(S.ed.data.items);
+  const r=S.ed.col==="quotes"?calcQ(S.ed.data):S.ed.col==="invoices"?calcI(S.ed.data):calc(S.ed.data.items);
   const box=(t,a,tx,tt)=>`<div class="tot"><span>${t}</span><b>${yen(tt)}</b><span class="row"><span>税抜金額</span><span>${yen(a)}</span></span><span class="row"><span>消費税（10%）</span><span>${yen(tx)}</span></span></div>`;
   return `<div class="totals">${box(showKind?"一括・初期費用（税込）":"ご請求額（税込）",r.once,r.onceTax,r.onceTotal)}${showKind?box("月額（税込）",r.monthly,r.monthlyTax,r.monthlyTotal):""}</div>`;
 }
@@ -784,7 +791,7 @@ function renderEditor(){
     const nextRev=String((d.rev||1)+1).padStart(2,"0");
     body=`<div class="qsplit"><div class="qform">${body}</div><div class="qprev"><div class="qprev-in" id="qprev"></div></div></div>`;
     foot=old?`<span class="sp"></span><button class="btn" data-act="qdup">複製</button><button class="btn" data-act="preview">PDF・ドライブ</button>`
-      :`${del}<span class="sp"></span>${e.isNew?"":`<button class="btn" data-act="qdup">複製</button>`}<button class="btn" data-act="preview">PDF・ドライブ</button><button class="btn" data-act="save">保存</button>${issued?`<button class="btn ${hasC?"":"pri"}" data-act="revise">改訂版を作成（-${nextRev}）</button>`:""}${hasC||d.status==="失注"?"":`<button class="btn ${issued?"":"pri"}" data-act="q2c">受注して契約書を作成</button>`}`;
+      :`${del}<span class="sp"></span>${e.isNew?"":`<button class="btn" data-act="qdup">複製</button>`}<button class="btn" data-act="preview">PDF・ドライブ</button><button class="btn" data-act="save">保存</button>${issued?`<button class="btn ${hasC?"":"pri"}" data-act="revise">改訂版を作成（-${nextRev}）</button>`:""}${hasC||d.status==="失注"?"":`<button class="btn ${issued?"":"pri"}" data-act="q2c">受注して契約書を作成</button>`}${!e.isNew&&d.status!=="失注"?`<button class="btn" data-act="q2i">請求書を作成</button>`:""}`;
   }
   if(col==="contracts"){
     const tpl=d.template||"general";
@@ -825,7 +832,9 @@ function renderEditor(){
   if(col==="invoices"){
     body=`<fieldset><legend>宛先と期日</legend><div class="f">
       ${sel("e-clientId","宛先",clientOpts().filter(o=>o[0]!=="__new"),d.clientId,'data-b="clientId"')}
-      ${sel("e-contractId","契約",[["","（紐づけない）"],...S.contracts.filter(c=>!d.clientId||c.clientId===d.clientId).map(c=>[c.id,`${c.no} ${c.title||""}`])],d.contractId,'data-b="contractId"')}
+      <div class="full">${sel("e-quoteId","見積から作成（選ぶと宛先・明細が入ります）",[["","（選ばない）"],...sortNew(S.quotes.filter(q=>q.status!==Q_OLD&&(!d.clientId||q.clientId===d.clientId))).map(q=>[q.id,`${q.no}　${clientName(q.clientId)}　${q.title||""}　${yen(calcQ(q).onceTotal+calcQ(q).monthlyTotal)}`])],d.quoteId,'data-b="quoteId"')}</div>
+      ${sel("e-contractId","契約（選ぶと契約の内容が入ります）",[["","（紐づけない）"],...S.contracts.filter(c=>!d.clientId||c.clientId===d.clientId).map(c=>[c.id,`${c.no} ${c.title||""}`])],d.contractId,'data-b="contractId"')}
+      <label class="fld">単価の入力<select class="inp" id="e-taxIncl" data-b="taxIncl" data-type="bool"><option value="1" ${d.taxIncl?"selected":""}>税込</option><option value="" ${!d.taxIncl?"selected":""}>税別</option></select></label>
       ${efld("month","対象月","","month")}${efld("issueDate","請求日","","date")}
       ${efld("dueDate","支払期限","","date")}
     </div></fieldset>
@@ -883,7 +892,7 @@ async function saveEditor(){
   delete d.newClientName;
   if(["quotes","contracts","invoices"].includes(col)&&!d.clientId){toast("宛先を選んでください");return}
   if(col==="partners"&&!d.name){toast("名前を入れてください");return}
-  if(col==="quotes"){ if(!d.base){d.base=quoteBase(d.issueDate);d.rev=1} d.rev=d.rev||1; d.no=quoteNo(d.base,d.rev); }
+  if(col==="quotes"){ if(!d.base){d.base=d.no?d.no:quoteBase(d.issueDate);d.rev=d.rev||1} d.rev=d.rev||1; if(!d.no) d.no=quoteNo(d.base,d.rev); }
   if(!d.no){
     const pre={quotes:"Q",contracts:"C",invoices:"I"}[col];
     if(pre) d.no=nextNo(col,pre,d.issueDate||d.startDate);
@@ -936,13 +945,52 @@ async function reviseQuote(){
   S.ed={col:"quotes",data:{...next,id},isNew:false,confirmDel:false}; renderEditor();
   toast(`改訂版 ${next.no} を作りました。直したら状態を「提出済」にしてください`+(c?"（契約書は前の版のままです）":""));
 }
+// 見積の明細から請求書の明細を作る。月額の明細は「○月分」を付ける。HP制作の着手金50%にも対応
+function itemsFromQuote(q,month,{first=true,half=false}={}){
+  const out=[];
+  (q.items||[]).filter(it=>it.name||Number(it.price)).forEach(it=>{
+    if(it.kind==="monthly") out.push({name:`${it.name}（${jym(month+"-01")}分）`,qty:it.qty,unit:it.unit||"月",price:it.price,kind:"once"});
+    else if(first) out.push(half?{name:`${it.name}（着手金50%）`,qty:it.qty,unit:it.unit||"式",price:Math.round((Number(it.price)||0)/2),kind:"once"}:{name:it.name,qty:it.qty,unit:it.unit||"式",price:it.price,kind:"once"});
+  });
+  return out;
+}
+function fillInvoice(d,{quote,contract}){
+  const month=d.month||ym(today());
+  if(contract){
+    d.contractId=contract.id; d.clientId=contract.clientId;
+    const q=contract.quoteId?byId("quotes",contract.quoteId):null;
+    const first=!S.invoices.some(i=>i.contractId===contract.id&&i.id!==d.id);
+    if(q){ d.quoteId=q.id; d.taxIncl=!!q.taxIncl; d.items=itemsFromQuote(q,month,{first,half:contract.template==="web"&&contract.payPlan==="着手時50%・検収後50%"}); }
+    else { const base=invoiceFromContractBasic(contract,month,first); d.taxIncl=false; d.items=base; delete d.quoteId; }
+    d.dueDate=addDays(d.issueDate||today(),contract.payDays??S.company.payDays??30);
+  } else if(quote){
+    d.quoteId=quote.id; d.clientId=quote.clientId; d.taxIncl=!!quote.taxIncl;
+    const first=!S.invoices.some(i=>i.quoteId===quote.id&&i.id!==d.id);
+    d.items=itemsFromQuote(quote,month,{first});
+    const c=S.contracts.find(k=>k.quoteId===quote.id); if(c&&!d.contractId) d.contractId=c.id;
+    if(!d.title) d.title=quote.title||"";
+  }
+  if(!d.items||!d.items.length) d.items=[{name:"",qty:1,unit:"式",price:"",kind:"once"}];
+  return d;
+}
 function invoiceFromContract(c,month){
-  const first=!S.invoices.some(i=>i.contractId===c.id);
+  const t=today();
+  return fillInvoice({status:"未送付",clientId:c.clientId,contractId:c.id,month,issueDate:t,dueDate:addDays(t,c.payDays??S.company.payDays??30),items:[]},{contract:c});
+}
+function invoiceFromContractBasic(c,month,first){
   const items=[];
   if(Number(c.monthly)>0) items.push({name:`${c.title||TPL_NAME[c.template].replace("契約書","")}（${jym(month+"-01")}分）`,qty:1,unit:"月",price:Number(c.monthly),kind:"once"});
   if(first&&Number(c.initial)>0) items.push({name:c.template==="web"?(c.payPlan==="着手時50%・検収後50%"?"ホームページ制作費（着手金50%）":"ホームページ制作費"):"初期費用",qty:1,unit:"式",price:c.template==="web"&&c.payPlan==="着手時50%・検収後50%"?Math.round(Number(c.initial)/2):Number(c.initial),kind:"once"});
+  return items;
+}
+async function quoteToInvoice(qid){
+  let q=byId("quotes",qid);
+  if(S.ed?.col==="quotes"){const id=await saveEditor();if(!id)return;q=clone(S.ed.data);qid=id}
+  if(!q) return;
   const t=today();
-  return {status:"未送付",clientId:c.clientId,contractId:c.id,month,issueDate:t,dueDate:addDays(t,c.payDays??S.company.payDays??30),items};
+  const inv=fillInvoice({status:"未送付",month:ym(t),issueDate:t,dueDate:addDays(t,S.company.payDays??30),items:[]},{quote:q});
+  S.ed={col:"invoices",data:inv,isNew:true,confirmDel:false}; renderEditor();
+  toast("見積の内容を入れました。確認して保存してください");
 }
 async function contractToInvoice(cid){
   let c=byId("contracts",cid);
@@ -983,7 +1031,7 @@ document.addEventListener("click",async ev=>{
   }
   else if(a==="addp"){const p=byId("products",el.dataset.id);if(!p)return;const items=S.ed.data.items=S.ed.data.items||[];
     if(!items.filter(i=>i.name).length&&S.ed.col==="quotes")S.ed.data.division=p.division;
-    const inc=S.ed.col==="quotes"&&S.ed.data.taxIncl; const pr=Number(p.price)||0; // メニューの単価は税別。税込入力の見積では1.1倍して入れる
+    const inc=(S.ed.col==="quotes"||S.ed.col==="invoices")&&S.ed.data.taxIncl; const pr=Number(p.price)||0; // メニューの単価は税別。税込入力の見積では1.1倍して入れる
     const it={name:p.name,qty:1,unit:p.kind==="monthly"?"月":"式",price:pr?(inc?Math.round(pr*1.1):pr):"",kind:p.kind||"once"};
     const last=items[items.length-1]; if(last&&!last.name&&!Number(last.price)) items[items.length-1]=it; else items.push(it); renderEditor()}
   else if(a==="qdup"){const src=clone(S.ed.data);["id","no","base","rev","prevNo","supersededBy","drive","createdAt","updatedAt"].forEach(k=>delete src[k]);const t=today();
@@ -1000,6 +1048,7 @@ document.addEventListener("click",async ev=>{
   else if(a==="drive"){if(!S.ed)return;let id=S.ed.data.id;if(S.ed.isNew||!id){id=await saveEditor();if(!id)return}el.disabled=true;await driveSave(S.ed.col,{...S.ed.data});el.disabled=false}
   else if(a==="ledger") await exportLedger();
   else if(a==="revise") await reviseQuote();
+  else if(a==="q2i") await quoteToInvoice(S.ed?.data?.id);
   else if(a==="docx") await exportDocx();
   else if(a==="savecompany"){
     const c={...S.company};["tradeName","rep","zip","tel","address","email","invoiceNo","bank","brandName","person","personEmail","defPayment","defNotes"].forEach(k=>c[k]=$("#co-"+k).value.trim());c.taxIncl=!!$("#co-taxIncl").value;
@@ -1023,6 +1072,11 @@ document.addEventListener("input",ev=>{
     S.ed.data[f]=v;
     if(f==="clientId"&&S.ed.col==="quotes"){const c=byId("clients",v);if(c){if(!S.ed.data.contact)S.ed.data.contact=c.person||"";if(!S.ed.data.ctel)S.ed.data.ctel=c.tel||"";if(!S.ed.data.cmail)S.ed.data.cmail=c.email||""}}
     if(f==="taxIncl"){renderEditor();return}
+    if(S.ed.col==="invoices"&&(f==="quoteId"||f==="contractId")&&v){
+      const hasItems=(S.ed.data.items||[]).some(i=>i.name||Number(i.price));
+      if(f==="quoteId") fillInvoice(S.ed.data,{quote:byId("quotes",v)}); else fillInvoice(S.ed.data,{contract:byId("contracts",v)});
+      renderEditor(); toast(hasItems?"明細を選んだ内容で入れ直しました":"宛先と明細を入れました"); return}
+    if(S.ed.col==="invoices"&&f==="month"&&S.ed.data.quoteId&&el.tagName==="INPUT"){const q=byId("quotes",S.ed.data.quoteId);if(q){S.ed.data.items=(S.ed.data.items||[]).map(it=>({...it,name:String(it.name).replace(/（\d{4}年\d{1,2}月分）$/,`（${jym(v+"-01")}分）`)}))}renderEditor();return}
     if(["clientId","template","signMethod","startDate","termMonths"].includes(f)&&el.tagName==="SELECT") renderEditor();
     updatePreview();
     if(f==="template"&&el.tagName==="SELECT"){}
@@ -1092,14 +1146,14 @@ function docQuote(q){
   ${q.prevNo?`<p class="small" style="margin-top:10px">※本見積書は ${esc(q.prevNo)} を改訂したものです。改訂前の見積書は無効となります。</p>`:""}</div>`;
 }
 function docInvoice(inv){
-  const cl=byId("clients",inv.clientId)||{name:""}, r=calc(inv.items), co=S.company;
-  return `<div class="paper"><div class="no">請求番号　${esc(inv.no||"（保存時に採番）")}<br>請求日　${jdate(inv.issueDate)}</div><h1>請求書</h1>
+  const cl=byId("clients",inv.clientId)||{name:""}, r=calcI(inv), co=S.company;
+  return `<div class="paper"><div class="no">請求番号　${esc(inv.no||"（保存時に採番）")}<br>請求日　${jdate(inv.issueDate)}${inv.quoteId&&byId("quotes",inv.quoteId)?`<br>見積番号　${esc(byId("quotes",inv.quoteId).no)}`:""}</div><h1>請求書</h1>
   <div class="meta"><div><div class="to">${esc(cl.name)}　${honor(cl)}</div>
   <p style="margin:14px 0 4px">下記のとおりご請求申し上げます。</p>
   ${inv.month?`<div>対象期間：${jym(inv.month+"-01")}分</div>`:""}
   <div class="big"><span>ご請求金額（税込）</span><b>${yen(r.onceTotal)}</b></div>
   <div>お支払期限：${jdate(inv.dueDate)}</div></div>${fromBlock()}</div>
-  <table><thead><tr><th style="width:52%">品名・内容</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th></tr></thead><tbody>${itemRows(inv.items||[])}</tbody></table>
+  <table><thead><tr><th style="width:52%">品名・内容</th><th>数量</th><th>単位</th><th>単価${inv.taxIncl?"（税込）":"（税別）"}</th><th>金額${inv.taxIncl?"（税込）":"（税別）"}</th></tr></thead><tbody>${itemRows(inv.items||[])}</tbody></table>
   <table class="sum"><tr><th>10%対象 小計</th><td class="n">${yen(r.once)}</td></tr><tr><th>消費税（10%）</th><td class="n">${yen(r.onceTax)}</td></tr><tr><th>合計</th><td class="n"><b>${yen(r.onceTotal)}</b></td></tr></table>
   <div class="sec">お振込先</div><div class="note">${esc(co.bank||"（設定で振込先を入力してください）")}\n振込手数料はご負担くださいますようお願いいたします。</div>
   ${inv.notes?`<div class="sec">備考</div><div class="note">${esc(inv.notes)}</div>`:""}
@@ -1362,7 +1416,7 @@ async function exportLedger(){
   const last=x=>{const l=(x.drive||[]).slice(-1)[0];return l?(l.docUrl||""):""};
   S.quotes.forEach(x=>{const r=calcQ(x);rows.push(["見積",x.no,x.issueDate,clientName(x.clientId),x.title,x.division,x.status,r.once,r.monthly,r.onceTotal+r.monthlyTotal,last(x)])});
   S.contracts.forEach(x=>rows.push(["契約",x.no,x.signedDate||x.startDate,clientName(x.clientId),x.title,x.division,x.status,Number(x.initial)||0,Number(x.monthly)||0,"",last(x)]));
-  S.invoices.forEach(x=>{const r=calc(x.items);rows.push(["請求",x.no,x.issueDate,clientName(x.clientId),x.month?jym(x.month+"-01")+"分":"","",x.status,r.once,"",r.onceTotal,last(x)])});
+  S.invoices.forEach(x=>{const r=calcI(x);rows.push(["請求",x.no,x.issueDate,clientName(x.clientId),x.month?jym(x.month+"-01")+"分":"","",x.status,r.once,"",r.onceTotal,last(x)])});
   const csv=rows.map(r=>r.map(q).join(",")).join("\n");
   const d=new Date(); const name=`TRESWIN台帳_${ymd(d).replace(/-/g,"")}-${pad(d.getHours())}${pad(d.getMinutes())}`;
   toast("台帳を書き出しています…");
