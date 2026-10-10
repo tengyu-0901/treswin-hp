@@ -577,7 +577,7 @@ V.home=()=>{
     <div class="kpi"><span class="l">受注率</span><span class="v">${rate===null?"—":rate+"<small>%</small>"}</span><span class="s">受注 ${won} ／ 失注 ${lost}・今月請求 ${yen(thisMonthBilled)}</span></div>
   </div>
   <div class="flow">
-    <div><b>見積</b><span>${S.quotes.length}</span><em>提出中 ${sent.length}</em></div>
+    <div><b>見積</b><span>${S.quotes.filter(q=>q.status!==Q_OLD).length}</span><em>提出中 ${sent.length}${S.quotes.some(q=>q.status===Q_OLD)?`・旧版 ${S.quotes.filter(q=>q.status===Q_OLD).length}`:""}</em></div>
     <div><b>契約書</b><span>${S.contracts.length}</span><em>締結済 ${S.contracts.filter(c=>c.status==="締結済").length}</em></div>
     <div><b>請求</b><span>${S.invoices.length}</span><em>入金済 ${S.invoices.filter(i=>i.status==="入金済").length}</em></div>
   </div>
