@@ -1354,7 +1354,10 @@ function driveErr(e){
   if(c==="blocked_by_policy") return "組織の設定でGoogleドライブへの保存が止められています";
   if(c==="tool_error") return "Googleドライブが保存を断りました："+(e.message||"");
   if(c==="server_unavailable"||c==="upstream_error") return "Googleドライブから応答がありません。ドライブに同じファイルができていないか確認してから、もう一度お試しください";
-  return "Googleドライブに保存できませんでした";
+  const m=String(e?.message||"");
+  if(/Drive is not defined|Drive.*定義されていません/i.test(m)) return "Googleドライブに保存できませんでした：Apps Scriptに「Drive API」サービスが追加されていません";
+  if(/permission|権限|authoriz|承認/i.test(m)) return "Googleドライブに保存できませんでした：Apps Scriptの権限が足りません（再承認と再デプロイが必要です）";
+  return "Googleドライブに保存できませんでした"+(m?"："+m:"");
 }
 async function gcreate(input){
   const r=await MCP.callTool(GD,"create_file",input,{cache:false});
