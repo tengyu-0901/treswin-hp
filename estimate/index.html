@@ -96,6 +96,12 @@ main{min-width:0;padding-block:24px 64px;padding-inline:clamp(16px,3vw,36px);dis
 .todo li:last-child{border-bottom:0}
 .todo li .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .empty{color:var(--muted);font-size:13px;padding:22px 16px;text-align:center}
+.rcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.rcard{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:var(--surface-2);min-width:0}
+.rcard .rc-h{display:flex;flex-direction:column;gap:2px}.rcard .rc-h b{font-size:15px}
+.rcard .rc-k{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}.rcard .rc-k b{color:var(--ink)}
+.rcard p{margin:0;font-size:13px;line-height:1.7;white-space:pre-wrap}
+.rcard .tools{margin-top:auto;padding-top:4px}
 .empty b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
 /* Tables */
 .tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -286,7 +292,7 @@ body.tw-locked .app{visibility:hidden}
 // Apps Script（データはGoogleスプレッドシート、書類はGoogleドライブ）で用意する。
 (function(){
   const API_URL = 'https://script.google.com/macros/s/AKfycbyWMrvg1F03aC0a4-C3UAriMSLfNgcFojK6h9_9OkgzqLY4DOWBalhOYj83cfSYuRmezQ/exec';
-  const MODE = 'core'; // core＝基幹システム（tres-win.com/estimate）／agent＝代理店ポータル（tres-win.com/agent）
+  const MODE = 'core'; // core＝基幹システム（tres-win.com/estimate）／agent＝エージェントポータル（tres-win.com/agent）
   let ME = null;
   let token = '';
   try { token = sessionStorage.getItem('tw-core-token') || ''; ME = JSON.parse(sessionStorage.getItem('tw-core-me') || 'null'); } catch (e) {}
@@ -324,7 +330,7 @@ body.tw-locked .app{visibility:hidden}
   function mountLogin() {
     const box = document.createElement('div');
     box.id = 'tw-login'; box.className = 'tw-login'; box.hidden = true;
-    box.innerHTML = '<form id="tw-login-form"><div class="tw-login-brand"><b>TRESWIN</b><span>' + (MODE === 'agent' ? '代理店ポータル' : '基幹システム') + '</span></div>' +
+    box.innerHTML = '<form id="tw-login-form"><div class="tw-login-brand"><b>TRESWIN</b><span>' + (MODE === 'agent' ? 'エージェントポータル' : '基幹システム') + '</span></div>' +
       '<label class="fld">ログインID<input class="inp" id="tw-id" autocomplete="username" ' + (MODE === 'agent' ? 'required' : 'placeholder="オーナーは空欄"') + '></label>' +
       '<label class="fld">パスワード<input class="inp" type="password" id="tw-pw" autocomplete="current-password" required></label>' +
       '<button class="btn pri" type="submit" id="tw-pw-btn">ログイン</button><p class="tw-err" id="tw-pw-err" aria-live="polite"></p></form>';
@@ -334,7 +340,7 @@ body.tw-locked .app{visibility:hidden}
       const btn = document.getElementById('tw-pw-btn'); btn.disabled = true; document.getElementById('tw-pw-err').textContent = '';
       try {
         const r = await api('login', { loginId: document.getElementById('tw-id').value.trim(), password: document.getElementById('tw-pw').value });
-        if (MODE === 'agent' && r.me && r.me.role !== 'agent') { /* 中核メンバーが代理店ポータルに来た場合は基幹システムへ */ }
+        if (MODE === 'agent' && r.me && r.me.role !== 'agent') { /* 中核メンバーがエージェントポータルに来た場合は基幹システムへ */ }
         token = r.token; ME = r.me || (MODE === 'core' ? { role: 'core', uid: 'owner', name: 'オーナー', code: '' } : null); try { sessionStorage.setItem('tw-core-token', token); sessionStorage.setItem('tw-core-me', JSON.stringify(ME)); } catch (e) {}
         await load(); box.hidden = true; document.body.classList.remove('tw-locked'); loggedIn();
       } catch (e) { document.getElementById('tw-pw-err').textContent = e.message || 'ログインできませんでした'; }
@@ -448,7 +454,7 @@ const quoteNo=(base,rev)=>`${base}-${String(rev||1).padStart(2,"0")}`;
 const revsOf=q=>q.base?S.quotes.filter(x=>x.base===q.base).sort((a,b)=>(a.rev||1)-(b.rev||1)):[q];
 const C_ST = ["作成中","送付済","締結済","終了"];
 const I_ST = ["未送付","送付済","入金済"];
-const COLS = ["products","clients","quotes","contracts","invoices","partners","income","deals","sales","agents","agentsRetired"];
+const COLS = ["products","clients","quotes","contracts","invoices","partners","income","deals","sales","agents","agentsRetired","resaleTerms"];
 const TAX = 0.10;
 const S = {view:"home", company:{}, loaded:{}, dbState:"wait", filter:{}, ed:null, pv:null};
 COLS.forEach(c=>S[c]=[]);
@@ -540,7 +546,7 @@ async function boot(){
 }
 
 // ===== Nav & routing =====
-const VIEWS=[["home","ホーム"],["clients","顧客"],["deals","案件"],["quotes","見積"],["contracts","契約書"],["invoices","請求"],["sales","売上"],["agents","代理店管理"],["partners","紹介・代理店報酬"],["settings","設定"]];
+const VIEWS=[["home","ホーム"],["clients","顧客"],["deals","案件"],["quotes","見積"],["contracts","契約書"],["invoices","請求"],["sales","売上"],["agents","エージェント管理"],["resale","取扱商材"],["partners","紹介パートナー"],["settings","設定"]];
 const AGENT_VIEWS=[["home","ホーム"],["clients","顧客"],["deals","案件"],["quotes","見積"],["sales","売上"],["rewards","報酬"],["myproducts","商材"]];
 const views=()=>(typeof MY!=="undefined"&&MY.twRole==="agent")?AGENT_VIEWS:VIEWS;
 function renderNav(){
@@ -591,7 +597,7 @@ V.home=()=>{
   S.quotes.filter(q=>q.status==="受注"&&!S.contracts.some(c=>c.quoteId===q.id)).forEach(q=>todo.push({k:"受注",t:`見積 ${q.no} ${clientName(q.clientId)}：契約書がまだありません`,a:`data-act="q2c" data-id="${q.id}"`}));
   S.contracts.filter(c=>c.status==="送付済").forEach(c=>todo.push({k:"送付済",t:`契約 ${c.no} ${clientName(c.clientId)}：締結待ち`,a:`data-act="edit" data-col="contracts" data-id="${c.id}"`}));
   unpaid.forEach(i=>{if(i.dueDate&&i.dueDate<t&&i.status==="送付済")todo.push({k:"期限超過",t:`請求 ${i.no} ${clientName(i.clientId)}：入金期限超過 ${yen(calcI(i).onceTotal)}`,a:`data-act="edit" data-col="invoices" data-id="${i.id}"`})});
-  const pendSales=S.sales.filter(x=>x.status==="申請中"); if(pendSales.length) todo.push({k:"提出済",t:`代理店からの売上申請が ${pendSales.length} 件、承認待ちです`,a:`data-act="go" data-v="agents"`});
+  const pendSales=S.sales.filter(x=>x.status==="申請中"); if(pendSales.length) todo.push({k:"提出済",t:`エージェントからの売上申請が ${pendSales.length} 件、承認待ちです`,a:`data-act="go" data-v="agents"`});
   const needBill=active.filter(c=>Number(c.monthly)>0&&!S.invoices.some(i=>i.contractId===c.id&&i.month===mon));
   if(needBill.length) todo.push({k:"未送付",t:`${jym(t)}分の月額請求が ${needBill.length} 件未作成です`,a:`data-act="go" data-v="invoices"`});
   return head("ホーム",`${jdate(t)}時点`,`<button class="btn pri" data-act="new" data-col="quotes">見積を作成</button>`)+
@@ -664,17 +670,13 @@ V.partners=()=>{
     const first=cs.reduce((s,c)=>s+(Number(c.initial)||0)+(Number(c.monthly)||0),0)*rate;
     const monthly=p.basis==="継続"?cs.filter(c=>isActive(c)).reduce((s,c)=>s+(Number(c.monthly)||0),0)*rate:0;
     return `<tr data-act="edit" data-col="partners" data-id="${p.id}"><td><b>${esc(p.name)}</b></td><td class="num">${esc(p.rate||0)}%</td><td>${esc(p.basis||"初回のみ")}</td><td class="num">${cl.length}</td><td class="num">${yen(first)}</td><td class="num">${monthly?yen(monthly):"—"}</td><td>${esc(p.memo||"")}</td></tr>`}).join("");
-  const inc=[...S.income].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
-  const y=today().slice(0,4);
-  const incY=inc.filter(x=>(x.date||"").startsWith(y)).reduce((s,x)=>s+(Number(x.amount)||0),0);
-  return head("紹介・代理店","紹介パートナーへの成果報酬と、当社が代理店として受け取る報酬",`<button class="btn" data-act="new" data-col="partners">紹介パートナーを追加</button><button class="btn pri" data-act="new" data-col="income">代理店報酬を記録</button>`)+
-  `<div class="panel"><h2>紹介パートナー（当社が支払う）<small>顧客の「紹介元」で紐づけ</small></h2>${ps.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>名前</th><th class="num">報酬率</th><th>支払方式</th><th class="num">紹介顧客</th><th class="num">初回報酬（見込み）</th><th class="num">毎月の報酬</th><th>メモ</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="empty">紹介パートナーはまだいません。成果報酬型のエージェントを登録すると、紹介顧客の契約額から報酬を自動計算します。</div>`}</div>
-  <div class="panel"><h2>代理店報酬（当社が受け取る）<small>${y}年 合計 ${yen(incY)}</small></h2>${inc.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>日付</th><th>商材・提携先</th><th>導入先</th><th class="num">報酬額</th><th>状態</th></tr></thead><tbody>${inc.map(x=>`<tr data-act="edit" data-col="income" data-id="${x.id}"><td class="mono">${esc(x.date||"")}</td><td>${esc(x.partner||"")}</td><td>${esc(x.customer||"")}</td><td class="num">${yen(x.amount)}</td><td>${pill(x.status||"見込み")}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">シャトクなど、代理店として受け取る報酬をここに記録します。</div>`}</div>`;
+  return head("紹介パートナー","お客様を紹介してくれた方への成果報酬（ログインなし・紹介のみ）",`<button class="btn pri" data-act="new" data-col="partners">紹介パートナーを追加</button>`)+
+  `<div class="panel"><h2>紹介パートナー（当社が支払う）<small>顧客の「紹介元」で紐づけると報酬を自動計算</small></h2>${ps.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>名前</th><th class="num">報酬率</th><th>支払方式</th><th class="num">紹介顧客</th><th class="num">初回報酬（見込み）</th><th class="num">毎月の報酬</th><th>メモ</th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="empty">紹介パートナーはまだいません。自分では売らず、お客様を紹介してくれる方を登録すると、紹介顧客の契約額から報酬を自動計算します。自分で営業してもらう方は「エージェント管理」へ。</div>`}</div>`;
 };
 
 V.settings=()=>{
   const c=S.company;
-  const ps=S.products;
+  const ps=S.products.filter(p=>!p.agentId&&!p.resale);
   return head("設定","書類に入る自社情報とサービスメニュー",`<button class="btn pri" data-act="savecompany">自社情報を保存</button>`)+
   `<div class="panel"><h2>自社情報</h2><div class="body"><div class="f">
     ${fld("co-tradeName","屋号・会社名",c.tradeName,"例：トレスウィン（TRESWIN）")}
@@ -723,7 +725,7 @@ function sel(id,label,opts,val,extra=""){
 }
 
 // ===== Editors =====
-const ED_TITLE={clients:"顧客",quotes:"見積",contracts:"契約書",invoices:"請求書",partners:"紹介パートナー",income:"代理店報酬",deals:"案件",sales:"売上",agents:"代理店",products:"商材"};
+const ED_TITLE={clients:"顧客",quotes:"見積",contracts:"契約書",invoices:"請求書",partners:"紹介パートナー",income:"受取報酬",deals:"案件",sales:"売上",agents:"エージェント",products:"商材"};
 function defaults(col){
   const t=today(), co=S.company;
   if(col==="clients") return {kind:"法人",divisions:[]};
@@ -731,7 +733,7 @@ function defaults(col){
   if(col==="contracts") return {status:"作成中",template:"general",division:"その他",termMonths:3,autoRenew:true,renewMonths:1,noticeDays:30,payDays:co.payDays??30,signMethod:"電子",monthly:0,initial:0,clientId:""};
   if(col==="invoices") return {status:"未送付",issueDate:t,dueDate:addDays(t,co.payDays??30),month:ym(t),items:[{name:"",qty:1,unit:"式",price:0,kind:"once"}],clientId:""};
   if(col==="partners") return {rate:10,basis:"初回のみ"};
-  if(col==="income") return {date:t,partner:"マネーフォワード シャトク",status:"見込み",amount:0};
+  if(col==="income") return {date:t,partner:"",status:"見込み",amount:0};
   if(col==="deals") return {stage:"リード",clientId:"",amount:"",productId:""};
   if(col==="sales") return {date:t,status:"申請中",clientId:"",productId:"",amount:""};
   if(col==="agents") return newAgentDefaults();
@@ -741,6 +743,7 @@ function defaults(col){
 function openEditor(col,id){
   const data=id?clone(byId(col,id)):defaults(col);
   if(id&&!byId(col,id)) return;
+  if(col==="products"&&data.resale) resaleOpen(data);
   S.ed={col,data,isNew:!id,confirmDel:false};
   renderEditor();
 }
@@ -882,17 +885,18 @@ function renderEditor(){
     foot=`${del}<span class="sp"></span><button class="btn pri" data-act="save">保存</button>`;
   }
   if(col==="income"){
-    body=`<fieldset><legend>代理店報酬</legend><div class="f">
+    body=`<fieldset><legend>受取報酬（提携先から当社へ）</legend><div class="f">
       ${efld("date","日付","","date")}${esel("status","状態",["見込み","確定","入金済"])}
-      ${efld("partner","商材・提携先")}${efld("customer","導入先")}
+      ${efld("partner","提携先・商材")}${efld("customer","導入先")}
       ${efld("amount","報酬額（円）","","number")}
       <div class="full">${fld("e-memo","メモ",d.memo,"","textarea",'data-b="memo"')}</div>
     </div></fieldset>`;
     foot=`${del}<span class="sp"></span><button class="btn pri" data-act="save">保存</button>`;
   }
-  if(EDX[col]&&(col!=="products"||isAgent()||d.agentId)){const r=EDX[col](e,d,del);body=r.body;foot=r.foot}
+  if(EDX[col]&&(col!=="products"||isAgent()||d.agentId||d.resale)){const r=EDX[col](e,d,del);body=r.body;foot=r.foot}
   const sc=$("#layer .scroll")?.scrollTop||0;
-  $("#layer").innerHTML=`<div class="scrim" data-act="close"></div><div class="drawer${col==="quotes"?" wide":""}" role="dialog" aria-label="${ED_TITLE[col]}"><header><div><h3>${e.isNew?"新しい"+ED_TITLE[col]:ED_TITLE[col]}</h3><span class="mono">${esc(d.no||"")}</span></div><button class="btn ghost" data-act="close">閉じる</button></header><div class="scroll">${body}</div><footer>${foot}</footer></div>`;
+  const ttl=col==="products"&&d.resale?"取扱商材":ED_TITLE[col];
+  $("#layer").innerHTML=`<div class="scrim" data-act="close"></div><div class="drawer${col==="quotes"?" wide":""}" role="dialog" aria-label="${ttl}"><header><div><h3>${e.isNew?"新しい"+ttl:ttl}</h3><span class="mono">${esc(d.no||"")}</span></div><button class="btn ghost" data-act="close">閉じる</button></header><div class="scroll">${body}</div><footer>${foot}</footer></div>`;
   const s=$("#layer .scroll"); if(s) s.scrollTop=sc;
   updatePreview();
 }
@@ -932,7 +936,7 @@ async function saveEditor(){
   if(col==="contracts"&&d.status==="締結済"&&!d.signedDate) d.signedDate=today();
   const prevSt=d.id?byId(col,d.id)?.status:null;
   const id=await save(col,d);
-  d.id=id; e.data=d; e.isNew=false; toast("保存しました");
+  d.id=id; await agentAfterSave(col,d).catch(err=>console.warn(err)); e.data=d; e.isNew=false; toast("保存しました");
   renderEditor();
   if(DRIVE_TRIGGER[col]&&d.status===DRIVE_TRIGGER[col]&&prevSt!==d.status&&S.company.autoDrive!==false&&MCP) driveSave(col,{...d});
   return id;
@@ -1052,18 +1056,21 @@ document.addEventListener("click",async ev=>{
   if(a==="go"){S.view=el.dataset.v;closeEditor();render();window.scrollTo(0,0)}
   else if(a==="filter"){S.filter[el.dataset.k]=el.dataset.v;render()}
   else if(a==="new") openEditor(el.dataset.col);
+  else if(a==="newresale"){S.ed={col:"products",data:resaleDefaults(),isNew:true,confirmDel:false};renderEditor()}
+  else if(a==="newwith"){openEditor(el.dataset.col);S.ed.data.productId=el.dataset.pid;const p=byId("products",el.dataset.pid);if(p&&el.dataset.col==="deals"&&!S.ed.data.title)S.ed.data.title=p.name;renderEditor()}
   else if(a==="newfor"){const cid=S.ed.data.id;openEditor(el.dataset.col);S.ed.data.clientId=cid;const c=byId("clients",cid);if(c?.divisions?.[0])S.ed.data.division=c.divisions[0];renderEditor()}
   else if(a==="edit") openEditor(el.dataset.col,el.dataset.id);
   else if(a==="close") closeEditor();
   else if(a==="save") await saveEditor();
   else if(a==="delagent"){
     if(!S.ed.confirmDel){S.ed.confirmDel=true;renderEditor();return}
-    if(!TW){toast("代理店の削除はサイト版（tres-win.com/estimate）で行ってください");return}
-    try{await deleteAgent(S.ed.data);toast("代理店を削除しました。このIDではもうログインできません");closeEditor()}
+    if(!TW){toast("エージェントの削除はサイト版（tres-win.com/estimate）で行ってください");return}
+    try{await deleteAgent(S.ed.data);toast("エージェントを削除しました。このIDではもうログインできません");closeEditor()}
     catch(err){toast("削除できませんでした："+(err.message||err))}
   }
   else if(a==="del"){
     if(!S.ed.confirmDel){S.ed.confirmDel=true;renderEditor();return}
+    if(S.ed.col==="products"&&S.ed.data.resale) await removeDoc("resaleTerms",S.ed.data.id).catch(()=>{});
     await removeDoc(S.ed.col,S.ed.data.id);toast("削除しました");closeEditor();
   }
   else if(a==="addp"){const p=byId("products",el.dataset.id);if(!p)return;const items=S.ed.data.items=S.ed.data.items||[];
@@ -1118,7 +1125,7 @@ document.addEventListener("input",ev=>{
       if(f==="quoteId") fillInvoice(S.ed.data,{quote:byId("quotes",v)}); else fillInvoice(S.ed.data,{contract:byId("contracts",v)});
       renderEditor(); toast(hasItems?"明細を選んだ内容で入れ直しました":"宛先と明細を入れました"); return}
     if(S.ed.col==="invoices"&&f==="month"&&S.ed.data.quoteId&&el.tagName==="INPUT"){const q=byId("quotes",S.ed.data.quoteId);if(q){S.ed.data.items=(S.ed.data.items||[]).map(it=>({...it,name:String(it.name).replace(/（\d{4}年\d{1,2}月分）$/,`（${jym(v+"-01")}分）`)}))}renderEditor();return}
-    if(["clientId","template","signMethod","startDate","termMonths"].includes(f)&&el.tagName==="SELECT") renderEditor();
+    if(["clientId","template","signMethod","startDate","termMonths","rewardType","t_ourType","forAllAgents","productId"].includes(f)&&el.tagName==="SELECT") renderEditor();
     updatePreview();
     if(f==="template"&&el.tagName==="SELECT"){}
     if(["startDate","termMonths"].includes(f)){const h=[...document.querySelectorAll("#layer .hint")].find(x=>x.textContent.startsWith("終了日"));if(h)h.textContent="終了日："+(contractEnd(S.ed.data)?jdate(contractEnd(S.ed.data)):"開始日と期間を入れると表示")}
@@ -1138,6 +1145,7 @@ document.addEventListener("input",ev=>{
 document.addEventListener("change",async ev=>{
   const el=ev.target;
   if(el.dataset.act==="agentf"){S.filter.agent=el.value;render();return}
+  if(el.dataset.act==="edassign"&&S.ed){const ids=new Set(S.ed.data.agentIds||[]);el.checked?ids.add(el.dataset.agent):ids.delete(el.dataset.agent);S.ed.data.agentIds=[...ids];return}
   if(el.dataset.act==="pexpose"||el.dataset.act==="passign"){
     const pid=el.closest("[data-pid]")?.dataset.pid; const p=byId("products",pid); if(!p) return;
     const n={...p};
@@ -1480,8 +1488,8 @@ async function exportLedger(){
   }catch(e){toast(driveErr(e))}
 }
 
-// ===== 代理店（ID・権限ごとの画面） =====
-// 見え方はサーバー（Apps Script）が決める。代理店には自分のデータと割り当てられた商材だけが届く。
+// ===== エージェント（ID・権限ごとの画面） =====
+// 見え方はサーバー（Apps Script）が決める。エージェントには自分のデータと割り当てられた商材だけが届く。
 // ここは画面の出し分けだけ。中核メンバー（core）はすべて見える。
 const STAGES=["リード","商談中","提案済","受注","失注"];
 const SALE_ST=["申請中","承認","差戻し","支払済"];
@@ -1489,31 +1497,43 @@ let MY={twRole:"core",uid:"owner",name:""};
 let TW=null;
 const isAgent=()=>MY.twRole==="agent";
 const agentName=id=>id==="owner"?"オーナー":(byId("agents",id)?.name||(byId("agentsRetired",id)?`${byId("agentsRetired",id).name}（削除済み）`:""));
-const agentTag=x=>(!isAgent()&&x&&x.agentId)?` <span class="tag">${esc(agentName(x.agentId)||"代理店")}</span>`:"";
+const agentTag=x=>(!isAgent()&&x&&x.agentId)?` <span class="tag">${esc(agentName(x.agentId)||"エージェント")}</span>`:"";
 const rid=()=>Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>"abcdefghijklmnopqrstuvwxyz0123456789"[b%36]).join("");
 function productRate(p,agentId){
   if(p&&p.agentRate!==undefined&&p.agentRate!==null&&p.agentRate!=="") return Number(p.agentRate)||0;
   return Number(byId("agents",agentId)?.rate)||0;
 }
+// 固定額の報酬は、TRESWINが登録した商材（自社・取扱）でだけ有効
+const isFixed=p=>!!(p&&!p.agentId&&p.rewardType==="fixed");
+function calcCommission(amount,p,agentId){return isFixed(p)?(Number(p.agentFee)||0):Math.round((Number(amount)||0)*productRate(p,agentId)/100)}
+const rewardLabel=(p,agentId)=>isFixed(p)?`${yen(p.agentFee)}／件`:(!agentId&&p&&(p.agentRate===undefined||p.agentRate===null||p.agentRate===""))?"標準率":`${productRate(p,agentId)}%`;
 function saleCommission(s){
-  if((s.status==="承認"||s.status==="支払済")&&s.commission!=null) return Number(s.commission)||0;
-  return Math.round((Number(s.amount)||0)*productRate(byId("products",s.productId),s.agentId)/100);
+  if((s.status==="承認"||s.status==="支払済")&&s.commission!=null&&s.commission!=="") return Number(s.commission)||0;
+  return calcCommission(s.amount,byId("products",s.productId),s.agentId);
 }
+// ---------- 取扱商材（TRESWINが代理店として扱う他社商材） ----------
+// エージェントに見せる情報は products に、当社の受取条件は resaleTerms（中核メンバーだけが見られる）に分けて保存する
+const isResale=p=>!!(p&&p.resale&&!p.agentId);
+const TERM_KEYS=["ourType","ourRate","ourFee","contact","contractNote","termMemo"];
+function ourIncome(amount,p){const t=p&&byId("resaleTerms",p.id);if(!t)return 0;return t.ourType==="fixed"?(Number(t.ourFee)||0):Math.round((Number(amount)||0)*(Number(t.ourRate)||0)/100)}
+const ourLabel=p=>{const t=p&&byId("resaleTerms",p.id);if(!t)return "未設定";return t.ourType==="fixed"?`${yen(t.ourFee)}／件`:`${Number(t.ourRate)||0}%`};
+function resaleOpen(d){const t=byId("resaleTerms",d.id)||{ourType:"rate"};TERM_KEYS.forEach(k=>{if(t[k]!==undefined)d["t_"+k]=t[k]});if(!d.t_ourType)d.t_ourType="rate"}
+function resaleDefaults(){return {resale:true,division:"取扱商材",kind:"monthly",price:"",maker:"",rewardType:"rate",agentRate:"",agentFee:"",forAllAgents:true,agentIds:[],t_ourType:"rate",t_ourRate:"",t_ourFee:""}}
 const visibleProducts=()=>isAgent()?S.products:S.products;
-const productOpts=()=>[["","（選択しない）"],...visibleProducts().sort((a,b)=>(a.division||"").localeCompare(b.division||"")||(a.order||0)-(b.order||0)).map(p=>[p.id,`${p.agentId?"【自社】":""}${p.name}${p.price?`（${p.kind==="monthly"?"月額":"一括"} ${yen(p.price)}）`:""}`])];
+const productOpts=()=>[["","（選択しない）"],...visibleProducts().sort((a,b)=>(a.division||"").localeCompare(b.division||"")||(a.order||0)-(b.order||0)).map(p=>[p.id,`${p.agentId?"【自社】":p.resale?"【取扱】":""}${p.name}${p.price?`（${p.kind==="monthly"?"月額":"一括"} ${yen(p.price)}）`:""}`])];
 const stagePill=s=>`<span class="pill ${({"リード":"","商談中":"info","提案済":"warn","受注":"ok","失注":"bad"})[s]??""}">${esc(s||"リード")}</span>`;
 const salePill=s=>`<span class="pill ${({"申請中":"warn","承認":"ok","差戻し":"bad","支払済":"info"})[s]??""}">${esc(s||"申請中")}</span>`;
 function agentFilterChips(){
   if(isAgent()||!S.agents.length) return "";
   const cur=S.filter.agent||"";
-  return `<label class="fld" style="flex-direction:row;align-items:center;gap:6px">代理店<select class="inp" id="f-agent" data-act="agentf" style="width:180px"><option value="">すべて</option><option value="__core" ${cur==="__core"?"selected":""}>TRESWIN直販</option>${S.agents.map(a=>`<option value="${a.id}" ${cur===a.id?"selected":""}>${esc(a.name)}</option>`).join("")}</select></label>`;
+  return `<label class="fld" style="flex-direction:row;align-items:center;gap:6px">エージェント<select class="inp" id="f-agent" data-act="agentf" style="width:180px"><option value="">すべて</option><option value="__core" ${cur==="__core"?"selected":""}>TRESWIN直販</option>${S.agents.map(a=>`<option value="${a.id}" ${cur===a.id?"selected":""}>${esc(a.name)}</option>`).join("")}</select></label>`;
 }
 const byAgentF=arr=>{const f=S.filter.agent;if(!f)return arr;if(f==="__core")return arr.filter(x=>!x.agentId);return arr.filter(x=>x.agentId===f)};
 
-// ---------- ID・代理店コード・パスワードの自動発行 ----------
-// 削除した代理店のコードも使い回さない（過去の見積番号と重ならないように）
+// ---------- ID・エージェントコード・パスワードの自動発行 ----------
+// 削除したエージェントのコードも使い回さない（過去の見積番号と重ならないように）
 function nextAgentCode(){const used=c=>S.agents.some(a=>a.code===c)||(S.agentsRetired||[]).some(a=>a.code===c);let n=1;while(used("A"+String(n).padStart(2,"0")))n++;return "A"+String(n).padStart(2,"0")}
-// 代理店を削除する：ログインを止め、IDを空け、名前とコードは記録に残す（顧客・売上などのデータは消さない）
+// エージェントを削除する：ログインを止め、IDを空け、名前とコードは記録に残す（顧客・売上などのデータは消さない）
 async function deleteAgent(a){
   if(TW){
     await TW.api("userSave",{user:{uid:a.id,loginId:"deleted-"+a.id.replace(/[^A-Za-z0-9._-]/g,""),name:a.name,role:"agent",code:a.code||"",active:false,password:""}});
@@ -1526,7 +1546,7 @@ function genPassword(len=12){const cs="abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRST
 function newAgentDefaults(){const code=nextAgentCode();return {rate:10,active:true,code,loginId:loginIdFor(code),password:genPassword()}}
 const AGENT_URL="https://tres-win.com/agent/";
 let issued={}; // 保存した直後だけ画面に出すログイン情報（パスワードはここ以外に残らない）
-const credText=c=>`TRESWIN 代理店ポータル\nURL：${AGENT_URL}\nログインID：${c.loginId}\nパスワード：${c.password}\n※パスワードは他の人に教えないでください。`;
+const credText=c=>`TRESWIN エージェントポータル\nURL：${AGENT_URL}\nログインID：${c.loginId}\nパスワード：${c.password}\n※パスワードは他の人に教えないでください。`;
 
 // ---------- 画面 ----------
 V.agentHome=()=>{
@@ -1537,7 +1557,7 @@ V.agentHome=()=>{
   const unpaid=S.sales.filter(s=>s.status==="承認").reduce((a,s)=>a+saleCommission(s),0);
   const pending=S.sales.filter(s=>s.status==="申請中");
   const next=[...open].filter(d=>d.nextDate).sort((a,b)=>a.nextDate.localeCompare(b.nextDate)).slice(0,8);
-  return head(`${esc(MY.name||"代理店")} さんのホーム`,`${jdate(today())}時点`,`<button class="btn" data-act="new" data-col="deals">案件を登録</button><button class="btn pri" data-act="new" data-col="sales">売上を申請</button>`)+
+  return head(`${esc(MY.name||"エージェント")} さんのホーム`,`${jdate(today())}時点`,`<button class="btn" data-act="new" data-col="deals">案件を登録</button><button class="btn pri" data-act="new" data-col="sales">売上を申請</button>`)+
   `<div class="kpis">
     <div class="kpi north"><span class="l">お支払い予定の報酬</span><span class="v">${yen(unpaid)}</span><span class="s">承認済み・未払いの合計</span></div>
     <div class="kpi"><span class="l">今月の売上（承認済）</span><span class="v">${yen(monthSales)}</span><span class="s">税別</span></div>
@@ -1557,7 +1577,7 @@ V.deals=()=>{
 
 V.sales=()=>{
   const acts=`${agentFilterChips()}<button class="btn pri" data-act="new" data-col="sales">売上を${isAgent()?"申請":"登録"}</button>`;
-  if(!S.sales.length) return head("売上",isAgent()?"成約した売上を申請します。承認されると報酬が確定します":"代理店からの売上申請と承認",acts)+emptyBox("売上はまだありません",isAgent()?"成約したら「売上を申請」から登録してください。TRESWINが確認して承認します。":"代理店が売上を申請すると、ここで承認できます。");
+  if(!S.sales.length) return head("売上",isAgent()?"成約した売上を申請します。承認されると報酬が確定します":"エージェントからの売上申請と承認",acts)+emptyBox("売上はまだありません",isAgent()?"成約したら「売上を申請」から登録してください。TRESWINが確認して承認します。":"エージェントが売上を申請すると、ここで承認できます。");
   const list=byAgentF(flt("sl",S.sales)).sort((a,b)=>(a.status==="申請中"?-1:0)-(b.status==="申請中"?-1:0)||(b.date||"").localeCompare(a.date||""));
   return head("売上",`${S.sales.length} 件`,acts)+`<div class="tools">${chips("sl",SALE_ST)}</div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>日付</th><th>お客様</th><th>商材</th><th class="num">売上（税別）</th><th class="num">報酬</th><th>状態</th></tr></thead><tbody>${
     list.map(s=>`<tr data-act="edit" data-col="sales" data-id="${s.id}"><td class="mono">${esc(s.date||"")}</td><td>${esc(clientName(s.clientId))}${agentTag(s)}</td><td>${esc(byId("products",s.productId)?.name||s.productName||"")}</td><td class="num">${yen(s.amount)}</td><td class="num">${s.agentId?yen(saleCommission(s)):"—"}</td><td>${salePill(s.status)}</td></tr>`).join("")}</tbody></table></div>`;
@@ -1578,27 +1598,59 @@ V.rewards=()=>{
   <div class="tbl-wrap"><table class="tbl"><thead><tr><th>月</th><th class="num">売上（承認済）</th><th class="num">報酬</th><th class="num">うち支払済</th></tr></thead><tbody>${rows.length?rows.map(m=>`<tr><td class="mono">${esc(m)}</td><td class="num">${yen(byMonth[m].sales)}</td><td class="num">${yen(byMonth[m].com)}</td><td class="num">${yen(byMonth[m].paid)}</td></tr>`).join(""):`<tr><td colspan="4" class="empty">承認された売上はまだありません。</td></tr>`}</tbody></table></div>`;
 };
 
+const safeUrl=u=>/^https?:\/\//i.test(String(u||"").trim())?String(u).trim():"";
+function resaleCard(p){
+  const u=safeUrl(p.url);
+  return `<div class="rcard"><div class="rc-h"><b>${esc(p.name)}</b>${p.maker?`<span class="hint">${esc(p.maker)}</span>`:""}</div>
+  <div class="rc-k"><span>報酬 <b>${rewardLabel(p,MY.uid)}</b></span><span>${p.kind==="monthly"?"月額":"一括"} ${p.price?yen(p.price):"都度見積"}</span></div>
+  ${p.desc?`<p>${esc(p.desc)}</p>`:""}${p.target?`<p class="hint">おすすめのお客様：${esc(p.target)}</p>`:""}
+  ${u?`<a class="hint" href="${esc(u)}" target="_blank" rel="noopener">資料・紹介ページを開く</a>`:""}
+  <div class="tools"><button class="btn sm" data-act="newwith" data-col="deals" data-pid="${p.id}">案件を登録</button><button class="btn sm pri" data-act="newwith" data-col="sales" data-pid="${p.id}">売上を申請</button></div></div>`;
+}
 V.myproducts=()=>{
-  const tw=S.products.filter(p=>!p.agentId), own=S.products.filter(p=>p.agentId===MY.uid);
+  const tw=S.products.filter(p=>!p.agentId&&!p.resale), rs=S.products.filter(isResale), own=S.products.filter(p=>p.agentId===MY.uid);
   return head("商材","あなたが扱える商材",`<button class="btn pri" data-act="new" data-col="products">自社の商材を登録</button>`)+
-  `<div class="panel"><h2>TRESWINの商材<small>見積・売上の申請に使えます</small></h2>${tw.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>区分</th><th class="num">単価（税別）</th><th class="num">報酬率</th></tr></thead><tbody>${tw.map(p=>`<tr style="cursor:default"><td><b>${esc(p.name)}</b></td><td>${esc(p.division||"")}</td><td>${p.kind==="monthly"?"月額":"一括"}</td><td class="num">${p.price?yen(p.price):"都度見積"}</td><td class="num">${productRate(p,MY.uid)}%</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">まだ割り当てられた商材はありません。</div>`}</div>
+  `<div class="panel"><h2>TRESWINの商材<small>見積・売上の申請に使えます</small></h2>${tw.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>区分</th><th class="num">単価（税別）</th><th class="num">報酬</th></tr></thead><tbody>${tw.map(p=>`<tr style="cursor:default"><td><b>${esc(p.name)}</b></td><td>${esc(p.division||"")}</td><td>${p.kind==="monthly"?"月額":"一括"}</td><td class="num">${p.price?yen(p.price):"都度見積"}</td><td class="num">${rewardLabel(p,MY.uid)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">まだ割り当てられた商材はありません。</div>`}</div>
+  ${rs.length?`<div class="panel"><h2>取扱商材<small>TRESWINが提携している他社の商材です。成約すると報酬が出ます</small></h2><div class="body"><div class="rcards">${rs.map(resaleCard).join("")}</div></div></div>`:""}
   <div class="panel"><h2>自社の商材<small>あなたとTRESWINだけが見られます</small></h2>${own.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>区分</th><th class="num">単価（税別）</th><th>メモ</th></tr></thead><tbody>${own.map(p=>`<tr data-act="edit" data-col="products" data-id="${p.id}"><td><b>${esc(p.name)}</b></td><td>${p.kind==="monthly"?"月額":"一括"}</td><td class="num">${yen(p.price)}</td><td>${esc(p.note||"")}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">自社で扱う商材があれば登録してください。</div>`}</div>`;
 };
 
 V.agents=()=>{
-  const acts=`<button class="btn pri" data-act="new" data-col="agents">代理店を追加</button>`;
+  const acts=`<button class="btn pri" data-act="new" data-col="agents">エージェントを追加</button>`;
   const pending=S.sales.filter(s=>s.status==="申請中");
   const sum=a=>{const ss=S.sales.filter(s=>s.agentId===a.id);return {clients:S.clients.filter(c=>c.agentId===a.id).length,deals:S.deals.filter(d=>d.agentId===a.id&&!["受注","失注"].includes(d.stage)).length,sales:ss.filter(s=>s.status==="承認"||s.status==="支払済").reduce((x,s)=>x+(Number(s.amount)||0),0),unpaid:ss.filter(s=>s.status==="承認").reduce((x,s)=>x+saleCommission(s),0)}};
-  const tw=S.products.filter(p=>!p.agentId);
+  const tw=S.products.filter(p=>!p.agentId&&!p.resale);
   const own=S.products.filter(p=>p.agentId);
-  return head("代理店管理","代理店ごとのID・権限・成果",acts)+
+  return head("エージェント管理","エージェントごとのID・権限・成果",acts)+
   (TW?"":`<div class="banner warn">ログインIDの発行とパスワードの設定は、サイト版（tres-win.com/estimate）でだけ行えます。</div>`)+
   (pending.length?`<div class="panel"><h2>承認待ちの売上<small>${pending.length} 件</small></h2><div class="body"><ul class="todo">${pending.map(s=>`<li data-act="edit" data-col="sales" data-id="${s.id}">${salePill(s.status)}<span class="t">${esc(agentName(s.agentId))}：${esc(clientName(s.clientId))}　${esc(byId("products",s.productId)?.name||"")}　${yen(s.amount)}</span></li>`).join("")}</ul></div></div>`:"")+
-  (S.agents.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>代理店</th><th>ログインID</th><th>コード</th><th class="num">標準報酬率</th><th class="num">顧客</th><th class="num">進行中の案件</th><th class="num">売上（承認済）</th><th class="num">未払い報酬</th><th>状態</th></tr></thead><tbody>${
-    S.agents.map(a=>{const m=sum(a);return `<tr data-act="edit" data-col="agents" data-id="${a.id}"><td><b>${esc(a.name)}</b></td><td class="mono">${esc(a.loginId||"")}</td><td class="mono">${esc(a.code||"")}</td><td class="num">${esc(a.rate??0)}%</td><td class="num">${m.clients}</td><td class="num">${m.deals}</td><td class="num">${yen(m.sales)}</td><td class="num">${yen(m.unpaid)}</td><td>${a.active===false?pill("停止中"):`<span class="pill ok">有効</span>`}</td></tr>`}).join("")}</tbody></table></div>`:emptyBox("代理店はまだいません","「代理店を追加」でIDとパスワードを発行すると、代理店は tres-win.com/agent から自分の画面に入れます。"))+
-  `<div class="panel"><h2>代理店に出す商材<small>チェックした商材だけが代理店に見えます</small></h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>全代理店に公開</th><th>個別に割り当て</th><th class="num">報酬率（空欄＝代理店の標準）</th></tr></thead><tbody>${
-    tw.map(p=>`<tr style="cursor:default" data-pid="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(p.division||"")}</td><td><input type="checkbox" id="pa-${p.id}-all" data-act="pexpose" data-f="forAllAgents" ${p.forAllAgents?"checked":""}></td><td>${S.agents.length?S.agents.map(a=>`<label style="display:inline-flex;gap:4px;margin-right:8px;font-size:12px"><input type="checkbox" data-act="passign" data-agent="${a.id}" ${(p.agentIds||[]).includes(a.id)?"checked":""}>${esc(a.name)}</label>`).join(""):`<span class="hint">代理店を追加すると選べます</span>`}</td><td class="num"><input class="inp" id="pa-${p.id}-rate" type="number" style="width:90px;text-align:right" value="${p.agentRate??""}" data-act="pexpose" data-f="agentRate"></td></tr>`).join("")}</tbody></table></div></div>`+
-  (own.length?`<div class="panel"><h2>代理店が登録した自社商材</h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>代理店</th><th class="num">単価（税別）</th><th class="num">報酬率</th></tr></thead><tbody>${own.map(p=>`<tr style="cursor:default" data-pid="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(agentName(p.agentId))}</td><td class="num">${yen(p.price)}</td><td class="num"><input class="inp" type="number" style="width:90px;text-align:right" value="${p.agentRate??""}" data-act="pexpose" data-f="agentRate"></td></tr>`).join("")}</tbody></table></div></div>`:"");
+  (S.agents.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>エージェント</th><th>ログインID</th><th>コード</th><th class="num">標準報酬率</th><th class="num">顧客</th><th class="num">進行中の案件</th><th class="num">売上（承認済）</th><th class="num">未払い報酬</th><th>状態</th></tr></thead><tbody>${
+    S.agents.map(a=>{const m=sum(a);return `<tr data-act="edit" data-col="agents" data-id="${a.id}"><td><b>${esc(a.name)}</b></td><td class="mono">${esc(a.loginId||"")}</td><td class="mono">${esc(a.code||"")}</td><td class="num">${esc(a.rate??0)}%</td><td class="num">${m.clients}</td><td class="num">${m.deals}</td><td class="num">${yen(m.sales)}</td><td class="num">${yen(m.unpaid)}</td><td>${a.active===false?pill("停止中"):`<span class="pill ok">有効</span>`}</td></tr>`}).join("")}</tbody></table></div>`:emptyBox("エージェントはまだいません","「エージェントを追加」でIDとパスワードを発行すると、エージェントは tres-win.com/agent から自分の画面に入れます。"))+
+  `<div class="panel"><h2>エージェントに出す商材<small>チェックした商材だけがエージェントに見えます（取扱商材は「取扱商材」で設定）</small></h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>全エージェントに公開</th><th>個別に割り当て</th><th class="num">報酬率（空欄＝エージェントの標準）</th></tr></thead><tbody>${
+    tw.map(p=>`<tr style="cursor:default" data-pid="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(p.division||"")}</td><td><input type="checkbox" id="pa-${p.id}-all" data-act="pexpose" data-f="forAllAgents" ${p.forAllAgents?"checked":""}></td><td>${S.agents.length?S.agents.map(a=>`<label style="display:inline-flex;gap:4px;margin-right:8px;font-size:12px"><input type="checkbox" data-act="passign" data-agent="${a.id}" ${(p.agentIds||[]).includes(a.id)?"checked":""}>${esc(a.name)}</label>`).join(""):`<span class="hint">エージェントを追加すると選べます</span>`}</td><td class="num"><input class="inp" id="pa-${p.id}-rate" type="number" style="width:90px;text-align:right" value="${p.agentRate??""}" data-act="pexpose" data-f="agentRate"></td></tr>`).join("")}</tbody></table></div></div>`+
+  (own.length?`<div class="panel"><h2>エージェントが登録した自社商材</h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>エージェント</th><th class="num">単価（税別）</th><th class="num">報酬率</th></tr></thead><tbody>${own.map(p=>`<tr style="cursor:default" data-pid="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(agentName(p.agentId))}</td><td class="num">${yen(p.price)}</td><td class="num"><input class="inp" type="number" style="width:90px;text-align:right" value="${p.agentRate??""}" data-act="pexpose" data-f="agentRate"></td></tr>`).join("")}</tbody></table></div></div>`:"");
+};
+
+V.resale=()=>{
+  const rs=S.products.filter(isResale);
+  const acts=`<button class="btn" data-act="new" data-col="income">受取報酬を記録</button><button class="btn pri" data-act="newresale">取扱商材を登録</button>`;
+  const ok=s=>s.status==="承認"||s.status==="支払済";
+  const y=today().slice(0,4);
+  const inc=[...S.income].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  const incY=inc.filter(x=>(x.date||"").startsWith(y)&&x.status!=="見込み").reduce((a,x)=>a+(Number(x.amount)||0),0);
+  const incWait=inc.filter(x=>x.status!=="入金済").reduce((a,x)=>a+(Number(x.amount)||0),0);
+  const pend=S.sales.filter(s=>s.status==="申請中"&&isResale(byId("products",s.productId)));
+  const st=p=>{const ss=S.sales.filter(s=>s.productId===p.id&&ok(s));const our=S.income.filter(x=>x.productId===p.id).reduce((a,x)=>a+(Number(x.amount)||0),0);const com=ss.filter(s=>s.agentId).reduce((a,s)=>a+saleCommission(s),0);return {n:ss.length,our,com}};
+  const scope=p=>p.forAllAgents?"全員":(p.agentIds||[]).length?`${(p.agentIds||[]).length}名`:"非公開";
+  return head("取扱商材","TRESWINが代理店として扱う他社商材。エージェントのポータルに表示され、案件・売上の申請に使えます",acts)+
+  `<div class="kpis"><div class="kpi north"><span class="l">入金待ちの受取報酬</span><span class="v">${yen(incWait)}</span><span class="s">見込み＋確定</span></div>
+  <div class="kpi"><span class="l">${y}年の受取報酬</span><span class="v">${yen(incY)}</span><span class="s">確定＋入金済</span></div>
+  <div class="kpi"><span class="l">取扱商材</span><span class="v">${rs.length}<small>件</small></span><span class="s">エージェントに公開中 ${rs.filter(p=>p.forAllAgents||(p.agentIds||[]).length).length} 件</span></div>
+  <div class="kpi"><span class="l">承認待ちの売上</span><span class="v">${pend.length}<small>件</small></span><span class="s">取扱商材の分</span></div></div>`+
+  (rs.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>商材</th><th>提携先</th><th class="num">当社の受取</th><th class="num">エージェント報酬</th><th>公開</th><th class="num">成約</th><th class="num">受取報酬（累計）</th><th class="num">エージェント報酬（累計）</th><th class="num">差引</th></tr></thead><tbody>${
+    rs.map(p=>{const m=st(p);return `<tr data-act="edit" data-col="products" data-id="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(p.maker||"")}</td><td class="num">${ourLabel(p)}</td><td class="num">${rewardLabel(p,"")}</td><td>${scope(p)}</td><td class="num">${m.n}</td><td class="num">${yen(m.our)}</td><td class="num">${yen(m.com)}</td><td class="num">${yen(m.our-m.com)}</td></tr>`}).join("")}</tbody></table></div>`
+  :emptyBox("取扱商材はまだありません","シャトクのように、TRESWINが代理店として扱う他社商材を登録してください。エージェントのポータルに表示され、案件・売上の申請に使えるようになります。"))+
+  `<div class="panel"><h2>受取報酬（提携先から当社へ）<small>取扱商材の売上を承認すると自動で記録されます</small></h2>${inc.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>日付</th><th>提携先・商材</th><th>導入先</th><th>担当</th><th class="num">報酬額</th><th>状態</th></tr></thead><tbody>${inc.map(x=>`<tr data-act="edit" data-col="income" data-id="${x.id}"><td class="mono">${esc(x.date||"")}</td><td>${esc(x.partner||"")}</td><td>${esc(x.customer||"")}</td><td>${x.agentId?esc(agentName(x.agentId)):"直販"}</td><td class="num">${yen(x.amount)}</td><td>${pill(x.status||"見込み")}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">まだ記録はありません。</div>`}</div>`;
 };
 
 // ---------- 編集画面 ----------
@@ -1616,7 +1668,7 @@ EDX.deals=(e,d,del)=>({
 });
 EDX.sales=(e,d,del)=>{
   const locked=isAgent()&&(d.status==="承認"||d.status==="支払済");
-  const com=saleCommission(d), rate=productRate(byId("products",d.productId),d.agentId||MY.uid);
+  const sp=byId("products",d.productId); const com=saleCommission(d), rate=rewardLabel(sp,d.agentId||MY.uid);
   return {
   body:`${locked?`<div class="banner">承認済みの売上は変更できません。内容に誤りがあればTRESWINにご連絡ください。</div>`:""}
   ${d.status==="差戻し"&&d.reviewNote?`<div class="banner warn">差し戻しの理由：${esc(d.reviewNote)}</div>`:""}
@@ -1627,26 +1679,27 @@ EDX.sales=(e,d,del)=>{
     ${efld("amount","売上金額（税別）","","number")}
     <div class="full">${fld("e-memo","メモ（契約内容・支払条件など）",d.memo,"","textarea",'data-b="memo"')}</div>
   </div></fieldset>
-  <fieldset><legend>報酬</legend><div class="totals"><div class="tot"><span>報酬（${rate}%）</span><b>${yen(com)}</b><span class="row"><span>状態</span><span>${salePill(d.status)}</span></span></div></div>
-  ${!isAgent()&&d.agentId?`<div class="f" style="margin-top:12px">${esel("status","状態",SALE_ST)}${efld("commission","報酬額（承認時に確定・空欄なら自動計算）","","number")}${efld("paidDate","支払日","","date")}<div class="full">${efld("reviewNote","差し戻しの理由（代理店に表示）")}</div></div>`:""}
-  ${!d.agentId&&!isAgent()?`<p class="hint">TRESWINの直販の売上です（報酬は発生しません）。</p>`:""}</fieldset>`,
+  <fieldset><legend>報酬</legend><div class="totals"><div class="tot"><span>報酬（${rate}）</span><b>${yen(com)}</b><span class="row"><span>状態</span><span>${salePill(d.status)}</span></span></div></div>
+  ${!isAgent()&&d.agentId?`<div class="f" style="margin-top:12px">${esel("status","状態",SALE_ST)}${efld("commission","報酬額（承認時に確定・空欄なら自動計算）","","number")}${efld("paidDate","支払日","","date")}<div class="full">${efld("reviewNote","差し戻しの理由（エージェントに表示）")}</div></div>`:""}
+  ${!d.agentId&&!isAgent()?`<p class="hint">TRESWINの直販の売上です（エージェント報酬は発生しません）。</p>`:""}
+  ${!isAgent()&&isResale(sp)?`<p class="hint">取扱商材：当社の受取（見込み）${yen(ourIncome(d.amount,sp))}（${ourLabel(sp)}）。承認すると「取扱商材」の受取報酬に自動で記録されます。</p>`:""}</fieldset>`,
   foot:`${locked?"":del}<span class="sp"></span>${locked?"":`<button class="btn pri" data-act="save">${isAgent()?(e.isNew?"申請する":"申請し直す"):"保存"}</button>`}`
 }};
 EDX.agents=(e,d,del)=>{const iss=d.id&&issued[d.id];return {
   body:`${iss?`<div class="panel" style="border-color:var(--ok)"><h2>ログイン情報を発行しました<small>この画面を閉じるとパスワードは二度と表示されません</small></h2><div class="body"><pre id="cred-text" style="margin:0;white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.8;user-select:all">${esc(credText(iss))}</pre><div class="tools" style="margin-top:10px"><button class="btn pri" data-act="copycred">ログイン情報をコピー</button><span class="hint">メールやLINEで本人に送ってください</span></div></div></div>`:""}
-  <fieldset><legend>代理店</legend><div class="f">
+  <fieldset><legend>エージェント</legend><div class="f">
     <div class="full">${efld("name","名前・会社名")}</div>
-    ${efld("code","代理店コード","自動で振っています。見積番号に入ります")}${efld("loginId","ログインID","自動で振っています。変えることもできます")}
+    ${efld("code","エージェントコード","自動で振っています。見積番号に入ります")}${efld("loginId","ログインID","自動で振っています。変えることもできます")}
     ${efld("rate","標準の報酬率（%）","","number")}
     <label class="fld">状態<select class="inp" id="e-active" data-b="active" data-type="bool"><option value="1" ${d.active!==false?"selected":""}>有効</option><option value="" ${d.active===false?"selected":""}>停止（ログインできなくする）</option></select></label>
     ${efld("email","連絡先メール")}${efld("tel","電話番号")}
     <div class="full"><label class="fld">パスワード${d.password?`<input class="inp" id="e-password" data-b="password" value="${esc(d.password)}" autocomplete="new-password" style="font-family:ui-monospace,monospace;letter-spacing:.05em">`:`<input class="inp" id="e-password" data-b="password" value="" placeholder="変更しない（再発行するときは下のボタン）" autocomplete="new-password">`}<span class="hint">${e.isNew?"自動で作っています。保存すると、本人に送るログイン情報が表示されます":"再発行すると、前のパスワードは使えなくなります"}</span></label></div>
     <div class="full"><button class="btn sm" data-act="genpw">パスワードを${e.isNew?"作り直す":"再発行する"}</button></div>
     <div class="full">${fld("e-memo","メモ",d.memo,"契約条件・利益相反の確認状況など","textarea",'data-b="memo"')}</div>
-  </div><p class="hint">代理店は tres-win.com/agent に、このログインIDとパスワードで入ります。見えるのは本人の顧客・案件・見積・売上と、割り当てた商材だけです。</p></fieldset>`,
+  </div><p class="hint">エージェントは tres-win.com/agent に、このログインIDとパスワードで入ります。見えるのは本人の顧客・案件・見積・売上と、割り当てた商材だけです。</p></fieldset>`,
   foot:`${e.isNew?"":`<button class="btn danger" data-act="delagent">${e.confirmDel?"もう一度押すと削除します（ログインできなくなります）":"削除"}</button>`}<span class="sp"></span><button class="btn pri" data-act="save">${e.isNew?"保存してIDを発行":"保存"}</button>`
 }};
-EDX.products=(e,d,del)=>({
+EDX.products=(e,d,del)=>d.resale&&!isAgent()?resaleEditor(e,d,del):({
   body:`<fieldset><legend>自社の商材</legend><div class="f">
     <div class="full">${efld("name","商材名")}</div>
     ${esel("kind","区分",[["once","一括"],["monthly","月額"]])}${efld("price","単価（税別）","","number")}
@@ -1654,6 +1707,30 @@ EDX.products=(e,d,del)=>({
     <p class="hint">この商材は、あなたとTRESWINの中核メンバーだけが見られます。報酬率はTRESWINが設定します。</p></fieldset>`,
   foot:`${del}<span class="sp"></span><button class="btn pri" data-act="save">保存</button>`
 });
+
+function resaleEditor(e,d,del){
+  const assign=d.forAllAgents===false?`<div class="full"><span class="hint">見せるエージェント</span><div>${S.agents.length?S.agents.map(a=>`<label style="display:inline-flex;gap:4px;margin:4px 10px 0 0;font-size:13px"><input type="checkbox" data-act="edassign" data-agent="${a.id}" ${(d.agentIds||[]).includes(a.id)?"checked":""}>${esc(a.name)}</label>`).join(""):`<span class="hint">エージェントがまだいません</span>`}</div></div>`:"";
+  return {body:`<fieldset><legend>商材（エージェントにも見える情報）</legend><div class="f">
+    <div class="full">${efld("name","商材名","例：シャトク")}</div>
+    ${efld("maker","提携先（メーカー）","例：マネーフォワード")}${esel("kind","区分",[["monthly","月額"],["once","一括"]])}
+    ${efld("price","お客様の価格の目安（税別）","空欄なら「都度見積」","number")}${efld("url","資料・紹介ページのURL","https://…")}
+    <div class="full">${fld("e-desc","商材の説明",d.desc,"エージェントがお客様に説明するときの要点","textarea",'data-b="desc"')}</div>
+    <div class="full">${efld("target","おすすめのお客様","例：従業員10〜50名で、経理を手作業でしている会社")}</div>
+  </div></fieldset>
+  <fieldset><legend>エージェントへの報酬と公開範囲</legend><div class="f">
+    ${esel("rewardType","報酬の決め方",[["rate","売上の◯%"],["fixed","1件いくら（固定）"]])}
+    ${d.rewardType==="fixed"?efld("agentFee","1件あたりの報酬（円）","","number"):efld("agentRate","報酬率（%）","空欄ならエージェントごとの標準率","number")}
+    <label class="fld">公開範囲<select class="inp" id="e-forAllAgents" data-b="forAllAgents" data-type="bool"><option value="1" ${d.forAllAgents!==false?"selected":""}>全エージェントに公開</option><option value="" ${d.forAllAgents===false?"selected":""}>選んだエージェントだけ</option></select></label>
+    ${assign}
+  </div></fieldset>
+  <fieldset><legend>当社の受取条件（中核メンバーだけが見られます）</legend><div class="f">
+    ${esel("t_ourType","受取の決め方",[["rate","売上の◯%"],["fixed","1件いくら（固定）"]])}
+    ${d.t_ourType==="fixed"?efld("t_ourFee","1件あたりの受取額（円）","","number"):efld("t_ourRate","受取率（%）","","number")}
+    ${efld("t_contact","提携先の担当者・連絡先")}${efld("t_contractNote","代理店契約の条件","期間・支払サイトなど")}
+    <div class="full">${fld("e-t_termMemo","メモ",d.t_termMemo,"","textarea",'data-b="t_termMemo"')}</div>
+  </div><p class="hint">エージェントの売上を承認すると、この条件で「受取報酬」が見込みとして自動で記録されます。</p></fieldset>`,
+  foot:`${del}<span class="sp"></span><button class="btn pri" data-act="save">保存</button>`};
+}
 
 // ---------- 保存の前後 ----------
 async function agentBeforeSave(col,d){
@@ -1664,19 +1741,29 @@ async function agentBeforeSave(col,d){
     if(!d.name){toast("名前を入れてください");return false}
     if(!/^[A-Za-z0-9._-]{3,40}$/.test(d.loginId)){toast("ログインIDは半角英数字（3文字以上）にしてください");return false}
     if(S.agents.some(a=>a.loginId===d.loginId&&a.id!==d.id)){toast("このログインIDはすでに使われています");return false}
-    if(S.agents.some(a=>a.code===d.code&&a.id!==d.id)){toast("この代理店コードはすでに使われています");return false}
+    if(S.agents.some(a=>a.code===d.code&&a.id!==d.id)){toast("このエージェントコードはすでに使われています");return false}
     if(!d.id) d.id="u_"+rid();
     const pw=d.password; delete d.password;
     if(!TW){ if(pw) toast("パスワードはサイト版でだけ設定できます"); return true }
     const isNewUser=!S.agents.some(a=>a.id===d.id);
-    if(isNewUser&&!pw){toast("新しい代理店にはパスワードを入れてください");return false}
+    if(isNewUser&&!pw){toast("新しいエージェントにはパスワードを入れてください");return false}
     if(pw&&pw.length<8){toast("パスワードは8文字以上にしてください");return false}
     try{ await TW.api("userSave",{user:{uid:d.id,loginId:d.loginId,name:d.name,role:"agent",code:d.code,active:d.active!==false,password:pw||""}}); }
     catch(err){toast("ログインIDを保存できませんでした："+(err.message||err));return false}
     if(pw){ issued[d.id]={loginId:d.loginId,password:pw}; toast("ログイン情報を発行しました。画面のログイン情報を本人に送ってください"); }
   }
+  if(col==="products"&&d.resale&&!isAgent()){
+    if(!d.name){toast("商材名を入れてください");return false}
+    if(!d.id) d.id="r_"+rid();
+    const t={id:d.id}; TERM_KEYS.forEach(k=>{if(d["t_"+k]!==undefined)t[k]=d["t_"+k];delete d["t_"+k]});
+    d.forAllAgents=d.forAllAgents!==false; d.agentIds=d.forAllAgents?[]:(d.agentIds||[]);
+    if(d.rewardType==="fixed") delete d.agentRate; else delete d.agentFee;
+    try{await save("resaleTerms",t)}catch(_){return false}
+    lastTerms=t;
+  }
   if(col==="sales"&&!isAgent()){
-    if(d.status==="承認"&&(d.commission===""||d.commission==null)) d.commission=Math.round((Number(d.amount)||0)*productRate(byId("products",d.productId),d.agentId)/100);
+    if(!d.agentId&&(!d.status||d.status==="申請中")) d.status="承認"; // 直販は承認の手続きなし
+    if(d.agentId&&d.status==="承認"&&(d.commission===""||d.commission==null)) d.commission=calcCommission(d.amount,byId("products",d.productId),d.agentId);
     if(d.status==="承認"&&!d.approvedAt) d.approvedAt=today();
     if(d.status==="支払済"&&!d.paidDate) d.paidDate=today();
   }
@@ -1684,6 +1771,20 @@ async function agentBeforeSave(col,d){
   if(col==="sales"&&(!d.clientId||!Number(d.amount))){toast("お客様と売上金額を入れてください");return false}
   if(col==="products"&&!d.name){toast("商材名を入れてください");return false}
   return true;
+}
+
+// 保存のあと：取扱商材の売上が承認されたら、当社の受取報酬を「見込み」で記録する
+let lastTerms=null; const incomeMade=new Set();
+async function agentAfterSave(col,d){
+  if(col==="products"&&d.resale&&lastTerms&&lastTerms.id===d.id) TERM_KEYS.forEach(k=>{if(lastTerms[k]!==undefined)d["t_"+k]=lastTerms[k]});
+  if(col==="sales"&&!isAgent()&&(d.status==="承認"||d.status==="支払済")){
+    const p=byId("products",d.productId);
+    if(!isResale(p)||incomeMade.has(d.id)||S.income.some(x=>x.saleId===d.id)) return;
+    incomeMade.add(d.id);
+    const amt=ourIncome(d.amount,p);
+    await save("income",{date:d.date||today(),partner:[p.maker,p.name].filter(Boolean).join(" "),productId:p.id,customer:clientName(d.clientId),agentId:d.agentId||"",saleId:d.id,amount:amt,status:"見込み",memo:"売上の承認から自動で記録"});
+    setTimeout(()=>toast(`受取報酬（見込み ${yen(amt)}）を「取扱商材」に記録しました`),2700);
+  }
 }
 
 // 案件から見積・売上へ
