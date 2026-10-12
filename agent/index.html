@@ -534,7 +534,7 @@ async function boot(){
   if(!DB){S.dbState="none";render();return}
   S.dbState="ok";
   USER = await claude.use("user").catch(()=>null);
-  if(USER&&USER.twRole){ MY=USER; TW=await claude.use("tw").catch(()=>null); }
+  if(USER&&USER.twRole){ MY=USER; TW=await claude.use("tw").catch(()=>null); if(TW) loadUsers(); }
   if(!views().some(v=>v[0]===S.view)) S.view="home";
   DL = await claude.use("downloads").catch(()=>null);
   MCP = await claude.use("mcp").catch(()=>null);
@@ -1093,6 +1093,7 @@ document.addEventListener("click",async ev=>{
   else if(a==="ledger") await exportLedger();
   else if(a==="revise") await reviseQuote();
   else if(a==="deal2q") dealToQuote();
+  else if(a==="restoreagent"){el.disabled=true;try{await restoreAgent(el.dataset.uid)}catch(err){toast("復元できませんでした："+(err.message||err))}el.disabled=false}
   else if(a==="genpw"){S.ed.data.password=genPassword();renderEditor();toast("新しいパスワードを作りました。保存すると切り替わります")}
   else if(a==="copycred"){const t=$("#cred-text")?.textContent||"";try{await navigator.clipboard.writeText(t);toast("コピーしました")}catch(_){const r=document.createRange();r.selectNodeContents($("#cred-text"));const s2=getSelection();s2.removeAllRanges();s2.addRange(r);toast("選択しました。コピーしてください")}}
   else if(a==="deal2s") dealToSale();
@@ -1532,13 +1533,32 @@ const byAgentF=arr=>{const f=S.filter.agent;if(!f)return arr;if(f==="__core")ret
 
 // ---------- ID・エージェントコード・パスワードの自動発行 ----------
 // 削除したエージェントのコードも使い回さない（過去の見積番号と重ならないように）
-function nextAgentCode(){const used=c=>S.agents.some(a=>a.code===c)||(S.agentsRetired||[]).some(a=>a.code===c);let n=1;while(used("A"+String(n).padStart(2,"0")))n++;return "A"+String(n).padStart(2,"0")}
+function nextAgentCode(){const used=c=>S.agents.some(a=>a.code===c)||(S.agentsRetired||[]).some(a=>a.code===c)||(S.users||[]).some(u=>u.code===c||u.loginId===loginIdFor(c));let n=1;while(used("A"+String(n).padStart(2,"0")))n++;return "A"+String(n).padStart(2,"0")}
+// ログイン情報（サーバーの利用者一覧）。中核メンバーだけが読める
+async function loadUsers(){try{const r=await TW.api("users");S.users=r.users||[];render()}catch(_){}}
+// 「エージェント」一覧にないのにログイン情報だけ残っているもの（削除したエージェントなど）
+const orphanUsers=()=>(S.users||[]).filter(u=>u.role==="agent"&&!S.agents.some(a=>a.id===u.uid));
+// 削除したエージェントを元に戻す：ログインIDと有効を戻し、エージェント一覧に再登録する（パスワードは以前のまま）
+async function restoreAgent(uid){
+  if(!TW){toast("復元はサイト版（tres-win.com/estimate）で行ってください");return}
+  const u=(S.users||[]).find(x=>x.uid===uid); if(!u) return;
+  const old=byId("agentsRetired",uid)||{};
+  let loginId=/^deleted-/.test(u.loginId)?(old.loginId||loginIdFor(u.code||nextAgentCode())):u.loginId;
+  if((S.users||[]).some(x=>x.loginId===loginId&&x.uid!==uid)||S.agents.some(a=>a.loginId===loginId)){toast(`ログインID ${loginId} は別の人が使っています。復元後に変更してください`);loginId="tw-"+uid.replace(/^u_/,"")}
+  const code=u.code||old.code||nextAgentCode();
+  const r=await TW.api("userSave",{user:{uid,loginId,name:u.name||old.name||"",role:"agent",code,active:true,password:""}});
+  S.users=r.users||S.users;
+  await save("agents",{id:uid,name:u.name||old.name||"",code,loginId,rate:old.rate??10,active:true,restoredAt:today()});
+  if(byId("agentsRetired",uid)) await removeDoc("agentsRetired",uid);
+  toast(`${u.name||"エージェント"}を復元しました。以前のID（${loginId}）とパスワードでログインできます`);
+  render();
+}
 // エージェントを削除する：ログインを止め、IDを空け、名前とコードは記録に残す（顧客・売上などのデータは消さない）
 async function deleteAgent(a){
   if(TW){
-    await TW.api("userSave",{user:{uid:a.id,loginId:"deleted-"+a.id.replace(/[^A-Za-z0-9._-]/g,""),name:a.name,role:"agent",code:a.code||"",active:false,password:""}});
+    const r=await TW.api("userSave",{user:{uid:a.id,loginId:"deleted-"+a.id.replace(/[^A-Za-z0-9._-]/g,""),name:a.name,role:"agent",code:a.code||"",active:false,password:""}}); if(r&&r.users) S.users=r.users;
   }
-  await save("agentsRetired",{id:a.id,name:a.name,code:a.code||"",loginId:a.loginId||"",deletedAt:today()});
+  await save("agentsRetired",{id:a.id,name:a.name,code:a.code||"",loginId:a.loginId||"",rate:a.rate??10,deletedAt:today()});
   await removeDoc("agents",a.id);
 }
 const loginIdFor=code=>"tw-"+String(code).toLowerCase();
@@ -1628,6 +1648,7 @@ V.agents=()=>{
     S.agents.map(a=>{const m=sum(a);return `<tr data-act="edit" data-col="agents" data-id="${a.id}"><td><b>${esc(a.name)}</b></td><td class="mono">${esc(a.loginId||"")}</td><td class="mono">${esc(a.code||"")}</td><td class="num">${esc(a.rate??0)}%</td><td class="num">${m.clients}</td><td class="num">${m.deals}</td><td class="num">${yen(m.sales)}</td><td class="num">${yen(m.unpaid)}</td><td>${a.active===false?pill("停止中"):`<span class="pill ok">有効</span>`}</td></tr>`}).join("")}</tbody></table></div>`:emptyBox("エージェントはまだいません","「エージェントを追加」でIDとパスワードを発行すると、エージェントは tres-win.com/agent から自分の画面に入れます。"))+
   `<div class="panel"><h2>エージェントに出す商材<small>チェックした商材だけがエージェントに見えます（取扱商材は「取扱商材」で設定）</small></h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>全エージェントに公開</th><th>個別に割り当て</th><th class="num">報酬率（空欄＝エージェントの標準）</th></tr></thead><tbody>${
     tw.map(p=>`<tr style="cursor:default" data-pid="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(p.division||"")}</td><td><input type="checkbox" id="pa-${p.id}-all" data-act="pexpose" data-f="forAllAgents" ${p.forAllAgents?"checked":""}></td><td>${S.agents.length?S.agents.map(a=>`<label style="display:inline-flex;gap:4px;margin-right:8px;font-size:12px"><input type="checkbox" data-act="passign" data-agent="${a.id}" ${(p.agentIds||[]).includes(a.id)?"checked":""}>${esc(a.name)}</label>`).join(""):`<span class="hint">エージェントを追加すると選べます</span>`}</td><td class="num"><input class="inp" id="pa-${p.id}-rate" type="number" style="width:90px;text-align:right" value="${p.agentRate??""}" data-act="pexpose" data-f="agentRate"></td></tr>`).join("")}</tbody></table></div></div>`+
+  (TW&&orphanUsers().length?`<div class="panel"><h2>ログイン情報だけ残っているID<small>削除したエージェントなど。復元すると以前のIDとパスワードで使えます</small></h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>名前</th><th>ログインID</th><th>コード</th><th>状態</th><th></th></tr></thead><tbody>${orphanUsers().map(u=>{const old=byId("agentsRetired",u.uid);const del=/^deleted-/.test(u.loginId);return `<tr style="cursor:default"><td><b>${esc(u.name||old?.name||"")}</b></td><td class="mono">${esc(del?(old?.loginId||"（削除済み）"):u.loginId)}</td><td class="mono">${esc(u.code||"")}</td><td>${del||!u.active?pill("ログイン停止"):`<span class="pill warn">一覧から消えている</span>`}</td><td class="num"><button class="btn sm" data-act="restoreagent" data-uid="${esc(u.uid)}">復元する</button></td></tr>`}).join("")}</tbody></table></div></div>`:"")+
   (own.length?`<div class="panel"><h2>エージェントが登録した自社商材</h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>エージェント</th><th class="num">単価（税別）</th><th class="num">報酬率</th></tr></thead><tbody>${own.map(p=>`<tr style="cursor:default" data-pid="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(agentName(p.agentId))}</td><td class="num">${yen(p.price)}</td><td class="num"><input class="inp" type="number" style="width:90px;text-align:right" value="${p.agentRate??""}" data-act="pexpose" data-f="agentRate"></td></tr>`).join("")}</tbody></table></div></div>`:"");
 };
 
@@ -1748,7 +1769,8 @@ async function agentBeforeSave(col,d){
     const isNewUser=!S.agents.some(a=>a.id===d.id);
     if(isNewUser&&!pw){toast("新しいエージェントにはパスワードを入れてください");return false}
     if(pw&&pw.length<8){toast("パスワードは8文字以上にしてください");return false}
-    try{ await TW.api("userSave",{user:{uid:d.id,loginId:d.loginId,name:d.name,role:"agent",code:d.code,active:d.active!==false,password:pw||""}}); }
+    if((S.users||[]).some(u=>u.loginId===d.loginId&&u.uid!==d.id)){toast("このログインIDは削除したエージェントに残っています。下の「ログイン情報だけ残っているID」から復元するか、別のIDにしてください");return false}
+    try{ const r=await TW.api("userSave",{user:{uid:d.id,loginId:d.loginId,name:d.name,role:"agent",code:d.code,active:d.active!==false,password:pw||""}}); if(r&&r.users) S.users=r.users; }
     catch(err){toast("ログインIDを保存できませんでした："+(err.message||err));return false}
     if(pw){ issued[d.id]={loginId:d.loginId,password:pw}; toast("ログイン情報を発行しました。画面のログイン情報を本人に送ってください"); }
   }
