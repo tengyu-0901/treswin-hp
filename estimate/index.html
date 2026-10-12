@@ -283,8 +283,10 @@ img{max-width:100%}
 // Apps Script（データはGoogleスプレッドシート、書類はGoogleドライブ）で用意する。
 (function(){
   const API_URL = 'https://script.google.com/macros/s/AKfycbyWMrvg1F03aC0a4-C3UAriMSLfNgcFojK6h9_9OkgzqLY4DOWBalhOYj83cfSYuRmezQ/exec';
+  const MODE = 'core'; // core＝基幹システム（tres-win.com/estimate）／agent＝代理店ポータル（tres-win.com/agent）
+  let ME = null;
   let token = '';
-  try { token = sessionStorage.getItem('tw-core-token') || ''; } catch (e) {}
+  try { token = sessionStorage.getItem('tw-core-token') || ''; ME = JSON.parse(sessionStorage.getItem('tw-core-me') || 'null'); } catch (e) {}
 
   // ---------- 通信 ----------
   async function api(action, payload) {
@@ -301,15 +303,16 @@ img{max-width:100%}
   // ---------- ログイン ----------
   let loggedIn; const ready = new Promise(r => { loggedIn = r; });
   function showLogin(msg) {
-    token = ''; try { sessionStorage.removeItem('tw-core-token'); } catch (e) {}
+    token = ''; ME = null; try { sessionStorage.removeItem('tw-core-token'); sessionStorage.removeItem('tw-core-me'); } catch (e) {}
     const el = document.getElementById('tw-login'); if (!el) return;
     el.hidden = false; document.getElementById('tw-pw-err').textContent = msg || '';
-    const pw = document.getElementById('tw-pw'); pw.value = ''; setTimeout(() => pw.focus(), 0);
+    const pw = document.getElementById('tw-pw'); pw.value = ''; const idf = document.getElementById('tw-id'); setTimeout(() => (idf && !idf.value ? idf : pw).focus(), 0);
   }
   function mountLogin() {
     const box = document.createElement('div');
     box.id = 'tw-login'; box.className = 'tw-login'; box.hidden = true;
-    box.innerHTML = '<form id="tw-login-form"><div class="tw-login-brand"><b>TRESWIN</b><span>基幹システム</span></div>' +
+    box.innerHTML = '<form id="tw-login-form"><div class="tw-login-brand"><b>TRESWIN</b><span>' + (MODE === 'agent' ? '代理店ポータル' : '基幹システム') + '</span></div>' +
+      '<label class="fld">ログインID<input class="inp" id="tw-id" autocomplete="username" ' + (MODE === 'agent' ? 'required' : 'placeholder="オーナーは空欄"') + '></label>' +
       '<label class="fld">パスワード<input class="inp" type="password" id="tw-pw" autocomplete="current-password" required></label>' +
       '<button class="btn pri" type="submit" id="tw-pw-btn">ログイン</button><p class="tw-err" id="tw-pw-err" aria-live="polite"></p></form>';
     document.body.appendChild(box);
@@ -317,8 +320,9 @@ img{max-width:100%}
       ev.preventDefault();
       const btn = document.getElementById('tw-pw-btn'); btn.disabled = true; document.getElementById('tw-pw-err').textContent = '';
       try {
-        const r = await api('login', { password: document.getElementById('tw-pw').value });
-        token = r.token; try { sessionStorage.setItem('tw-core-token', token); } catch (e) {}
+        const r = await api('login', { loginId: document.getElementById('tw-id').value.trim(), password: document.getElementById('tw-pw').value });
+        if (MODE === 'agent' && r.me && r.me.role !== 'agent') { /* 中核メンバーが代理店ポータルに来た場合は基幹システムへ */ }
+        token = r.token; ME = r.me || (MODE === 'core' ? { role: 'core', uid: 'owner', name: 'オーナー', code: '' } : null); try { sessionStorage.setItem('tw-core-token', token); sessionStorage.setItem('tw-core-me', JSON.stringify(ME)); } catch (e) {}
         await load(); box.hidden = true; loggedIn();
       } catch (e) { document.getElementById('tw-pw-err').textContent = e.message || 'ログインできませんでした'; }
       finally { btn.disabled = false; }
@@ -396,14 +400,16 @@ img{max-width:100%}
     async use(name) {
       if (name === 'db') { await ready; return db; }
       if (name === 'downloads') return downloads;
-      if (name === 'mcp') { await ready; return mcp; }
-      return null; // user など、このサイトでは使わない機能
+      if (name === 'mcp') { await ready; return ME && ME.role === 'core' ? mcp : null; }
+      if (name === 'user') { await ready; return ME ? { twRole: ME.role, uid: ME.uid, name: ME.name, code: ME.code } : null; }
+      if (name === 'tw') { await ready; return ME && ME.role === 'core' ? { api, me: ME } : null; }
+      return null;
     }
   };
 
   function start() {
     mountLogin();
-    if (token) load().then(loggedIn).catch(() => showLogin('')); else showLogin('');
+    if (token) api('me').catch(e => e && e.code === 'bad_request' && MODE === 'core' ? { me: { role: 'core', uid: 'owner', name: 'オーナー', code: '' } } : Promise.reject(e)).then(r => { ME = r.me; try { sessionStorage.setItem('tw-core-me', JSON.stringify(ME)); } catch (e) {} return load(); }).then(loggedIn).catch(() => showLogin('')); else showLogin('');
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
@@ -420,7 +426,7 @@ const Q_ST = ["下書き","提出済","受注","失注"];
 const Q_OLD = "改訂済";
 // 見積番号：TW+発行日-連番(2桁)-版(2桁)　例 TW20261010-01-01 → 修正すると TW20261010-01-02
 function quoteBase(dateStr){
-  const key="TW"+(dateStr||today()).replace(/-/g,"");
+  const key="TW"+(dateStr||today()).replace(/-/g,"")+(typeof MY!=="undefined"&&MY.twRole==="agent"&&MY.code?"-"+MY.code:"");
   let max=0; S.quotes.forEach(x=>{const b=x.base||"";if(b.startsWith(key+"-")){const n=Number(b.split("-").pop());if(n>max)max=n}});
   return key+"-"+String(max+1).padStart(2,"0");
 }
@@ -428,7 +434,7 @@ const quoteNo=(base,rev)=>`${base}-${String(rev||1).padStart(2,"0")}`;
 const revsOf=q=>q.base?S.quotes.filter(x=>x.base===q.base).sort((a,b)=>(a.rev||1)-(b.rev||1)):[q];
 const C_ST = ["作成中","送付済","締結済","終了"];
 const I_ST = ["未送付","送付済","入金済"];
-const COLS = ["products","clients","quotes","contracts","invoices","partners","income"];
+const COLS = ["products","clients","quotes","contracts","invoices","partners","income","deals","sales","agents"];
 const TAX = 0.10;
 const S = {view:"home", company:{}, loaded:{}, dbState:"wait", filter:{}, ed:null, pv:null};
 COLS.forEach(c=>S[c]=[]);
@@ -508,6 +514,8 @@ async function boot(){
   if(!DB){S.dbState="none";render();return}
   S.dbState="ok";
   USER = await claude.use("user").catch(()=>null);
+  if(USER&&USER.twRole){ MY=USER; TW=await claude.use("tw").catch(()=>null); }
+  if(!views().some(v=>v[0]===S.view)) S.view="home";
   DL = await claude.use("downloads").catch(()=>null);
   MCP = await claude.use("mcp").catch(()=>null);
   COLS.forEach(col=>{
@@ -518,24 +526,26 @@ async function boot(){
 }
 
 // ===== Nav & routing =====
-const VIEWS=[["home","ホーム"],["clients","顧客"],["quotes","見積"],["contracts","契約書"],["invoices","請求"],["partners","紹介・代理店"],["settings","設定"]];
+const VIEWS=[["home","ホーム"],["clients","顧客"],["deals","案件"],["quotes","見積"],["contracts","契約書"],["invoices","請求"],["sales","売上"],["agents","代理店管理"],["partners","紹介・代理店報酬"],["settings","設定"]];
+const AGENT_VIEWS=[["home","ホーム"],["clients","顧客"],["deals","案件"],["quotes","見積"],["sales","売上"],["rewards","報酬"],["myproducts","商材"]];
+const views=()=>(typeof MY!=="undefined"&&MY.twRole==="agent")?AGENT_VIEWS:VIEWS;
 function renderNav(){
-  const cnt={clients:S.clients.length,quotes:S.quotes.filter(q=>q.status==="提出済").length,contracts:S.contracts.filter(c=>c.status==="送付済").length,invoices:S.invoices.filter(i=>i.status!=="入金済").length};
-  $("#nav").innerHTML=VIEWS.map(([k,l])=>`<button data-act="go" data-v="${k}" ${S.view===k?'aria-current="page"':""}><span>${l}</span>${cnt[k]?`<span class="cnt">${cnt[k]}</span>`:""}</button>`).join("");
+  const cnt={clients:S.clients.length,quotes:S.quotes.filter(q=>q.status==="提出済").length,contracts:S.contracts.filter(c=>c.status==="送付済").length,invoices:S.invoices.filter(i=>i.status!=="入金済").length,deals:S.deals.filter(d=>!["受注","失注"].includes(d.stage)).length,sales:S.sales.filter(x=>x.status==="申請中").length,agents:S.sales.filter(x=>x.status==="申請中").length};
+  $("#nav").innerHTML=views().map(([k,l])=>`<button data-act="go" data-v="${k}" ${S.view===k?'aria-current="page"':""}><span>${l}</span>${cnt[k]?`<span class="cnt">${cnt[k]}</span>`:""}</button>`).join("");
 }
 function render(){
   renderNav();
   const m=$("#main");
   const st=[...document.querySelectorAll("main .inp")].map(e=>[e.id,e.value]); // keep filters
   const ae=document.activeElement, aid=ae&&ae.closest&&ae.closest("main")?ae.id:"", pos=ae&&ae.selectionStart;
-  m.innerHTML=banner()+(V[S.view]||V.home)();
+  m.innerHTML=banner()+((S.view==="home"&&isAgent())?V.agentHome():(V[S.view]||V.home)());
   st.forEach(([id,v])=>{if(id){const e=document.getElementById(id);if(e&&e.value!==v)e.value=v}});
   if(aid){const e=document.getElementById(aid);if(e){e.focus();try{if(pos!=null)e.setSelectionRange(pos,pos)}catch(_){}}}
 }
 function banner(){
   if(S.dbState==="none") return `<div class="banner warn">データベースに接続できないため、表示のみのモードです。claude.ai でサインインして開くと保存できます。</div>`;
   if(S.dbState==="err") return `<div class="banner warn">データの読み込みが止まりました。ページを開き直してください。</div>`;
-  if(S.dbState==="ok" && !S.company.tradeName && S.loaded.company) return `<div class="banner">最初に「設定」で自社情報（屋号・住所・振込先・インボイス登録番号）を入れてください。書類に自動で入ります。</div>`;
+  if(S.dbState==="ok" && !isAgent() && !S.company.tradeName && S.loaded.company) return `<div class="banner">最初に「設定」で自社情報（屋号・住所・振込先・インボイス登録番号）を入れてください。書類に自動で入ります。</div>`;
   return "";
 }
 const head=(h,p,acts="")=>`<div class="top"><div><h1>${h}</h1>${p?`<p>${p}</p>`:""}</div><div class="actions">${acts}</div></div>`;
@@ -567,6 +577,7 @@ V.home=()=>{
   S.quotes.filter(q=>q.status==="受注"&&!S.contracts.some(c=>c.quoteId===q.id)).forEach(q=>todo.push({k:"受注",t:`見積 ${q.no} ${clientName(q.clientId)}：契約書がまだありません`,a:`data-act="q2c" data-id="${q.id}"`}));
   S.contracts.filter(c=>c.status==="送付済").forEach(c=>todo.push({k:"送付済",t:`契約 ${c.no} ${clientName(c.clientId)}：締結待ち`,a:`data-act="edit" data-col="contracts" data-id="${c.id}"`}));
   unpaid.forEach(i=>{if(i.dueDate&&i.dueDate<t&&i.status==="送付済")todo.push({k:"期限超過",t:`請求 ${i.no} ${clientName(i.clientId)}：入金期限超過 ${yen(calcI(i).onceTotal)}`,a:`data-act="edit" data-col="invoices" data-id="${i.id}"`})});
+  const pendSales=S.sales.filter(x=>x.status==="申請中"); if(pendSales.length) todo.push({k:"提出済",t:`代理店からの売上申請が ${pendSales.length} 件、承認待ちです`,a:`data-act="go" data-v="agents"`});
   const needBill=active.filter(c=>Number(c.monthly)>0&&!S.invoices.some(i=>i.contractId===c.id&&i.month===mon));
   if(needBill.length) todo.push({k:"未送付",t:`${jym(t)}分の月額請求が ${needBill.length} 件未作成です`,a:`data-act="go" data-v="invoices"`});
   return head("ホーム",`${jdate(t)}時点`,`<button class="btn pri" data-act="new" data-col="quotes">見積を作成</button>`)+
@@ -593,7 +604,7 @@ V.clients=()=>{
   if(!list.length) return head("顧客","取引先・見込み客の一覧",acts)+emptyBox("顧客はまだいません","「顧客を追加」から登録すると、見積・契約書・請求書に宛名が入ります。");
   return head("顧客",`${list.length} 件`,acts)+`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>名称</th><th>区分</th><th>担当者</th><th>事業</th><th class="num">月額（契約中）</th><th>紹介元</th></tr></thead><tbody>${
     list.map(c=>{const m=S.contracts.filter(k=>k.clientId===c.id&&isActive(k)).reduce((s,k)=>s+(Number(k.monthly)||0),0);
-      return `<tr data-act="edit" data-col="clients" data-id="${c.id}"><td><b>${esc(c.name)}</b></td><td>${esc(c.kind||"法人")}</td><td>${esc(c.person||"")}</td><td>${(c.divisions||[]).map(d=>`<span class="tag">${esc(d)}</span>`).join(" ")}</td><td class="num">${m?yen(m):"—"}</td><td>${esc(byId("partners",c.partnerId)?.name||"")}</td></tr>`}).join("")
+      return `<tr data-act="edit" data-col="clients" data-id="${c.id}"><td><b>${esc(c.name)}</b>${agentTag(c)}</td><td>${esc(c.kind||"法人")}</td><td>${esc(c.person||"")}</td><td>${(c.divisions||[]).map(d=>`<span class="tag">${esc(d)}</span>`).join(" ")}</td><td class="num">${m?yen(m):"—"}</td><td>${esc(byId("partners",c.partnerId)?.name||"")}</td></tr>`}).join("")
   }</tbody></table></div>`;
 };
 
@@ -605,7 +616,7 @@ V.quotes=()=>{
   const list=sortNew(cur).filter(q=>!qs||[q.no,clientName(q.clientId),q.title].join(" ").toLowerCase().includes(qs));
   const live=S.quotes.filter(q=>q.status!==Q_OLD).length;
   return head("見積",`${live} 件${S.quotes.length>live?`（旧版 ${S.quotes.length-live} 件）`:""}`,acts)+`<div class="tools"><input class="inp" id="f-qsearch" type="search" placeholder="番号・お客様名・件名で検索" value="${esc(S.filter.qs||"")}" data-act="qsearch" style="max-width:300px">${chips("q",[...Q_ST,Q_OLD])}</div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>番号</th><th>宛先</th><th>件名</th><th>事業</th><th class="num">初期費用</th><th class="num">月額</th><th>有効期限</th><th>状態</th></tr></thead><tbody>${
-    list.map(q=>{const r=calcQ(q);return `<tr data-act="edit" data-col="quotes" data-id="${q.id}"><td class="mono">${esc(q.no)}${(q.rev||1)>1?` <span class="pill ac">第${q.rev}版</span>`:""}</td><td>${esc(clientName(q.clientId))}</td><td>${esc(q.title)}</td><td><span class="tag">${esc(q.division||"")}</span></td><td class="num">${r.once?yen(r.once):"—"}</td><td class="num">${r.monthly?yen(r.monthly):"—"}</td><td class="mono">${esc(q.validUntil||"")}</td><td>${pill(q.status||"下書き")}</td></tr>`}).join("")
+    list.map(q=>{const r=calcQ(q);return `<tr data-act="edit" data-col="quotes" data-id="${q.id}"><td class="mono">${esc(q.no)}${(q.rev||1)>1?` <span class="pill ac">第${q.rev}版</span>`:""}</td><td>${esc(clientName(q.clientId))}${agentTag(q)}</td><td>${esc(q.title)}</td><td><span class="tag">${esc(q.division||"")}</span></td><td class="num">${r.once?yen(r.once):"—"}</td><td class="num">${r.monthly?yen(r.monthly):"—"}</td><td class="mono">${esc(q.validUntil||"")}</td><td>${pill(q.status||"下書き")}</td></tr>`}).join("")
   }</tbody></table></div>`;
 };
 
@@ -698,7 +709,7 @@ function sel(id,label,opts,val,extra=""){
 }
 
 // ===== Editors =====
-const ED_TITLE={clients:"顧客",quotes:"見積",contracts:"契約書",invoices:"請求書",partners:"紹介パートナー",income:"代理店報酬"};
+const ED_TITLE={clients:"顧客",quotes:"見積",contracts:"契約書",invoices:"請求書",partners:"紹介パートナー",income:"代理店報酬",deals:"案件",sales:"売上",agents:"代理店",products:"商材"};
 function defaults(col){
   const t=today(), co=S.company;
   if(col==="clients") return {kind:"法人",divisions:[]};
@@ -707,6 +718,10 @@ function defaults(col){
   if(col==="invoices") return {status:"未送付",issueDate:t,dueDate:addDays(t,co.payDays??30),month:ym(t),items:[{name:"",qty:1,unit:"式",price:0,kind:"once"}],clientId:""};
   if(col==="partners") return {rate:10,basis:"初回のみ"};
   if(col==="income") return {date:t,partner:"マネーフォワード シャトク",status:"見込み",amount:0};
+  if(col==="deals") return {stage:"リード",clientId:"",amount:"",productId:""};
+  if(col==="sales") return {date:t,status:"申請中",clientId:"",productId:"",amount:""};
+  if(col==="agents") return {rate:10,active:true};
+  if(col==="products") return {kind:"once",price:0,division:"その他",note:""};
   return {};
 }
 function openEditor(col,id){
@@ -757,7 +772,7 @@ function renderEditor(){
       ${efld("zip","郵便番号")}${efld("tel","電話番号")}
       <div class="full">${efld("address","住所","契約書の署名欄にも入ります")}</div>
       ${efld("email","メール")}
-      ${sel("e-partnerId","紹介元（紹介パートナー）",[["","なし"],...S.partners.map(p=>[p.id,p.name])],d.partnerId,'data-b="partnerId"')}
+      ${isAgent()?"":sel("e-partnerId","紹介元（紹介パートナー）",[["","なし"],...S.partners.map(p=>[p.id,p.name])],d.partnerId,'data-b="partnerId"')}
     </div></fieldset>
     <fieldset><legend>利用中・検討中の事業</legend><div class="chips">${DIVS.map(dv=>`<button class="chip" data-act="divtoggle" data-v="${dv}" aria-pressed="${(d.divisions||[]).includes(dv)}">${dv}</button>`).join("")}</div></fieldset>
     <fieldset><legend>メモ</legend>${fld("e-memo","",d.memo,"","textarea",'data-b="memo"')}</fieldset>${rel}`;
@@ -791,7 +806,7 @@ function renderEditor(){
     const nextRev=String((d.rev||1)+1).padStart(2,"0");
     body=`<div class="qsplit"><div class="qform">${body}</div><div class="qprev"><div class="qprev-in" id="qprev"></div></div></div>`;
     foot=old?`<span class="sp"></span><button class="btn" data-act="qdup">複製</button><button class="btn" data-act="preview">PDF・ドライブ</button>`
-      :`${del}<span class="sp"></span>${e.isNew?"":`<button class="btn" data-act="qdup">複製</button>`}<button class="btn" data-act="preview">PDF・ドライブ</button><button class="btn" data-act="save">保存</button>${issued?`<button class="btn ${hasC?"":"pri"}" data-act="revise">改訂版を作成（-${nextRev}）</button>`:""}${hasC||d.status==="失注"?"":`<button class="btn ${issued?"":"pri"}" data-act="q2c">受注して契約書を作成</button>`}${!e.isNew&&d.status!=="失注"?`<button class="btn" data-act="q2i">請求書を作成</button>`:""}`;
+      :`${del}<span class="sp"></span>${e.isNew?"":`<button class="btn" data-act="qdup">複製</button>`}<button class="btn" data-act="preview">PDF・ドライブ</button><button class="btn" data-act="save">保存</button>${issued?`<button class="btn ${hasC?"":"pri"}" data-act="revise">改訂版を作成（-${nextRev}）</button>`:""}${isAgent()||hasC||d.status==="失注"?"":`<button class="btn ${issued?"":"pri"}" data-act="q2c">受注して契約書を作成</button>`}${!isAgent()&&!e.isNew&&d.status!=="失注"?`<button class="btn" data-act="q2i">請求書を作成</button>`:""}`;
   }
   if(col==="contracts"){
     const tpl=d.template||"general";
@@ -861,6 +876,7 @@ function renderEditor(){
     </div></fieldset>`;
     foot=`${del}<span class="sp"></span><button class="btn pri" data-act="save">保存</button>`;
   }
+  if(EDX[col]&&(col!=="products"||isAgent()||d.agentId)){const r=EDX[col](e,d,del);body=r.body;foot=r.foot}
   const sc=$("#layer .scroll")?.scrollTop||0;
   $("#layer").innerHTML=`<div class="scrim" data-act="close"></div><div class="drawer${col==="quotes"?" wide":""}" role="dialog" aria-label="${ED_TITLE[col]}"><header><div><h3>${e.isNew?"新しい"+ED_TITLE[col]:ED_TITLE[col]}</h3><span class="mono">${esc(d.no||"")}</span></div><button class="btn ghost" data-act="close">閉じる</button></header><div class="scroll">${body}</div><footer>${foot}</footer></div>`;
   const s=$("#layer .scroll"); if(s) s.scrollTop=sc;
@@ -890,6 +906,7 @@ async function saveEditor(){
     d.clientId=await save("clients",{name:d.newClientName,kind:"法人",divisions:[d.division],person:d.contact||"",tel:d.ctel||"",email:d.cmail||""});
   }
   delete d.newClientName;
+  if(!(await agentBeforeSave(col,d))) return;
   if(["quotes","contracts","invoices"].includes(col)&&!d.clientId){toast("宛先を選んでください");return}
   if(col==="partners"&&!d.name){toast("名前を入れてください");return}
   if(col==="quotes"){ if(!d.base){d.base=d.no?d.no:quoteBase(d.issueDate);d.rev=d.rev||1} d.rev=d.rev||1; if(!d.no) d.no=quoteNo(d.base,d.rev); }
@@ -1048,6 +1065,8 @@ document.addEventListener("click",async ev=>{
   else if(a==="drive"){if(!S.ed)return;let id=S.ed.data.id;if(S.ed.isNew||!id){id=await saveEditor();if(!id)return}el.disabled=true;await driveSave(S.ed.col,{...S.ed.data});el.disabled=false}
   else if(a==="ledger") await exportLedger();
   else if(a==="revise") await reviseQuote();
+  else if(a==="deal2q") dealToQuote();
+  else if(a==="deal2s") dealToSale();
   else if(a==="q2i") await quoteToInvoice(S.ed?.data?.id);
   else if(a==="docx") await exportDocx();
   else if(a==="savecompany"){
@@ -1096,6 +1115,16 @@ document.addEventListener("input",ev=>{
 });
 document.addEventListener("change",async ev=>{
   const el=ev.target;
+  if(el.dataset.act==="agentf"){S.filter.agent=el.value;render();return}
+  if(el.dataset.act==="pexpose"||el.dataset.act==="passign"){
+    const pid=el.closest("[data-pid]")?.dataset.pid; const p=byId("products",pid); if(!p) return;
+    const n={...p};
+    if(el.dataset.act==="passign"){const ids=new Set(n.agentIds||[]);el.checked?ids.add(el.dataset.agent):ids.delete(el.dataset.agent);n.agentIds=[...ids]}
+    else if(el.dataset.f==="forAllAgents") n.forAllAgents=el.checked;
+    else { if(el.value==="") delete n.agentRate; else n.agentRate=Number(el.value)||0; }
+    try{await save("products",n);toast("商材の公開設定を保存しました")}catch(_){}
+    return;
+  }
   if(el.dataset.act==="addprod"&&el.value){
     const p=byId("products",el.value); if(p){if(!(S.ed.data.items||[]).length&&S.ed.col==="quotes")S.ed.data.division=p.division;(S.ed.data.items=S.ed.data.items||[]).push({name:p.name,qty:1,unit:p.kind==="monthly"?"月":"式",price:Number(p.price)||0,kind:p.kind||"once"})}
     renderEditor(); return;
@@ -1127,7 +1156,7 @@ function docQuote(q){
   let body=""; const n=Math.max(6,items.length);
   for(let i=0;i<n;i++){const it=items[i];
     body+=it?`<tr><td class="c">${i+1}</td><td>${esc(it.name)}${hasM&&it.kind==="monthly"&&!/月額/.test(it.name)?"（月額）":""}</td><td class="n">${esc(it.qty)}</td><td class="c">${esc(it.unit||"")}</td><td class="n">${it.price===""?"":num(it.price)}</td><td class="n">${num((Number(it.qty)||0)*(Number(it.price)||0))}</td></tr>`:`<tr><td class="c">${i+1}</td><td></td><td></td><td></td><td></td><td></td></tr>`}
-  const coLines=[co.zip&&"〒"+esc(co.zip),esc(co.address||""),co.tel&&"TEL："+esc(co.tel),(co.personEmail||co.email)&&"Mail："+esc(co.personEmail||co.email),co.person&&"担当："+esc(co.person)].filter(Boolean).join("<br>");
+  const coLines=[co.zip&&"〒"+esc(co.zip),esc(co.address||""),co.tel&&"TEL："+esc(co.tel),(q.agentName?co.email:(co.personEmail||co.email))&&"Mail："+esc(q.agentName?co.email:(co.personEmail||co.email)),(q.agentName||co.person)&&"担当："+esc(q.agentName||co.person)].filter(Boolean).join("<br>");
   const tl=inc?"（税込）":"（税別）";
   const tot=(t,x)=>`<table class="qt"><tr><th>${t?t+" ":""}税抜金額</th><td class="n">${num(x.a)}</td></tr><tr><th>消費税（10%）</th><td class="n">${num(x.t)}</td></tr><tr><th>合計（税込）</th><td class="n"><b>${num(x.g)}</b></td></tr></table>`;
   return `<div class="paper qdoc"><h1>御見積書</h1>
@@ -1427,6 +1456,204 @@ async function exportLedger(){
     const c={...S.company,lastLedger:{at:d.toISOString(),url:f.viewUrl||""}};await DB.doc("settings/company").set(c);
     toast("台帳をGoogleスプレッドシートに書き出しました");
   }catch(e){toast(driveErr(e))}
+}
+
+// ===== 代理店（ID・権限ごとの画面） =====
+// 見え方はサーバー（Apps Script）が決める。代理店には自分のデータと割り当てられた商材だけが届く。
+// ここは画面の出し分けだけ。中核メンバー（core）はすべて見える。
+const STAGES=["リード","商談中","提案済","受注","失注"];
+const SALE_ST=["申請中","承認","差戻し","支払済"];
+let MY={twRole:"core",uid:"owner",name:""};
+let TW=null;
+const isAgent=()=>MY.twRole==="agent";
+const agentName=id=>id==="owner"?"オーナー":(byId("agents",id)?.name||"");
+const agentTag=x=>(!isAgent()&&x&&x.agentId)?` <span class="tag">${esc(agentName(x.agentId)||"代理店")}</span>`:"";
+const rid=()=>Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>"abcdefghijklmnopqrstuvwxyz0123456789"[b%36]).join("");
+function productRate(p,agentId){
+  if(p&&p.agentRate!==undefined&&p.agentRate!==null&&p.agentRate!=="") return Number(p.agentRate)||0;
+  return Number(byId("agents",agentId)?.rate)||0;
+}
+function saleCommission(s){
+  if((s.status==="承認"||s.status==="支払済")&&s.commission!=null) return Number(s.commission)||0;
+  return Math.round((Number(s.amount)||0)*productRate(byId("products",s.productId),s.agentId)/100);
+}
+const visibleProducts=()=>isAgent()?S.products:S.products;
+const productOpts=()=>[["","（選択しない）"],...visibleProducts().sort((a,b)=>(a.division||"").localeCompare(b.division||"")||(a.order||0)-(b.order||0)).map(p=>[p.id,`${p.agentId?"【自社】":""}${p.name}${p.price?`（${p.kind==="monthly"?"月額":"一括"} ${yen(p.price)}）`:""}`])];
+const stagePill=s=>`<span class="pill ${({"リード":"","商談中":"info","提案済":"warn","受注":"ok","失注":"bad"})[s]??""}">${esc(s||"リード")}</span>`;
+const salePill=s=>`<span class="pill ${({"申請中":"warn","承認":"ok","差戻し":"bad","支払済":"info"})[s]??""}">${esc(s||"申請中")}</span>`;
+function agentFilterChips(){
+  if(isAgent()||!S.agents.length) return "";
+  const cur=S.filter.agent||"";
+  return `<label class="fld" style="flex-direction:row;align-items:center;gap:6px">代理店<select class="inp" id="f-agent" data-act="agentf" style="width:180px"><option value="">すべて</option><option value="__core" ${cur==="__core"?"selected":""}>TRESWIN直販</option>${S.agents.map(a=>`<option value="${a.id}" ${cur===a.id?"selected":""}>${esc(a.name)}</option>`).join("")}</select></label>`;
+}
+const byAgentF=arr=>{const f=S.filter.agent;if(!f)return arr;if(f==="__core")return arr.filter(x=>!x.agentId);return arr.filter(x=>x.agentId===f)};
+
+// ---------- 画面 ----------
+V.agentHome=()=>{
+  const open=S.deals.filter(d=>!["受注","失注"].includes(d.stage));
+  const mon=ym(today());
+  const ok=S.sales.filter(s=>s.status==="承認"||s.status==="支払済");
+  const monthSales=ok.filter(s=>ym(s.date)===mon).reduce((a,s)=>a+(Number(s.amount)||0),0);
+  const unpaid=S.sales.filter(s=>s.status==="承認").reduce((a,s)=>a+saleCommission(s),0);
+  const pending=S.sales.filter(s=>s.status==="申請中");
+  const next=[...open].filter(d=>d.nextDate).sort((a,b)=>a.nextDate.localeCompare(b.nextDate)).slice(0,8);
+  return head(`${esc(MY.name||"代理店")} さんのホーム`,`${jdate(today())}時点`,`<button class="btn" data-act="new" data-col="deals">案件を登録</button><button class="btn pri" data-act="new" data-col="sales">売上を申請</button>`)+
+  `<div class="kpis">
+    <div class="kpi north"><span class="l">お支払い予定の報酬</span><span class="v">${yen(unpaid)}</span><span class="s">承認済み・未払いの合計</span></div>
+    <div class="kpi"><span class="l">今月の売上（承認済）</span><span class="v">${yen(monthSales)}</span><span class="s">税別</span></div>
+    <div class="kpi"><span class="l">進行中の案件</span><span class="v">${open.length}<small>件</small></span><span class="s">見込み ${yen(open.reduce((a,d)=>a+(Number(d.amount)||0),0))}</span></div>
+    <div class="kpi"><span class="l">承認待ちの売上</span><span class="v">${pending.length}<small>件</small></span><span class="s">${yen(pending.reduce((a,s)=>a+(Number(s.amount)||0),0))}</span></div>
+  </div>
+  <div class="panel"><h2>次にやること<small>次回予定日が近い順</small></h2><div class="body">${next.length?`<ul class="todo">${next.map(d=>`<li data-act="edit" data-col="deals" data-id="${d.id}">${stagePill(d.stage)}<span class="t">${esc(d.nextDate)}　${esc(clientName(d.clientId))}：${esc(d.nextAction||d.title||"")}</span></li>`).join("")}</ul>`:`<div class="empty">予定の入った案件はありません。案件に「次回予定日」を入れるとここに並びます。</div>`}</div></div>`;
+};
+
+V.deals=()=>{
+  const acts=`${agentFilterChips()}<button class="btn pri" data-act="new" data-col="deals">案件を登録</button>`;
+  if(!S.deals.length) return head("案件","商談の進み具合",acts)+emptyBox("案件はまだありません","見込み客との商談を登録すると、見積や売上の申請につなげられます。");
+  const list=byAgentF(flt("dl",S.deals,"stage")).sort((a,b)=>(b.updatedAt||"").localeCompare(a.updatedAt||""));
+  return head("案件",`${S.deals.length} 件`,acts)+`<div class="tools">${chips("dl",STAGES)}</div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>お客様</th><th>件名</th><th>商材</th><th class="num">見込み金額</th><th>次回予定</th><th>状況</th></tr></thead><tbody>${
+    list.map(d=>`<tr data-act="edit" data-col="deals" data-id="${d.id}"><td><b>${esc(clientName(d.clientId))}</b>${agentTag(d)}</td><td>${esc(d.title||"")}</td><td>${esc(byId("products",d.productId)?.name||"")}</td><td class="num">${d.amount?yen(d.amount):"—"}</td><td class="mono">${esc(d.nextDate||"")}</td><td>${stagePill(d.stage)}</td></tr>`).join("")}</tbody></table></div>`;
+};
+
+V.sales=()=>{
+  const acts=`${agentFilterChips()}<button class="btn pri" data-act="new" data-col="sales">売上を${isAgent()?"申請":"登録"}</button>`;
+  if(!S.sales.length) return head("売上",isAgent()?"成約した売上を申請します。承認されると報酬が確定します":"代理店からの売上申請と承認",acts)+emptyBox("売上はまだありません",isAgent()?"成約したら「売上を申請」から登録してください。TRESWINが確認して承認します。":"代理店が売上を申請すると、ここで承認できます。");
+  const list=byAgentF(flt("sl",S.sales)).sort((a,b)=>(a.status==="申請中"?-1:0)-(b.status==="申請中"?-1:0)||(b.date||"").localeCompare(a.date||""));
+  return head("売上",`${S.sales.length} 件`,acts)+`<div class="tools">${chips("sl",SALE_ST)}</div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>日付</th><th>お客様</th><th>商材</th><th class="num">売上（税別）</th><th class="num">報酬</th><th>状態</th></tr></thead><tbody>${
+    list.map(s=>`<tr data-act="edit" data-col="sales" data-id="${s.id}"><td class="mono">${esc(s.date||"")}</td><td>${esc(clientName(s.clientId))}${agentTag(s)}</td><td>${esc(byId("products",s.productId)?.name||s.productName||"")}</td><td class="num">${yen(s.amount)}</td><td class="num">${s.agentId?yen(saleCommission(s)):"—"}</td><td>${salePill(s.status)}</td></tr>`).join("")}</tbody></table></div>`;
+};
+
+V.rewards=()=>{
+  const mine=S.sales.filter(s=>s.status==="承認"||s.status==="支払済");
+  const unpaid=mine.filter(s=>s.status==="承認").reduce((a,s)=>a+saleCommission(s),0);
+  const paid=mine.filter(s=>s.status==="支払済").reduce((a,s)=>a+saleCommission(s),0);
+  const pend=S.sales.filter(s=>s.status==="申請中").reduce((a,s)=>a+saleCommission(s),0);
+  const byMonth={}; mine.forEach(s=>{const m=ym(s.date)||"—";(byMonth[m]=byMonth[m]||{sales:0,com:0,paid:0});byMonth[m].sales+=Number(s.amount)||0;byMonth[m].com+=saleCommission(s);if(s.status==="支払済")byMonth[m].paid+=saleCommission(s)});
+  const rows=Object.keys(byMonth).sort().reverse();
+  return head("報酬","承認された売上にもとづく報酬",``)+
+  `<div class="kpis"><div class="kpi north"><span class="l">お支払い予定</span><span class="v">${yen(unpaid)}</span><span class="s">承認済み・未払い</span></div>
+  <div class="kpi"><span class="l">お支払い済み</span><span class="v">${yen(paid)}</span><span class="s">これまでの合計</span></div>
+  <div class="kpi"><span class="l">承認待ち（見込み）</span><span class="v">${yen(pend)}</span><span class="s">承認されると確定します</span></div>
+  <div class="kpi"><span class="l">標準の報酬率</span><span class="v">${esc(byId("agents",MY.uid)?.rate??"—")}<small>%</small></span><span class="s">商材ごとに別の率があります</span></div></div>
+  <div class="tbl-wrap"><table class="tbl"><thead><tr><th>月</th><th class="num">売上（承認済）</th><th class="num">報酬</th><th class="num">うち支払済</th></tr></thead><tbody>${rows.length?rows.map(m=>`<tr><td class="mono">${esc(m)}</td><td class="num">${yen(byMonth[m].sales)}</td><td class="num">${yen(byMonth[m].com)}</td><td class="num">${yen(byMonth[m].paid)}</td></tr>`).join(""):`<tr><td colspan="4" class="empty">承認された売上はまだありません。</td></tr>`}</tbody></table></div>`;
+};
+
+V.myproducts=()=>{
+  const tw=S.products.filter(p=>!p.agentId), own=S.products.filter(p=>p.agentId===MY.uid);
+  return head("商材","あなたが扱える商材",`<button class="btn pri" data-act="new" data-col="products">自社の商材を登録</button>`)+
+  `<div class="panel"><h2>TRESWINの商材<small>見積・売上の申請に使えます</small></h2>${tw.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>区分</th><th class="num">単価（税別）</th><th class="num">報酬率</th></tr></thead><tbody>${tw.map(p=>`<tr style="cursor:default"><td><b>${esc(p.name)}</b></td><td>${esc(p.division||"")}</td><td>${p.kind==="monthly"?"月額":"一括"}</td><td class="num">${p.price?yen(p.price):"都度見積"}</td><td class="num">${productRate(p,MY.uid)}%</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">まだ割り当てられた商材はありません。</div>`}</div>
+  <div class="panel"><h2>自社の商材<small>あなたとTRESWINだけが見られます</small></h2>${own.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>区分</th><th class="num">単価（税別）</th><th>メモ</th></tr></thead><tbody>${own.map(p=>`<tr data-act="edit" data-col="products" data-id="${p.id}"><td><b>${esc(p.name)}</b></td><td>${p.kind==="monthly"?"月額":"一括"}</td><td class="num">${yen(p.price)}</td><td>${esc(p.note||"")}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">自社で扱う商材があれば登録してください。</div>`}</div>`;
+};
+
+V.agents=()=>{
+  const acts=`<button class="btn pri" data-act="new" data-col="agents">代理店を追加</button>`;
+  const pending=S.sales.filter(s=>s.status==="申請中");
+  const sum=a=>{const ss=S.sales.filter(s=>s.agentId===a.id);return {clients:S.clients.filter(c=>c.agentId===a.id).length,deals:S.deals.filter(d=>d.agentId===a.id&&!["受注","失注"].includes(d.stage)).length,sales:ss.filter(s=>s.status==="承認"||s.status==="支払済").reduce((x,s)=>x+(Number(s.amount)||0),0),unpaid:ss.filter(s=>s.status==="承認").reduce((x,s)=>x+saleCommission(s),0)}};
+  const tw=S.products.filter(p=>!p.agentId);
+  const own=S.products.filter(p=>p.agentId);
+  return head("代理店管理","代理店ごとのID・権限・成果",acts)+
+  (TW?"":`<div class="banner warn">ログインIDの発行とパスワードの設定は、サイト版（tres-win.com/estimate）でだけ行えます。</div>`)+
+  (pending.length?`<div class="panel"><h2>承認待ちの売上<small>${pending.length} 件</small></h2><div class="body"><ul class="todo">${pending.map(s=>`<li data-act="edit" data-col="sales" data-id="${s.id}">${salePill(s.status)}<span class="t">${esc(agentName(s.agentId))}：${esc(clientName(s.clientId))}　${esc(byId("products",s.productId)?.name||"")}　${yen(s.amount)}</span></li>`).join("")}</ul></div></div>`:"")+
+  (S.agents.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>代理店</th><th>ログインID</th><th>コード</th><th class="num">標準報酬率</th><th class="num">顧客</th><th class="num">進行中の案件</th><th class="num">売上（承認済）</th><th class="num">未払い報酬</th><th>状態</th></tr></thead><tbody>${
+    S.agents.map(a=>{const m=sum(a);return `<tr data-act="edit" data-col="agents" data-id="${a.id}"><td><b>${esc(a.name)}</b></td><td class="mono">${esc(a.loginId||"")}</td><td class="mono">${esc(a.code||"")}</td><td class="num">${esc(a.rate??0)}%</td><td class="num">${m.clients}</td><td class="num">${m.deals}</td><td class="num">${yen(m.sales)}</td><td class="num">${yen(m.unpaid)}</td><td>${a.active===false?pill("停止中"):`<span class="pill ok">有効</span>`}</td></tr>`}).join("")}</tbody></table></div>`:emptyBox("代理店はまだいません","「代理店を追加」でIDとパスワードを発行すると、代理店は tres-win.com/agent から自分の画面に入れます。"))+
+  `<div class="panel"><h2>代理店に出す商材<small>チェックした商材だけが代理店に見えます</small></h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>全代理店に公開</th><th>個別に割り当て</th><th class="num">報酬率（空欄＝代理店の標準）</th></tr></thead><tbody>${
+    tw.map(p=>`<tr style="cursor:default" data-pid="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(p.division||"")}</td><td><input type="checkbox" id="pa-${p.id}-all" data-act="pexpose" data-f="forAllAgents" ${p.forAllAgents?"checked":""}></td><td>${S.agents.length?S.agents.map(a=>`<label style="display:inline-flex;gap:4px;margin-right:8px;font-size:12px"><input type="checkbox" data-act="passign" data-agent="${a.id}" ${(p.agentIds||[]).includes(a.id)?"checked":""}>${esc(a.name)}</label>`).join(""):`<span class="hint">代理店を追加すると選べます</span>`}</td><td class="num"><input class="inp" id="pa-${p.id}-rate" type="number" style="width:90px;text-align:right" value="${p.agentRate??""}" data-act="pexpose" data-f="agentRate"></td></tr>`).join("")}</tbody></table></div></div>`+
+  (own.length?`<div class="panel"><h2>代理店が登録した自社商材</h2><div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>代理店</th><th class="num">単価（税別）</th><th class="num">報酬率</th></tr></thead><tbody>${own.map(p=>`<tr style="cursor:default" data-pid="${p.id}"><td><b>${esc(p.name)}</b></td><td>${esc(agentName(p.agentId))}</td><td class="num">${yen(p.price)}</td><td class="num"><input class="inp" type="number" style="width:90px;text-align:right" value="${p.agentRate??""}" data-act="pexpose" data-f="agentRate"></td></tr>`).join("")}</tbody></table></div></div>`:"");
+};
+
+// ---------- 編集画面 ----------
+const EDX={};
+EDX.deals=(e,d,del)=>({
+  body:`<fieldset><legend>案件</legend><div class="f">
+    ${sel("e-clientId","お客様",clientOpts().filter(o=>o[0]!=="__new"),d.clientId,'data-b="clientId"')}
+    ${sel("e-productId","商材",productOpts(),d.productId,'data-b="productId"')}
+    <div class="full">${efld("title","件名","例：ホームページのリニューアル")}</div>
+    ${efld("amount","見込み金額（税別）","","number")}${esel("stage","状況",STAGES)}
+    ${efld("nextDate","次回予定日","","date")}${efld("nextAction","次にやること","例：提案書を持って再訪問")}
+    <div class="full">${fld("e-memo","メモ",d.memo,"","textarea",'data-b="memo"')}</div>
+  </div>${S.clients.length?"":`<p class="hint warn">先に「顧客」でお客様を登録してください。</p>`}</fieldset>`,
+  foot:`${del}<span class="sp"></span>${e.isNew?"":`<button class="btn" data-act="deal2q">見積を作成</button><button class="btn" data-act="deal2s">売上を${isAgent()?"申請":"登録"}</button>`}<button class="btn pri" data-act="save">保存</button>`
+});
+EDX.sales=(e,d,del)=>{
+  const locked=isAgent()&&(d.status==="承認"||d.status==="支払済");
+  const com=saleCommission(d), rate=productRate(byId("products",d.productId),d.agentId||MY.uid);
+  return {
+  body:`${locked?`<div class="banner">承認済みの売上は変更できません。内容に誤りがあればTRESWINにご連絡ください。</div>`:""}
+  ${d.status==="差戻し"&&d.reviewNote?`<div class="banner warn">差し戻しの理由：${esc(d.reviewNote)}</div>`:""}
+  <fieldset ${locked?"disabled":""}><legend>売上</legend><div class="f">
+    ${efld("date","成約日","","date")}
+    ${sel("e-clientId","お客様",clientOpts().filter(o=>o[0]!=="__new"),d.clientId,'data-b="clientId"')}
+    ${sel("e-productId","商材",productOpts(),d.productId,'data-b="productId"')}
+    ${efld("amount","売上金額（税別）","","number")}
+    <div class="full">${fld("e-memo","メモ（契約内容・支払条件など）",d.memo,"","textarea",'data-b="memo"')}</div>
+  </div></fieldset>
+  <fieldset><legend>報酬</legend><div class="totals"><div class="tot"><span>報酬（${rate}%）</span><b>${yen(com)}</b><span class="row"><span>状態</span><span>${salePill(d.status)}</span></span></div></div>
+  ${!isAgent()&&d.agentId?`<div class="f" style="margin-top:12px">${esel("status","状態",SALE_ST)}${efld("commission","報酬額（承認時に確定・空欄なら自動計算）","","number")}${efld("paidDate","支払日","","date")}<div class="full">${efld("reviewNote","差し戻しの理由（代理店に表示）")}</div></div>`:""}
+  ${!d.agentId&&!isAgent()?`<p class="hint">TRESWINの直販の売上です（報酬は発生しません）。</p>`:""}</fieldset>`,
+  foot:`${locked?"":del}<span class="sp"></span>${locked?"":`<button class="btn pri" data-act="save">${isAgent()?(e.isNew?"申請する":"申請し直す"):"保存"}</button>`}`
+}};
+EDX.agents=(e,d,del)=>({
+  body:`<fieldset><legend>代理店</legend><div class="f">
+    <div class="full">${efld("name","名前・会社名")}</div>
+    ${efld("loginId","ログインID","半角英数字。代理店がログインに使います")}${efld("code","代理店コード","見積番号に入ります（例：A01）")}
+    ${efld("rate","標準の報酬率（%）","","number")}
+    <label class="fld">状態<select class="inp" id="e-active" data-b="active" data-type="bool"><option value="1" ${d.active!==false?"selected":""}>有効</option><option value="" ${d.active===false?"selected":""}>停止（ログインできなくする）</option></select></label>
+    ${efld("email","連絡先メール")}${efld("tel","電話番号")}
+    <div class="full">${fld("e-password","パスワード（発行・変更するときだけ入力）","","8文字以上。入力したら必ず本人に伝えてください","text",'data-b="password" autocomplete="new-password"')}</div>
+    <div class="full">${fld("e-memo","メモ",d.memo,"契約条件・利益相反の確認状況など","textarea",'data-b="memo"')}</div>
+  </div><p class="hint">代理店は tres-win.com/agent に、このログインIDとパスワードで入ります。見えるのは本人の顧客・案件・見積・売上と、割り当てた商材だけです。</p></fieldset>`,
+  foot:`${del}<span class="sp"></span><button class="btn pri" data-act="save">保存</button>`
+});
+EDX.products=(e,d,del)=>({
+  body:`<fieldset><legend>自社の商材</legend><div class="f">
+    <div class="full">${efld("name","商材名")}</div>
+    ${esel("kind","区分",[["once","一括"],["monthly","月額"]])}${efld("price","単価（税別）","","number")}
+    <div class="full">${efld("note","メモ")}</div></div>
+    <p class="hint">この商材は、あなたとTRESWINの中核メンバーだけが見られます。報酬率はTRESWINが設定します。</p></fieldset>`,
+  foot:`${del}<span class="sp"></span><button class="btn pri" data-act="save">保存</button>`
+});
+
+// ---------- 保存の前後 ----------
+async function agentBeforeSave(col,d){
+  if(isAgent()){ d.agentId=MY.uid; if(col==="quotes") d.agentName=MY.name; if(col==="sales"&&d.status!=="承認"&&d.status!=="支払済") d.status="申請中"; }
+  if(col==="agents"){
+    if(!d.name||!d.loginId){toast("名前とログインIDを入れてください");return false}
+    if(!/^[A-Za-z0-9._-]{3,40}$/.test(d.loginId)){toast("ログインIDは半角英数字（3文字以上）にしてください");return false}
+    if(S.agents.some(a=>a.loginId===d.loginId&&a.id!==d.id)){toast("このログインIDはすでに使われています");return false}
+    if(!d.code){let n=1;while(S.agents.some(a=>a.code==="A"+String(n).padStart(2,"0")))n++;d.code="A"+String(n).padStart(2,"0")}
+    if(!d.id) d.id="u_"+rid();
+    const pw=d.password; delete d.password;
+    if(!TW){ if(pw) toast("パスワードはサイト版でだけ設定できます"); return true }
+    const isNewUser=!S.agents.some(a=>a.id===d.id);
+    if(isNewUser&&!pw){toast("新しい代理店にはパスワードを入れてください");return false}
+    if(pw&&pw.length<8){toast("パスワードは8文字以上にしてください");return false}
+    try{ await TW.api("userSave",{user:{uid:d.id,loginId:d.loginId,name:d.name,role:"agent",code:d.code,active:d.active!==false,password:pw||""}}); }
+    catch(err){toast("ログインIDを保存できませんでした："+(err.message||err));return false}
+    if(pw) toast("ログインIDとパスワードを設定しました");
+  }
+  if(col==="sales"&&!isAgent()){
+    if(d.status==="承認"&&(d.commission===""||d.commission==null)) d.commission=Math.round((Number(d.amount)||0)*productRate(byId("products",d.productId),d.agentId)/100);
+    if(d.status==="承認"&&!d.approvedAt) d.approvedAt=today();
+    if(d.status==="支払済"&&!d.paidDate) d.paidDate=today();
+  }
+  if(col==="deals"&&!d.clientId){toast("お客様を選んでください");return false}
+  if(col==="sales"&&(!d.clientId||!Number(d.amount))){toast("お客様と売上金額を入れてください");return false}
+  if(col==="products"&&!d.name){toast("商材名を入れてください");return false}
+  return true;
+}
+
+// 案件から見積・売上へ
+function dealToQuote(){
+  const dl=S.ed.data; const p=byId("products",dl.productId);
+  openEditor("quotes"); const q=S.ed.data;
+  q.clientId=dl.clientId; q.title=dl.title||""; q.dealId=dl.id;
+  if(p){q.division=p.division||q.division;const pr=Number(p.price)||0;q.items=[{name:p.name,qty:1,unit:p.kind==="monthly"?"月":"式",price:pr?(q.taxIncl?Math.round(pr*1.1):pr):"",kind:p.kind||"once"}]}
+  const c=byId("clients",dl.clientId); if(c){q.contact=c.person||"";q.ctel=c.tel||"";q.cmail=c.email||""}
+  renderEditor();
+}
+function dealToSale(){
+  const dl=S.ed.data;
+  openEditor("sales"); Object.assign(S.ed.data,{clientId:dl.clientId,productId:dl.productId||"",amount:dl.amount||"",dealId:dl.id,memo:dl.title||""}); renderEditor();
 }
 
 boot();
