@@ -245,6 +245,9 @@ img{max-width:100%}
 .tw-err{color:var(--bad);font-size:12px;min-height:1em;margin:0}
 .tw-logout{margin:6px 8px 0;color:var(--navy-muted)!important;align-self:flex-start}
 @media (max-width:760px){.tw-logout{margin:0}}
+
+/* ログイン前は画面の中身を出さない */
+body.tw-locked .app{visibility:hidden}
 </style>
 </head><body>
 
@@ -290,11 +293,21 @@ img{max-width:100%}
 
   // ---------- 通信 ----------
   async function api(action, payload) {
-    let res;
-    try {
-      res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ action, token }, payload || {})) });
-    } catch (e) { throw { code: 'unavailable', message: 'サーバーに接続できませんでした。通信状況を確認してください。' }; }
-    let data; try { data = await res.json(); } catch (e) { throw { code: 'unavailable', message: 'サーバーの応答を読めませんでした。' }; }
+    let res, lastErr;
+    const body = JSON.stringify(Object.assign({ action, token }, payload || {}));
+    // Apps Script は公開直後や混雑時に一時的に応答しないことがあるため、2回まで自動でやり直す
+    for (let i = 0; i < 3 && !res; i++) {
+      if (i) await new Promise(r => setTimeout(r, 1200 * i));
+      try { res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }); }
+      catch (e) { lastErr = e; }
+    }
+    if (!res) {
+      const alive = await fetch(API_URL).then(r => r.json()).then(j => j && j.ok).catch(() => false);
+      throw { code: 'unavailable', message: alive
+        ? 'サーバーで処理中にエラーが起きました（' + action + '）。少し待ってもう一度お試しください。続く場合は管理者にお知らせください。'
+        : 'サーバーに接続できませんでした。通信状況を確認してください。（' + (lastErr && lastErr.message || '') + '）' };
+    }
+    let data; try { data = await res.json(); } catch (e) { throw { code: 'unavailable', message: 'サーバーの応答を読めませんでした（' + action + '）。' }; }
     if (data.ok) return data;
     if (data.error === 'auth') { showLogin('時間が経ったため、もう一度ログインしてください。'); throw { code: 'auth', message: 'ログインが必要です' }; }
     throw { code: data.error || 'tool_error', message: data.message || data.error || 'エラーが発生しました' };
@@ -305,7 +318,7 @@ img{max-width:100%}
   function showLogin(msg) {
     token = ''; ME = null; try { sessionStorage.removeItem('tw-core-token'); sessionStorage.removeItem('tw-core-me'); } catch (e) {}
     const el = document.getElementById('tw-login'); if (!el) return;
-    el.hidden = false; document.getElementById('tw-pw-err').textContent = msg || '';
+    el.hidden = false; document.body.classList.add('tw-locked'); document.getElementById('tw-pw-err').textContent = msg || '';
     const pw = document.getElementById('tw-pw'); pw.value = ''; const idf = document.getElementById('tw-id'); setTimeout(() => (idf && !idf.value ? idf : pw).focus(), 0);
   }
   function mountLogin() {
@@ -323,7 +336,7 @@ img{max-width:100%}
         const r = await api('login', { loginId: document.getElementById('tw-id').value.trim(), password: document.getElementById('tw-pw').value });
         if (MODE === 'agent' && r.me && r.me.role !== 'agent') { /* 中核メンバーが代理店ポータルに来た場合は基幹システムへ */ }
         token = r.token; ME = r.me || (MODE === 'core' ? { role: 'core', uid: 'owner', name: 'オーナー', code: '' } : null); try { sessionStorage.setItem('tw-core-token', token); sessionStorage.setItem('tw-core-me', JSON.stringify(ME)); } catch (e) {}
-        await load(); box.hidden = true; loggedIn();
+        await load(); box.hidden = true; document.body.classList.remove('tw-locked'); loggedIn();
       } catch (e) { document.getElementById('tw-pw-err').textContent = e.message || 'ログインできませんでした'; }
       finally { btn.disabled = false; }
     });
@@ -408,8 +421,9 @@ img{max-width:100%}
   };
 
   function start() {
+    document.body.classList.add('tw-locked');
     mountLogin();
-    if (token) api('me').catch(e => e && e.code === 'bad_request' && MODE === 'core' ? { me: { role: 'core', uid: 'owner', name: 'オーナー', code: '' } } : Promise.reject(e)).then(r => { ME = r.me; try { sessionStorage.setItem('tw-core-me', JSON.stringify(ME)); } catch (e) {} return load(); }).then(loggedIn).catch(() => showLogin('')); else showLogin('');
+    if (token) api('me').catch(e => e && e.code === 'bad_request' && MODE === 'core' ? { me: { role: 'core', uid: 'owner', name: 'オーナー', code: '' } } : Promise.reject(e)).then(r => { ME = r.me; try { sessionStorage.setItem('tw-core-me', JSON.stringify(ME)); } catch (e) {} return load(); }).then(() => { document.body.classList.remove('tw-locked'); loggedIn(); }).catch(() => showLogin('')); else showLogin('');
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
