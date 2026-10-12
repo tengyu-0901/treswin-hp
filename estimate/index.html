@@ -720,7 +720,7 @@ function defaults(col){
   if(col==="income") return {date:t,partner:"マネーフォワード シャトク",status:"見込み",amount:0};
   if(col==="deals") return {stage:"リード",clientId:"",amount:"",productId:""};
   if(col==="sales") return {date:t,status:"申請中",clientId:"",productId:"",amount:""};
-  if(col==="agents") return {rate:10,active:true};
+  if(col==="agents") return newAgentDefaults();
   if(col==="products") return {kind:"once",price:0,division:"その他",note:""};
   return {};
 }
@@ -730,7 +730,7 @@ function openEditor(col,id){
   S.ed={col,data,isNew:!id,confirmDel:false};
   renderEditor();
 }
-function closeEditor(){S.ed=null;$("#layer").innerHTML=""}
+function closeEditor(){if(S.ed&&S.ed.col==="agents"&&typeof issued!=="undefined"&&S.ed.data.id)delete issued[S.ed.data.id];S.ed=null;$("#layer").innerHTML=""}
 const B=(f,v)=>`id="e-${f}" data-b="${f}" ${v??""}`;
 function efld(f,label,hint="",type="text"){const v=S.ed.data[f];return fld("e-"+f,label,v,hint,type,`data-b="${f}"`)}
 function esel(f,label,opts){return sel("e-"+f,label,opts,S.ed.data[f],`data-b="${f}"`)}
@@ -1066,6 +1066,8 @@ document.addEventListener("click",async ev=>{
   else if(a==="ledger") await exportLedger();
   else if(a==="revise") await reviseQuote();
   else if(a==="deal2q") dealToQuote();
+  else if(a==="genpw"){S.ed.data.password=genPassword();renderEditor();toast("新しいパスワードを作りました。保存すると切り替わります")}
+  else if(a==="copycred"){const t=$("#cred-text")?.textContent||"";try{await navigator.clipboard.writeText(t);toast("コピーしました")}catch(_){const r=document.createRange();r.selectNodeContents($("#cred-text"));const s2=getSelection();s2.removeAllRanges();s2.addRange(r);toast("選択しました。コピーしてください")}}
   else if(a==="deal2s") dealToSale();
   else if(a==="q2i") await quoteToInvoice(S.ed?.data?.id);
   else if(a==="docx") await exportDocx();
@@ -1488,6 +1490,15 @@ function agentFilterChips(){
 }
 const byAgentF=arr=>{const f=S.filter.agent;if(!f)return arr;if(f==="__core")return arr.filter(x=>!x.agentId);return arr.filter(x=>x.agentId===f)};
 
+// ---------- ID・代理店コード・パスワードの自動発行 ----------
+function nextAgentCode(){let n=1;while(S.agents.some(a=>a.code==="A"+String(n).padStart(2,"0")))n++;return "A"+String(n).padStart(2,"0")}
+const loginIdFor=code=>"tw-"+String(code).toLowerCase();
+function genPassword(len=12){const cs="abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";const b=crypto.getRandomValues(new Uint8Array(len));let p="";for(let i=0;i<len;i++)p+=cs[b[i]%cs.length];return /[0-9]/.test(p)&&/[A-Z]/.test(p)&&/[a-z]/.test(p)?p:genPassword(len)}
+function newAgentDefaults(){const code=nextAgentCode();return {rate:10,active:true,code,loginId:loginIdFor(code),password:genPassword()}}
+const AGENT_URL="https://tres-win.com/agent/";
+let issued={}; // 保存した直後だけ画面に出すログイン情報（パスワードはここ以外に残らない）
+const credText=c=>`TRESWIN 代理店ポータル\nURL：${AGENT_URL}\nログインID：${c.loginId}\nパスワード：${c.password}\n※パスワードは他の人に教えないでください。`;
+
 // ---------- 画面 ----------
 V.agentHome=()=>{
   const open=S.deals.filter(d=>!["受注","失注"].includes(d.stage));
@@ -1592,18 +1603,20 @@ EDX.sales=(e,d,del)=>{
   ${!d.agentId&&!isAgent()?`<p class="hint">TRESWINの直販の売上です（報酬は発生しません）。</p>`:""}</fieldset>`,
   foot:`${locked?"":del}<span class="sp"></span>${locked?"":`<button class="btn pri" data-act="save">${isAgent()?(e.isNew?"申請する":"申請し直す"):"保存"}</button>`}`
 }};
-EDX.agents=(e,d,del)=>({
-  body:`<fieldset><legend>代理店</legend><div class="f">
+EDX.agents=(e,d,del)=>{const iss=d.id&&issued[d.id];return {
+  body:`${iss?`<div class="panel" style="border-color:var(--ok)"><h2>ログイン情報を発行しました<small>この画面を閉じるとパスワードは二度と表示されません</small></h2><div class="body"><pre id="cred-text" style="margin:0;white-space:pre-wrap;font-family:inherit;font-size:14px;line-height:1.8;user-select:all">${esc(credText(iss))}</pre><div class="tools" style="margin-top:10px"><button class="btn pri" data-act="copycred">ログイン情報をコピー</button><span class="hint">メールやLINEで本人に送ってください</span></div></div></div>`:""}
+  <fieldset><legend>代理店</legend><div class="f">
     <div class="full">${efld("name","名前・会社名")}</div>
-    ${efld("loginId","ログインID","半角英数字。代理店がログインに使います")}${efld("code","代理店コード","見積番号に入ります（例：A01）")}
+    ${efld("code","代理店コード","自動で振っています。見積番号に入ります")}${efld("loginId","ログインID","自動で振っています。変えることもできます")}
     ${efld("rate","標準の報酬率（%）","","number")}
     <label class="fld">状態<select class="inp" id="e-active" data-b="active" data-type="bool"><option value="1" ${d.active!==false?"selected":""}>有効</option><option value="" ${d.active===false?"selected":""}>停止（ログインできなくする）</option></select></label>
     ${efld("email","連絡先メール")}${efld("tel","電話番号")}
-    <div class="full">${fld("e-password","パスワード（発行・変更するときだけ入力）","","8文字以上。入力したら必ず本人に伝えてください","text",'data-b="password" autocomplete="new-password"')}</div>
+    <div class="full"><label class="fld">パスワード${d.password?`<input class="inp" id="e-password" data-b="password" value="${esc(d.password)}" autocomplete="new-password" style="font-family:ui-monospace,monospace;letter-spacing:.05em">`:`<input class="inp" id="e-password" data-b="password" value="" placeholder="変更しない（再発行するときは下のボタン）" autocomplete="new-password">`}<span class="hint">${e.isNew?"自動で作っています。保存すると、本人に送るログイン情報が表示されます":"再発行すると、前のパスワードは使えなくなります"}</span></label></div>
+    <div class="full"><button class="btn sm" data-act="genpw">パスワードを${e.isNew?"作り直す":"再発行する"}</button></div>
     <div class="full">${fld("e-memo","メモ",d.memo,"契約条件・利益相反の確認状況など","textarea",'data-b="memo"')}</div>
   </div><p class="hint">代理店は tres-win.com/agent に、このログインIDとパスワードで入ります。見えるのは本人の顧客・案件・見積・売上と、割り当てた商材だけです。</p></fieldset>`,
-  foot:`${del}<span class="sp"></span><button class="btn pri" data-act="save">保存</button>`
-});
+  foot:`${del}<span class="sp"></span><button class="btn pri" data-act="save">${e.isNew?"保存してIDを発行":"保存"}</button>`
+}};
 EDX.products=(e,d,del)=>({
   body:`<fieldset><legend>自社の商材</legend><div class="f">
     <div class="full">${efld("name","商材名")}</div>
@@ -1617,10 +1630,12 @@ EDX.products=(e,d,del)=>({
 async function agentBeforeSave(col,d){
   if(isAgent()){ d.agentId=MY.uid; if(col==="quotes") d.agentName=MY.name; if(col==="sales"&&d.status!=="承認"&&d.status!=="支払済") d.status="申請中"; }
   if(col==="agents"){
-    if(!d.name||!d.loginId){toast("名前とログインIDを入れてください");return false}
+    if(!d.code) d.code=nextAgentCode();
+    if(!d.loginId) d.loginId=loginIdFor(d.code);
+    if(!d.name){toast("名前を入れてください");return false}
     if(!/^[A-Za-z0-9._-]{3,40}$/.test(d.loginId)){toast("ログインIDは半角英数字（3文字以上）にしてください");return false}
     if(S.agents.some(a=>a.loginId===d.loginId&&a.id!==d.id)){toast("このログインIDはすでに使われています");return false}
-    if(!d.code){let n=1;while(S.agents.some(a=>a.code==="A"+String(n).padStart(2,"0")))n++;d.code="A"+String(n).padStart(2,"0")}
+    if(S.agents.some(a=>a.code===d.code&&a.id!==d.id)){toast("この代理店コードはすでに使われています");return false}
     if(!d.id) d.id="u_"+rid();
     const pw=d.password; delete d.password;
     if(!TW){ if(pw) toast("パスワードはサイト版でだけ設定できます"); return true }
@@ -1629,7 +1644,7 @@ async function agentBeforeSave(col,d){
     if(pw&&pw.length<8){toast("パスワードは8文字以上にしてください");return false}
     try{ await TW.api("userSave",{user:{uid:d.id,loginId:d.loginId,name:d.name,role:"agent",code:d.code,active:d.active!==false,password:pw||""}}); }
     catch(err){toast("ログインIDを保存できませんでした："+(err.message||err));return false}
-    if(pw) toast("ログインIDとパスワードを設定しました");
+    if(pw){ issued[d.id]={loginId:d.loginId,password:pw}; toast("ログイン情報を発行しました。画面のログイン情報を本人に送ってください"); }
   }
   if(col==="sales"&&!isAgent()){
     if(d.status==="承認"&&(d.commission===""||d.commission==null)) d.commission=Math.round((Number(d.amount)||0)*productRate(byId("products",d.productId),d.agentId)/100);
