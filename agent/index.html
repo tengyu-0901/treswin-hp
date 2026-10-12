@@ -448,7 +448,7 @@ const quoteNo=(base,rev)=>`${base}-${String(rev||1).padStart(2,"0")}`;
 const revsOf=q=>q.base?S.quotes.filter(x=>x.base===q.base).sort((a,b)=>(a.rev||1)-(b.rev||1)):[q];
 const C_ST = ["作成中","送付済","締結済","終了"];
 const I_ST = ["未送付","送付済","入金済"];
-const COLS = ["products","clients","quotes","contracts","invoices","partners","income","deals","sales","agents"];
+const COLS = ["products","clients","quotes","contracts","invoices","partners","income","deals","sales","agents","agentsRetired"];
 const TAX = 0.10;
 const S = {view:"home", company:{}, loaded:{}, dbState:"wait", filter:{}, ed:null, pv:null};
 COLS.forEach(c=>S[c]=[]);
@@ -1056,6 +1056,12 @@ document.addEventListener("click",async ev=>{
   else if(a==="edit") openEditor(el.dataset.col,el.dataset.id);
   else if(a==="close") closeEditor();
   else if(a==="save") await saveEditor();
+  else if(a==="delagent"){
+    if(!S.ed.confirmDel){S.ed.confirmDel=true;renderEditor();return}
+    if(!TW){toast("代理店の削除はサイト版（tres-win.com/estimate）で行ってください");return}
+    try{await deleteAgent(S.ed.data);toast("代理店を削除しました。このIDではもうログインできません");closeEditor()}
+    catch(err){toast("削除できませんでした："+(err.message||err))}
+  }
   else if(a==="del"){
     if(!S.ed.confirmDel){S.ed.confirmDel=true;renderEditor();return}
     await removeDoc(S.ed.col,S.ed.data.id);toast("削除しました");closeEditor();
@@ -1482,7 +1488,7 @@ const SALE_ST=["申請中","承認","差戻し","支払済"];
 let MY={twRole:"core",uid:"owner",name:""};
 let TW=null;
 const isAgent=()=>MY.twRole==="agent";
-const agentName=id=>id==="owner"?"オーナー":(byId("agents",id)?.name||"");
+const agentName=id=>id==="owner"?"オーナー":(byId("agents",id)?.name||(byId("agentsRetired",id)?`${byId("agentsRetired",id).name}（削除済み）`:""));
 const agentTag=x=>(!isAgent()&&x&&x.agentId)?` <span class="tag">${esc(agentName(x.agentId)||"代理店")}</span>`:"";
 const rid=()=>Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>"abcdefghijklmnopqrstuvwxyz0123456789"[b%36]).join("");
 function productRate(p,agentId){
@@ -1505,7 +1511,16 @@ function agentFilterChips(){
 const byAgentF=arr=>{const f=S.filter.agent;if(!f)return arr;if(f==="__core")return arr.filter(x=>!x.agentId);return arr.filter(x=>x.agentId===f)};
 
 // ---------- ID・代理店コード・パスワードの自動発行 ----------
-function nextAgentCode(){let n=1;while(S.agents.some(a=>a.code==="A"+String(n).padStart(2,"0")))n++;return "A"+String(n).padStart(2,"0")}
+// 削除した代理店のコードも使い回さない（過去の見積番号と重ならないように）
+function nextAgentCode(){const used=c=>S.agents.some(a=>a.code===c)||(S.agentsRetired||[]).some(a=>a.code===c);let n=1;while(used("A"+String(n).padStart(2,"0")))n++;return "A"+String(n).padStart(2,"0")}
+// 代理店を削除する：ログインを止め、IDを空け、名前とコードは記録に残す（顧客・売上などのデータは消さない）
+async function deleteAgent(a){
+  if(TW){
+    await TW.api("userSave",{user:{uid:a.id,loginId:"deleted-"+a.id.replace(/[^A-Za-z0-9._-]/g,""),name:a.name,role:"agent",code:a.code||"",active:false,password:""}});
+  }
+  await save("agentsRetired",{id:a.id,name:a.name,code:a.code||"",loginId:a.loginId||"",deletedAt:today()});
+  await removeDoc("agents",a.id);
+}
 const loginIdFor=code=>"tw-"+String(code).toLowerCase();
 function genPassword(len=12){const cs="abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";const b=crypto.getRandomValues(new Uint8Array(len));let p="";for(let i=0;i<len;i++)p+=cs[b[i]%cs.length];return /[0-9]/.test(p)&&/[A-Z]/.test(p)&&/[a-z]/.test(p)?p:genPassword(len)}
 function newAgentDefaults(){const code=nextAgentCode();return {rate:10,active:true,code,loginId:loginIdFor(code),password:genPassword()}}
@@ -1629,7 +1644,7 @@ EDX.agents=(e,d,del)=>{const iss=d.id&&issued[d.id];return {
     <div class="full"><button class="btn sm" data-act="genpw">パスワードを${e.isNew?"作り直す":"再発行する"}</button></div>
     <div class="full">${fld("e-memo","メモ",d.memo,"契約条件・利益相反の確認状況など","textarea",'data-b="memo"')}</div>
   </div><p class="hint">代理店は tres-win.com/agent に、このログインIDとパスワードで入ります。見えるのは本人の顧客・案件・見積・売上と、割り当てた商材だけです。</p></fieldset>`,
-  foot:`${del}<span class="sp"></span><button class="btn pri" data-act="save">${e.isNew?"保存してIDを発行":"保存"}</button>`
+  foot:`${e.isNew?"":`<button class="btn danger" data-act="delagent">${e.confirmDel?"もう一度押すと削除します（ログインできなくなります）":"削除"}</button>`}<span class="sp"></span><button class="btn pri" data-act="save">${e.isNew?"保存してIDを発行":"保存"}</button>`
 }};
 EDX.products=(e,d,del)=>({
   body:`<fieldset><legend>自社の商材</legend><div class="f">
