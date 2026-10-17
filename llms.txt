@@ -1,6 +1,6 @@
 # TRESWIN（トレスウィン）
 
-> TRESWIN（トレスウィン）は、大阪市北区梅田（大阪駅前第2ビル）を拠点とするビジネス支援企業です。ホームページ制作（TRESWEB）、SNS運用代行（TRESLINK）、成功報酬型の営業支援（商流舎）、キャリア支援（日本人財開発機構／ハレマ）を、戦略設計から実行・改善まで伴走型で提供しています。大阪を中心に全国対応。
+> TRESWIN（トレスウィン）は、大阪市北区梅田（大阪駅前第2ビル）を拠点とするビジネス支援企業です。商社機能を軸に、トレーディング事業（法人向けサービスの提案、商流舎による成功報酬型の販路開拓）、クリエイティブ事業（TRESWEB：ホームページ・LP・動画制作）、SNS支援事業（TRESLINK：SNS運用代行）、キャリアコーチング事業（日本人財開発機構／ハレマ）の4事業を、課題の発見から実行・改善まで伴走型で提供しています。大阪を中心に全国対応。
 
 ## 基本情報
 - 名称: TRESWIN（トレスウィン）
@@ -11,10 +11,11 @@
 - 対応エリア: 大阪を中心に全国
 
 ## サービス
-- [TRESWEB｜ホームページ制作・LP制作](https://tres-win.com/tresweb.html): LP制作（最短2週間〜）、コーポレートサイト構築、リニューアル、SEO・コンテンツ設計、サイト高速化、公開後の運用・改善の伴走（月次契約）。初回相談無料。
-- [TRESLINK｜SNS運用代行・SNSコンサル](https://tres-win.com/treslink.html): Instagram・X・TikTok・YouTube・LinkedIn・Facebook対応。戦略設計、コンテンツ制作、投稿・コメント・DM対応、月次レポート。Starter 月額50,000円〜／Standard 月額100,000円〜／Premium 要相談（税抜・初期費用別途）。
-- [商流舎｜営業支援](https://tres-win.com/shoryusha.html): 初期費用ゼロ・完全成功報酬型の商流マッチング。
-- [日本人財開発機構（J-TAD）｜キャリア支援](https://tres-win.com/jtad-corp.html): 1対1のオンラインキャリアコーチング「ハレマ」。
+- [トレーディング事業｜商社機能](https://tres-win.com/trading.html): 企業の潜在的な課題をヒアリングで整理し、取り扱う法人向けサービスの中から最適なものを提案。優れた商材の販路開拓（商流舎）も支援。初回相談無料。
+- [クリエイティブ事業｜TRESWEB（ホームページ・LP・動画制作）](https://tres-win.com/tresweb.html): LP制作（最短2週間〜）、コーポレートサイト構築、リニューアル、SEO・コンテンツ設計、サイト高速化、公開後の運用・改善の伴走（月次契約）、動画制作。初回相談無料。
+- [SNS支援事業｜TRESLINK（SNS運用代行・SNSコンサル）](https://tres-win.com/treslink.html): Instagram・X・TikTok・YouTube・LinkedIn・Facebook対応。戦略設計、コンテンツ制作、投稿・コメント・DM対応、月次レポート。Starter 月額50,000円〜／Standard 月額100,000円〜／Premium 要相談（税抜・初期費用別途）。
+- [商流舎｜トレーディング事業の販路開拓](https://tres-win.com/shoryusha.html): 初期費用ゼロ・完全成功報酬型の商流マッチング。
+- [キャリアコーチング事業｜日本人財開発機構（J-TAD）](https://tres-win.com/jtad-corp.html): 1対1のオンラインキャリアコーチング「ハレマ」。
 
 ## その他
 - [事業内容一覧](https://tres-win.com/services.html)
