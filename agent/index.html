@@ -865,7 +865,7 @@ function renderEditor(){
       ${esel("status","状態",C_ST)}
       ${efld("signedDate","締結日","","date")}
     </div>${d.signMethod==="書面"?`<p class="hint warn">書面で締結する場合、契約の種類と金額によっては収入印紙が必要です（電子契約なら不要）。</p>`:""}
-    <p class="hint">${tpl==="std"?"行政書士が監修したひな形です。第1条の業務の選択・追記や特約など、個別に変えた部分は監修の対象外です（契約書の末尾にもそう記載されます）。":"ひな形は一般的な条項で作っています。初めて使う種類の契約や、金額の大きい契約は弁護士の確認をおすすめします。"}</p></fieldset>${driveLogHTML(d)}`;
+    <p class="hint">${tpl==="std"?"行政書士が監修したひな形を、文面を変えずにそのまま使います（第1条の業務の選択だけが変わります）。末尾の監修者の表示も常に入ります。締結方法が電子契約でも、結びの一文は原文（本書2通・記名押印）のままです。":"ひな形は一般的な条項で作っています。初めて使う種類の契約や、金額の大きい契約は弁護士の確認をおすすめします。"}</p></fieldset>${driveLogHTML(d)}`;
     const hasI=!e.isNew&&S.invoices.some(i=>i.contractId===d.id);
     foot=`${del}<span class="sp"></span><button class="btn" data-act="preview">プレビュー・保存</button><button class="btn" data-act="save">保存</button>${e.isNew?"":`<button class="btn pri" data-act="c2i">${hasI?"今月分の請求書":"請求書を作成"}</button>`}`;
   }
@@ -1267,7 +1267,6 @@ function art1Editor(d){
     <label style="display:flex;gap:8px;align-items:center;font-size:13px;margin-top:4px"><input type="checkbox" data-act="art1inc" ${d.art1Inc!==false?"checked":""}>最後に「${ART1_INC}」を入れる</label>
     <div style="margin-top:10px">${fld("e-art1Note","第1条に追記する内容（任意・3項として入ります）",d.art1Note,"例：本業務の対象は、甲が運営する○○店のホームページとする。","textarea",'data-b="art1Note" style="min-height:56px"')}</div>
     <div id="art1-prev" class="linkbox" style="display:block;font-size:12.5px;line-height:1.8;margin-top:10px">${art1PrevHTML(d)}</div>
-    <div style="margin-top:12px">${fld("e-special","特約（任意）",d.special,"入れると第13条（特約）として追加されます","textarea",'data-b="special"')}</div>
   </fieldset>`;
 }
 function stdModel(c,cl,co){
@@ -1285,12 +1284,10 @@ function stdModel(c,cl,co){
   art("損害賠償及び成果の非保証","甲又は乙が本契約に違反し、相手方に損害を与えた場合、法令の定めに従い、その損害を賠償する責任を負うものとする。","乙は、本業務の遂行にあたり善良な管理者の注意をもって業務を行うものとする。ただし、甲乙間で別途合意した場合を除き、売上、成約、採用、転職その他の特定の成果を保証するものではない。");
   art("協議事項","本契約に定めのない事項又は本契約の解釈について疑義が生じた場合、甲乙は誠意をもって協議し、解決するものとする。");
   art("合意管轄","本契約に関する紛争は、東京地方裁判所を第一審の専属的合意管轄裁判所とする。");
-  if(lines(c.special).length) art("特約",lines(c.special));
-  const paper=c.signMethod!=="電子";
   return {title:"業務委託契約書",pre:"委託者（以下「甲」という。）と受託者（以下「乙」という。）は、甲が乙に委託する業務について、次のとおり業務委託契約（以下「本契約」という。）を締結する。",arts,
-    closing:paper?"本契約締結の証として本書2通を作成し、記名押印のうえ甲乙各1通を保有するものとする。":"本契約締結の証として本契約書の電磁的記録を作成し、甲乙が電子署名を施したうえ、各自その電磁的記録を保管するものとする。",
-    date:c.signedDate,dateText:"契約締結日："+wareki(c.signedDate),firstPlain:true,labels:{name:"氏名・法人名",rep:"代表者"},foot:SUPERVISION,
-    A:{name:cl.name||"",address:[cl.zip?"〒"+cl.zip:"",cl.address].filter(Boolean).join(" "),rep:cl.kind==="法人"?cl.person:""},B:{name:Bn,address:[co.zip?"〒"+co.zip:"",co.address].filter(Boolean).join(" "),rep:co.rep},paper};
+    closing:"本契約締結の証として本書2通を作成し、記名押印のうえ甲乙各1通を保有するものとする。",
+    date:c.signedDate,dateText:"契約締結日："+wareki(c.signedDate),firstPlain:true,noNo:true,labels:{addr:"住所：",name:"氏名・法人名：",rep:"代表者："},foot:SUPERVISION,
+    A:{name:cl.name||"",address:[cl.zip?"〒"+cl.zip:"",cl.address].filter(Boolean).join(" "),rep:cl.kind==="法人"?cl.person:""},B:{name:Bn,address:[co.zip?"〒"+co.zip:"",co.address].filter(Boolean).join(" "),rep:co.rep},paper:false};
 }
 // ---- Contract model ----
 function lines(s){return String(s||"").split(/\n+/).map(x=>x.trim()).filter(Boolean)}
@@ -1399,12 +1396,12 @@ function docContract(c){
   const M=contractModel(c);
   const arts=M.arts.map((a,i)=>`<div class="art"><h4>第${i+1}条（${esc(a.h)}）</h4>${a.ps.map((p,j)=>typeof p==="object"?`<p class="li">${esc(p.li)}</p>`:`<p class="i">${paraNo(M,a,p)}${esc(p)}</p>`).join("")}</div>`).join("");
   const L=M.labels||{name:"名称"};
-  const party=(r,p)=>`<div><b>${r}</b><br>住所<span class="ln">${esc(p.address||"")}</span>${L.name}<span class="ln">${esc(p.name)}</span>${L.rep||(r.startsWith("乙")?"代表":"代表者")}<span class="ln">${esc(p.rep||"")}${M.paper?'<span class="stamp">印</span>':""}</span></div>`;
+  const party=(r,p)=>`<div><b>${r}</b><br>${L.addr||"住所"}<span class="ln">${esc(p.address||"")}</span>${L.name}<span class="ln">${esc(p.name)}</span>${L.rep||(r.startsWith("乙")?"代表":"代表者")}<span class="ln">${esc(p.rep||"")}${M.paper?'<span class="stamp">印</span>':""}</span></div>`;
   return `<div class="paper"><h1 class="k">${esc(M.title)}</h1><p class="pre">${esc(M.pre)}</p>${arts}
   <p class="pre" style="margin-top:18px">${esc(M.closing)}</p><p style="margin:12px 0 0">${esc(M.dateText||jdate(M.date))}</p>
   <div class="sig">${party("甲（委託者）",M.A)}${party("乙（受託者）",M.B)}</div>
   ${(M.foot||[]).map((t,i)=>`<p class="small" style="margin:${i?2:22}px 0 0">${esc(t)}</p>`).join("")}
-  <p class="small" style="margin-top:${M.foot?10:22}px">契約番号 ${esc(c.no||"")}</p></div>`;
+  ${M.noNo?"":`<p class="small" style="margin-top:22px">契約番号 ${esc(c.no||"")}</p>`}</div>`;
 }
 function currentDoc(){
   const e=S.ed; if(!e) return null;
@@ -1469,7 +1466,8 @@ async function exportDocx(){
     });
     kids.push(P(M.closing,{indent:{firstLine:210},after:200}),P(M.dateText||jdate(M.date),{after:300}));
     const L=M.labels||{name:"名称"};
-    const party=(r,p)=>[P(r,{bold:true}),P("住所　"+(p.address||"")),P(L.name+"　"+p.name),P((L.rep||(r.startsWith("乙")?"代表":"代表者"))+"　"+(p.rep||"")+(M.paper?"　　　　　印":""),{after:240})];
+    const sp=x=>/：$/.test(x)?x:x+"　";
+    const party=(r,p)=>[P(r,{bold:true}),P(sp(L.addr||"住所")+(p.address||"")),P(sp(L.name)+p.name),P(sp(L.rep||(r.startsWith("乙")?"代表":"代表者"))+(p.rep||"")+(M.paper?"　　　　　印":""),{after:240})];
     kids.push(...party("甲（委託者）",M.A),...party("乙（受託者）",M.B));
     (M.foot||[]).forEach((t,i)=>kids.push(P(t,{size:17,after:20})));
     const doc=new D.Document({styles:{default:{document:{run:{font:F,size:21}}}},sections:[{properties:{page:{margin:{top:1418,bottom:1418,left:1418,right:1418}}},children:kids}]});
