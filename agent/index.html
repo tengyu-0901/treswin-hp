@@ -415,6 +415,9 @@ body.tw-locked .app{visibility:hidden}
     }
   };
 
+  // エージェントが使えるサーバー操作は資料のダウンロードだけ（権限はサーバーでも確認する）
+  window.__twApi = (action, payload) => action === 'getMaterial' ? api(action, payload) : Promise.reject({ code: 'forbidden', message: 'この操作はできません' });
+
   window.claude = {
     async use(name) {
       if (name === 'db') { await ready; return db; }
@@ -461,7 +464,7 @@ const quoteNo=(base,rev)=>`${base}-${String(rev||1).padStart(2,"0")}`;
 const revsOf=q=>q.base?S.quotes.filter(x=>x.base===q.base).sort((a,b)=>(a.rev||1)-(b.rev||1)):[q];
 const C_ST = ["作成中","送付済","締結済","終了"];
 const I_ST = ["未送付","送付済","入金済"];
-const COLS = ["products","clients","quotes","contracts","invoices","partners","income","deals","sales","agents","agentsRetired","resaleTerms","notices","noticeReads"];
+const COLS = ["products","clients","quotes","contracts","invoices","partners","income","deals","sales","agents","agentsRetired","resaleTerms","notices","noticeReads","materials"];
 const TAX = 0.10;
 const S = {view:"home", company:{}, loaded:{}, dbState:"wait", filter:{}, ed:null, pv:null};
 COLS.forEach(c=>S[c]=[]);
@@ -553,8 +556,8 @@ async function boot(){
 }
 
 // ===== Nav & routing =====
-const VIEWS=[["home","ホーム"],["clients","顧客"],["deals","案件"],["quotes","見積"],["contracts","契約書"],["invoices","請求"],["sales","売上"],["agents","エージェント管理"],["notices","お知らせ配信"],["resale","取扱商材"],["partners","紹介パートナー"],["settings","設定"]];
-const AGENT_VIEWS=[["home","ホーム"],["notices","お知らせ"],["clients","顧客"],["deals","案件"],["quotes","見積"],["sales","売上"],["rewards","報酬"],["myproducts","商材"]];
+const VIEWS=[["home","ホーム"],["clients","顧客"],["deals","案件"],["quotes","見積"],["contracts","契約書"],["invoices","請求"],["sales","売上"],["agents","エージェント管理"],["notices","お知らせ配信"],["resale","取扱商材"],["materials","営業資料"],["partners","紹介パートナー"],["settings","設定"]];
+const AGENT_VIEWS=[["home","ホーム"],["notices","お知らせ"],["clients","顧客"],["deals","案件"],["quotes","見積"],["sales","売上"],["rewards","報酬"],["myproducts","商材"],["materials","資料"]];
 const views=()=>(typeof MY!=="undefined"&&MY.twRole==="agent")?AGENT_VIEWS:VIEWS;
 function renderNav(){
   const cnt={clients:S.clients.length,quotes:S.quotes.filter(q=>q.status==="提出済").length,contracts:S.contracts.filter(c=>c.status==="送付済").length,invoices:S.invoices.filter(i=>i.status!=="入金済").length,deals:S.deals.filter(d=>!["受注","失注"].includes(d.stage)).length,sales:S.sales.filter(x=>x.status==="申請中").length,agents:S.sales.filter(x=>x.status==="申請中").length,myproducts:isAgent()?unseenProducts().length:0,notices:isAgent()?unreadNotices().length:0};
@@ -1111,6 +1114,9 @@ document.addEventListener("click",async ev=>{
   else if(a==="restoreagent"){el.disabled=true;try{await restoreAgent(el.dataset.uid)}catch(err){toast("復元できませんでした："+(err.message||err))}el.disabled=false}
   else if(a==="notify"){await notifyClick(el.dataset.pid)}
   else if(a==="noticemail"){await noticeMailClick(el.dataset.id)}
+  else if(a==="matup") await matUpload(el);
+  else if(a==="matdl") await matDownload(el.dataset.id,el);
+  else if(a==="matdel") await matDelete(el.dataset.id);
   else if(a==="genpw"){S.ed.data.password=genPassword();renderEditor();toast("新しいパスワードを作りました。保存すると切り替わります")}
   else if(a==="copycred"){const t=$("#cred-text")?.textContent||"";try{await navigator.clipboard.writeText(t);toast("コピーしました")}catch(_){const r=document.createRange();r.selectNodeContents($("#cred-text"));const s2=getSelection();s2.removeAllRanges();s2.addRange(r);toast("選択しました。コピーしてください")}}
   else if(a==="deal2s") dealToSale();
@@ -1164,6 +1170,7 @@ document.addEventListener("input",ev=>{
 document.addEventListener("change",async ev=>{
   const el=ev.target;
   if(el.dataset.act==="agentf"){S.filter.agent=el.value;render();return}
+  if(el.dataset.act==="matshare"){const m=byId("materials",el.closest("[data-mid]")?.dataset.mid);if(m){try{await save("materials",{...m,share:el.checked});toast(el.checked?"エージェントに公開しました":"社内のみにしました")}catch(_){}}return}
   if(el.dataset.act==="art1"&&S.ed){const ks=new Set(S.ed.data.art1Std||[]);el.checked?ks.add(el.dataset.k):ks.delete(el.dataset.k);S.ed.data.art1Std=ART1_STD.map(x=>x[0]).filter(k=>ks.has(k));updateArt1Prev();return}
   if(el.dataset.act==="art1inc"&&S.ed){S.ed.data.art1Inc=el.checked;updateArt1Prev();return}
   if(el.dataset.act==="edassign"&&S.ed){const ids=new Set(S.ed.data.agentIds||[]);el.checked?ids.add(el.dataset.agent):ids.delete(el.dataset.agent);S.ed.data.agentIds=[...ids];return}
@@ -1763,13 +1770,14 @@ function resaleCard(p){
   <div class="rc-k"><span>報酬 <b>${rewardLabel(p,MY.uid)}</b></span><span>${p.kind==="monthly"?"月額":"一括"} ${p.price?yen(p.price):"都度見積"}</span></div>
   ${p.desc?`<p>${esc(p.desc)}</p>`:""}${p.target?`<p class="hint">おすすめのお客様：${esc(p.target)}</p>`:""}
   ${u?`<a class="hint" href="${esc(u)}" target="_blank" rel="noopener">資料・紹介ページを開く</a>`:""}
+  ${matButtons(p.id)}
   <div class="tools"><button class="btn sm" data-act="newwith" data-col="deals" data-pid="${p.id}">案件を登録</button><button class="btn sm pri" data-act="newwith" data-col="sales" data-pid="${p.id}">売上を申請</button></div></div>`;
 }
 V.myproducts=()=>{
   const tw=S.products.filter(p=>!p.agentId&&!p.resale), rs=S.products.filter(isResale), own=S.products.filter(p=>p.agentId===MY.uid);
   if(isAgent()&&unseenProducts().length) setTimeout(()=>{markSeen();renderNav()},0);
   return head("商材","あなたが扱える商材",`<button class="btn pri" data-act="new" data-col="products">自社の商材を登録</button>`)+
-  `<div class="panel"><h2>TRESWINの商材<small>見積・売上の申請に使えます</small></h2>${tw.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>区分</th><th class="num">単価（税別）</th><th class="num">報酬</th></tr></thead><tbody>${tw.map(p=>`<tr style="cursor:default"><td><b>${esc(p.name)}</b>${newPill(p)}</td><td>${esc(p.division||"")}</td><td>${p.kind==="monthly"?"月額":"一括"}</td><td class="num">${p.price?yen(p.price):"都度見積"}</td><td class="num">${rewardLabel(p,MY.uid)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">まだ割り当てられた商材はありません。</div>`}</div>
+  `<div class="panel"><h2>TRESWINの商材<small>見積・売上の申請に使えます</small></h2>${tw.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>事業</th><th>区分</th><th class="num">単価（税別）</th><th class="num">報酬</th></tr></thead><tbody>${tw.map(p=>`<tr style="cursor:default"><td><b>${esc(p.name)}</b>${newPill(p)}${matButtons(p.id)}</td><td>${esc(p.division||"")}</td><td>${p.kind==="monthly"?"月額":"一括"}</td><td class="num">${p.price?yen(p.price):"都度見積"}</td><td class="num">${rewardLabel(p,MY.uid)}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">まだ割り当てられた商材はありません。</div>`}</div>
   ${rs.length?`<div class="panel"><h2>取扱商材<small>TRESWINが提携している他社の商材です。成約すると報酬が出ます</small></h2><div class="body"><div class="rcards">${rs.map(resaleCard).join("")}</div></div></div>`:""}
   <div class="panel"><h2>自社の商材<small>あなたとTRESWINだけが見られます</small></h2>${own.length?`<div class="tbl-wrap" style="border:0;border-radius:0"><table class="tbl"><thead><tr><th>商材</th><th>区分</th><th class="num">単価（税別）</th><th>メモ</th></tr></thead><tbody>${own.map(p=>`<tr data-act="edit" data-col="products" data-id="${p.id}"><td><b>${esc(p.name)}</b></td><td>${p.kind==="monthly"?"月額":"一括"}</td><td class="num">${yen(p.price)}</td><td>${esc(p.note||"")}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">自社で扱う商材があれば登録してください。</div>`}</div>`;
 };
@@ -2143,6 +2151,83 @@ async function sendDo(btn){
 function sentLogHTML(d){
   const ls=d.sent||[]; if(!ls.length) return "";
   return `<fieldset><legend>送付の履歴</legend><div class="items">${ls.slice().reverse().map(l=>`<div class="linkbox"><span class="mono">${esc(new Date(l.at).toLocaleString("ja-JP",{hour12:false}))}</span><span>${esc(l.to)}${l.cc?`（CC：${esc(l.cc)}）`:""}</span>${l.pdfUrl?`<a href="${esc(l.pdfUrl)}" target="_blank" rel="noopener">送ったPDF</a>`:""}</div>`).join("")}</div></fieldset>`;
+}
+
+// ===== 営業資料（提案書・パンフレット・トークスクリプトなどのファイル） =====
+// 中核メンバーがアップロード → ドライブの「TRESWIN営業資料」に保管 → 対象の商材が見えるエージェントだけがダウンロードできる。
+// 対象を選ばない資料は全エージェント共通。「公開しない」にすると社内だけの保管になる。
+const MAT_MAX=20*1024*1024;
+const fmtSize=n=>{n=Number(n)||0;return n>=1048576?(n/1048576).toFixed(1)+"MB":Math.max(1,Math.round(n/1024))+"KB"};
+const matTarget=m=>m.productId?(byId("products",m.productId)?.name||"（削除された商材）"):"共通（全エージェント）";
+const matsFor=pid=>S.materials.filter(m=>m.productId===pid);
+const matIcon=m=>{const t=String(m.mime||"")+String(m.name||"");return /pdf/i.test(t)?"PDF":/presentation|pptx?|key$/i.test(t)?"スライド":/sheet|xlsx?|csv/i.test(t)?"表":/word|docx?/i.test(t)?"文書":/image|png|jpe?g/i.test(t)?"画像":/video|mp4|mov/i.test(t)?"動画":"ファイル"};
+let matDelArm="";
+
+V.materials=()=>{
+  if(isAgent()) return agentMaterials();
+  const prods=S.products.filter(p=>!p.agentId).sort((a,b)=>(a.resale?1:0)-(b.resale?1:0)||(a.name||"").localeCompare(b.name||"","ja"));
+  const list=[...S.materials].sort((a,b)=>matTarget(a).localeCompare(matTarget(b),"ja")||(b.uploadedAt||"").localeCompare(a.uploadedAt||""));
+  const up=TW?`<div class="panel"><h2>資料をアップロード<small>1ファイル20MBまで・複数選べます</small></h2><div class="body"><div class="f">
+      <div class="full"><label class="fld">ファイル<input class="inp" type="file" id="mat-file" multiple></label></div>
+      <label class="fld">対象の商材<select class="inp" id="mat-target"><option value="">共通（全エージェント）</option>${prods.map(p=>`<option value="${p.id}">${p.resale?"【取扱】":""}${esc(p.name)}</option>`).join("")}</select></label>
+      <label class="fld">エージェントへの公開<select class="inp" id="mat-share"><option value="1">公開する（対象の商材が見える人）</option><option value="">公開しない（社内だけで保管）</option></select></label>
+      <div class="full"><label class="fld">メモ（任意）<input class="inp" id="mat-note" placeholder="例：2026年11月版の提案書。初回訪問で使う"></label></div>
+    </div><div class="tools" style="margin-top:10px"><button class="btn pri" data-act="matup">アップロード</button><span class="hint" id="mat-msg"></span></div></div></div>`
+    :`<div class="banner warn">資料のアップロードは、サイト版（tres-win.com/estimate）で行えます。</div>`;
+  return head("営業資料","商材ごとの提案書・パンフレットなどを保管し、エージェントに配布します","")+up+
+  (list.length?`<div class="tbl-wrap"><table class="tbl"><thead><tr><th>資料</th><th>対象</th><th class="num">サイズ</th><th>公開</th><th>登録日</th><th></th></tr></thead><tbody>${
+    list.map(m=>`<tr style="cursor:default" data-mid="${m.id}"><td><span class="tag">${matIcon(m)}</span> <b>${esc(m.name)}</b>${m.note?`<div class="hint">${esc(m.note)}</div>`:""}</td><td>${esc(matTarget(m))}</td><td class="num">${fmtSize(m.size)}</td>
+      <td><label style="display:inline-flex;gap:6px;align-items:center;font-size:13px"><input type="checkbox" data-act="matshare" ${m.share!==false?"checked":""}>${m.share!==false?"公開中":"社内のみ"}</label></td>
+      <td class="mono">${esc((m.uploadedAt||"").slice(0,10))}</td>
+      <td class="num" style="white-space:nowrap">${TW?`<button class="btn sm" data-act="matdl" data-id="${m.id}">ダウンロード</button> <button class="btn sm ${matDelArm===m.id?"danger":"ghost"}" data-act="matdel" data-id="${m.id}">${matDelArm===m.id?"もう一度押すと削除":"削除"}</button>`:""}</td></tr>`).join("")}</tbody></table></div>`
+    :emptyBox("資料はまだありません","提案書やパンフレットをアップロードすると、対象の商材を扱うエージェントがポータルからダウンロードできます。"));
+};
+function agentMaterials(){
+  if(!S.materials.length) return head("資料","営業に使える資料","")+emptyBox("資料はまだありません","TRESWINが資料を用意すると、ここからダウンロードできます。");
+  const groups={}; S.materials.forEach(m=>{const k=matTarget(m);(groups[k]=groups[k]||[]).push(m)});
+  const keys=Object.keys(groups).sort((a,b)=>a.startsWith("共通")?-1:b.startsWith("共通")?1:a.localeCompare(b,"ja"));
+  return head("資料",`${S.materials.length} 件`,"")+keys.map(k=>`<div class="panel"><h2>${esc(k)}<small>${groups[k].length} 件</small></h2><div class="body"><ul class="todo">${
+    groups[k].sort((a,b)=>(b.uploadedAt||"").localeCompare(a.uploadedAt||"")).map(m=>`<li style="cursor:default"><span class="tag">${matIcon(m)}</span><span class="t">${esc(m.name)}${m.note?`<span class="hint">　${esc(m.note)}</span>`:""}</span><button class="btn sm" data-act="matdl" data-id="${m.id}">ダウンロード（${fmtSize(m.size)}）</button></li>`).join("")}</ul></div></div>`).join("");
+}
+// 商材カード・一覧に添える「資料」ボタン
+const matButtons=pid=>{const ms=matsFor(pid);return ms.length?`<div class="tools" style="gap:6px;flex-wrap:wrap">${ms.map(m=>`<button class="btn sm ghost" data-act="matdl" data-id="${m.id}" title="${esc(m.note||"")}">${matIcon(m)}：${esc(m.name)}</button>`).join("")}</div>`:""};
+
+async function matUpload(btn){
+  const inp=$("#mat-file"), files=[...(inp?.files||[])];
+  if(!files.length){toast("ファイルを選んでください");return}
+  const big=files.filter(f=>f.size>MAT_MAX); if(big.length){toast(`20MBを超えるファイルは入れられません：${big.map(f=>f.name).join("、")}`);return}
+  const pid=$("#mat-target").value, share=!!$("#mat-share").value, note=$("#mat-note").value.trim();
+  btn.disabled=true; let n=0;
+  try{
+    for(const f of files){
+      $("#mat-msg").textContent=`アップロード中…（${n+1}／${files.length}）${f.name}`;
+      const r=await TW.api("uploadMaterial",{name:f.name,mime:f.type,data:await b64(f)});
+      await save("materials",{name:f.name,mime:f.type||"",size:r.size||f.size,fileId:r.fileId,productId:pid,share,note,uploadedAt:new Date().toISOString(),uploadedBy:MY.name||""});
+      n++;
+    }
+    toast(`${n}件の資料を保管しました`+(share?"。対象のエージェントのポータルに表示されます":""));
+  }catch(err){toast(err&&err.code==="bad_request"?"資料を保管するには、Apps Script を v2.4 に更新してください":`アップロードできませんでした（${n}件は保管済み）：`+(err.message||err))}
+  finally{btn.disabled=false; if($("#mat-msg"))$("#mat-msg").textContent=""; if(inp)inp.value=""; if(n&&$("#mat-note"))$("#mat-note").value=""}
+}
+async function matDownload(id,btn){
+  const m=byId("materials",id); if(!m) return;
+  if(!TW&&!isAgent()){toast("ダウンロードはサイト版で行えます");return}
+  const api=TW?TW.api:null;
+  if(btn){btn.disabled=true}
+  try{
+    const r=await (api?api("getMaterial",{id}):window.__twApi("getMaterial",{id}));
+    const bin=atob(r.data), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+    const blob=new Blob([u],{type:r.mime||m.mime||"application/octet-stream"});
+    if(DL) await DL.save({filename:r.name||m.name,data:blob}); else{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=r.name||m.name;a.click()}
+  }catch(err){toast(err&&err.code==="bad_request"?"資料のダウンロードは、サーバーの更新後に使えます":"ダウンロードできませんでした："+(err.message||err))}
+  finally{if(btn)btn.disabled=false}
+}
+async function matDelete(id){
+  const m=byId("materials",id); if(!m) return;
+  if(matDelArm!==id){matDelArm=id;render();setTimeout(()=>{if(matDelArm===id){matDelArm="";render()}},6000);return}
+  matDelArm="";
+  try{await TW.api("trashMaterial",{fileId:m.fileId});await removeDoc("materials",id);toast("資料を削除しました（ドライブではゴミ箱に移しました）")}
+  catch(err){toast("削除できませんでした："+(err.message||err))}
 }
 
 boot();
