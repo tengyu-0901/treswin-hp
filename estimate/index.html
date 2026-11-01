@@ -702,6 +702,7 @@ V.settings=()=>{
     ${fld("co-defPayment","お支払条件の初期値",c.defPayment)}
     ${sel("co-taxIncl","見積の単価の初期値",[["1","税込で入力"],["","税別で入力"]],c.taxIncl===false?"":"1")}
     <div class="full">${fld("co-defNotes","見積の備考の初期値",c.defNotes??DEF_NOTES,"","textarea")}</div>
+    <div class="full">${fld("co-mailSig","メールの署名（送付メールの末尾）",c.mailSig,"空欄なら屋号・担当者・住所・電話・メールから自動で作ります","textarea")}</div>
   </div>${!c.invoiceNo?`<p class="hint warn">インボイス登録番号が空欄のため、請求書は「適格請求書」の表記なしで出力されます。</p>`:""}</div></div>
   <div class="panel"><h2>Googleドライブ<small>書類と台帳の保存先</small></h2><div class="body"><div class="f">
     ${fld("co-drive-quotes","見積書の保存先フォルダ",c.drive?.quotes,"フォルダのURLかID")}
@@ -831,7 +832,7 @@ function renderEditor(){
     const nextRev=String((d.rev||1)+1).padStart(2,"0");
     body=`<div class="qsplit"><div class="qform">${body}</div><div class="qprev"><div class="qprev-in" id="qprev"></div></div></div>`;
     foot=old?`<span class="sp"></span><button class="btn" data-act="qdup">複製</button><button class="btn" data-act="preview">PDF・ドライブ</button>`
-      :`${del}<span class="sp"></span>${e.isNew?"":`<button class="btn" data-act="qdup">複製</button>`}<button class="btn" data-act="preview">PDF・ドライブ</button><button class="btn" data-act="save">保存</button>${issued?`<button class="btn ${hasC?"":"pri"}" data-act="revise">改訂版を作成（-${nextRev}）</button>`:""}${isAgent()||hasC||d.status==="失注"?"":`<button class="btn ${issued?"":"pri"}" data-act="q2c">受注して契約書を作成</button>`}${!isAgent()&&!e.isNew&&d.status!=="失注"?`<button class="btn" data-act="q2i">請求書を作成</button>`:""}`;
+      :`${del}<span class="sp"></span>${e.isNew?"":`<button class="btn" data-act="qdup">複製</button>`}<button class="btn" data-act="preview">PDF・ドライブ</button><button class="btn" data-act="save">保存</button>${canSend()&&!e.isNew?`<button class="btn" data-act="sendopen">送付する</button>`:""}${issued?`<button class="btn ${hasC?"":"pri"}" data-act="revise">改訂版を作成（-${nextRev}）</button>`:""}${isAgent()||hasC||d.status==="失注"?"":`<button class="btn ${issued?"":"pri"}" data-act="q2c">受注して契約書を作成</button>`}${!isAgent()&&!e.isNew&&d.status!=="失注"?`<button class="btn" data-act="q2i">請求書を作成</button>`:""}`;
   }
   if(col==="contracts"){
     const tpl=d.template||"general";
@@ -867,7 +868,7 @@ function renderEditor(){
     </div>${d.signMethod==="書面"?`<p class="hint warn">書面で締結する場合、契約の種類と金額によっては収入印紙が必要です（電子契約なら不要）。</p>`:""}
     <p class="hint">${tpl==="std"?"行政書士が監修したひな形を、文面を変えずにそのまま使います（第1条の業務の選択だけが変わります）。末尾の監修者の表示も常に入ります。締結方法が電子契約でも、結びの一文は原文（本書2通・記名押印）のままです。":"ひな形は一般的な条項で作っています。初めて使う種類の契約や、金額の大きい契約は弁護士の確認をおすすめします。"}</p></fieldset>${driveLogHTML(d)}`;
     const hasI=!e.isNew&&S.invoices.some(i=>i.contractId===d.id);
-    foot=`${del}<span class="sp"></span><button class="btn" data-act="preview">プレビュー・保存</button><button class="btn" data-act="save">保存</button>${e.isNew?"":`<button class="btn pri" data-act="c2i">${hasI?"今月分の請求書":"請求書を作成"}</button>`}`;
+    foot=`${del}<span class="sp"></span><button class="btn" data-act="preview">プレビュー・保存</button><button class="btn" data-act="save">保存</button>${canSend()&&!e.isNew?`<button class="btn" data-act="sendopen">送付する</button>`:""}${e.isNew?"":`<button class="btn pri" data-act="c2i">${hasI?"今月分の請求書":"請求書を作成"}</button>`}`;
   }
   if(col==="invoices"){
     body=`<fieldset><legend>宛先と期日</legend><div class="f">
@@ -881,7 +882,7 @@ function renderEditor(){
     ${itemsEditor(false)}
     <fieldset><legend>備考</legend>${fld("e-notes","",d.notes,"","textarea",'data-b="notes"')}</fieldset>
     <fieldset><legend>状態</legend><div class="f">${esel("status","状態",I_ST)}${efld("paidDate","入金日","","date")}</div></fieldset>${driveLogHTML(d)}`;
-    foot=`${del}<span class="sp"></span><button class="btn" data-act="preview">プレビュー・保存</button><button class="btn pri" data-act="save">保存</button>`;
+    foot=`${del}<span class="sp"></span><button class="btn" data-act="preview">プレビュー・保存</button><button class="btn ${canSend()&&!e.isNew?"":"pri"}" data-act="save">保存</button>${canSend()&&!e.isNew?`<button class="btn pri" data-act="sendopen">送付する</button>`:""}`;
   }
   if(col==="partners"){
     body=`<fieldset><legend>紹介パートナー</legend><div class="f">
@@ -946,7 +947,7 @@ async function saveEditor(){
   const id=await save(col,d);
   d.id=id; await agentAfterSave(col,d).catch(err=>console.warn(err)); e.data=d; e.isNew=false; toast("保存しました");
   renderEditor();
-  if(DRIVE_TRIGGER[col]&&d.status===DRIVE_TRIGGER[col]&&prevSt!==d.status&&S.company.autoDrive!==false&&MCP) driveSave(col,{...d});
+  if(DRIVE_TRIGGER[col]&&d.status===DRIVE_TRIGGER[col]&&prevSt!==d.status&&S.company.autoDrive!==false&&(TW||MCP)) driveSave(col,{...d});
   return id;
 }
 
@@ -1098,6 +1099,10 @@ document.addEventListener("click",async ev=>{
   else if(a==="bulkbill") await bulkBill();
   else if(a==="preview") openPreview();
   else if(a==="pvclose") closePreview();
+  else if(a==="sendopen"){const id=await saveEditor();if(!id)return;openPreview(true)}
+  else if(a==="pvsend"){if(S.pv){S.pv.send={...mailDraft(S.ed.col,S.ed.data),drive:true};renderPreview()}}
+  else if(a==="senddo") await sendDo(el);
+  else if(a==="sendcancel"){if(S.pv){delete S.pv.send;renderPreview()}}
   else if(a==="pdf") await exportPDF();
   else if(a==="drive"){if(!S.ed)return;let id=S.ed.data.id;if(S.ed.isNew||!id){id=await saveEditor();if(!id)return}el.disabled=true;await driveSave(S.ed.col,{...S.ed.data});el.disabled=false}
   else if(a==="ledger") await exportLedger();
@@ -1112,7 +1117,7 @@ document.addEventListener("click",async ev=>{
   else if(a==="q2i") await quoteToInvoice(S.ed?.data?.id);
   else if(a==="docx") await exportDocx();
   else if(a==="savecompany"){
-    const c={...S.company};["tradeName","rep","zip","tel","address","email","invoiceNo","bank","brandName","person","personEmail","defPayment","defNotes"].forEach(k=>c[k]=$("#co-"+k).value.trim());c.taxIncl=!!$("#co-taxIncl").value;
+    const c={...S.company};["tradeName","rep","zip","tel","address","email","invoiceNo","bank","brandName","person","personEmail","defPayment","defNotes","mailSig"].forEach(k=>c[k]=$("#co-"+k).value.trim());c.taxIncl=!!$("#co-taxIncl").value;
     const fid=v=>{v=(v||"").trim();const m=v.match(/folders\/([\w-]+)/)||v.match(/[?&]id=([\w-]+)/);return m?m[1]:v};
     c.drive={...(c.drive||{}),quotes:fid($("#co-drive-quotes").value),contracts:fid($("#co-drive-contracts").value),invoices:fid($("#co-drive-invoices").value),ledger:fid($("#co-drive-ledger").value)};
     c.autoDrive=!!$("#co-autoDrive").value;
@@ -1413,13 +1418,18 @@ function currentDoc(){
 }
 
 // ===== Preview & export =====
-function openPreview(){
+function openPreview(send=false){
   const doc=currentDoc(); if(!doc) return; S.pv=doc;
-  const canDl=!!DL;
+  if(send&&canSend()) S.pv.send={...mailDraft(S.ed.col,S.ed.data),drive:true};
+  renderPreview();
+}
+function renderPreview(){
+  const doc=S.pv; if(!doc) return;
+  const canDl=!!DL, sendable=canSend()&&["quotes","invoices","contracts"].includes(S.ed?.col);
   $("#pv").innerHTML=`<div class="pv" role="dialog" aria-label="プレビュー"><div class="bar"><span class="t">${esc(doc.title)}</span>
-    <button class="btn pri" data-act="drive" ${MCP?"":"disabled"}>Googleドライブに保存</button><button class="btn" data-act="pdf" ${canDl?"":"disabled"}>PDFで保存</button>${doc.docx?`<button class="btn" data-act="docx" ${canDl?"":"disabled"}>Wordで保存</button>`:""}<button class="btn ghost" data-act="pvclose">閉じる</button></div>
+    ${sendable&&!doc.send?`<button class="btn pri" data-act="pvsend">メールで送付</button>`:""}<button class="btn ${sendable?"":"pri"}" data-act="drive" ${TW||MCP?"":"disabled"}>Googleドライブに保存</button><button class="btn" data-act="pdf" ${canDl?"":"disabled"}>PDFで保存</button>${doc.docx?`<button class="btn" data-act="docx" ${canDl?"":"disabled"}>Wordで保存</button>`:""}<button class="btn ghost" data-act="pvclose">閉じる</button></div>
     ${canDl?"":`<div class="banner warn" style="margin:8px 16px 0">この画面ではファイルを保存できません。claude.ai で開いてください。</div>`}
-    <div class="stage"><div class="paper-fit" id="pv-fit">${doc.html}</div></div></div>`;
+    <div class="stage">${sendPanel()}<div class="paper-fit" id="pv-fit">${doc.html}</div></div></div>`;
   fitPaper();
 }
 function fitPaper(){const f=$("#pv-fit");if(!f)return;const w=f.parentElement.clientWidth-8;const s=Math.min(1,w/794);f.style.transform=`scale(${s})`;f.style.marginBottom=s<1?`-${f.scrollHeight*(1-s)}px`:"0"}
@@ -1519,6 +1529,7 @@ async function pdfBlob(html){
 }
 const b64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(blob)});
 async function driveSave(col,rec,{quiet=false}={}){
+  if(TW) return driveSaveServer(col,rec,{quiet});
   if(!MCP){toast("この画面ではGoogleドライブに保存できません");return false}
   if(!byId("clients",rec.clientId)) await new Promise(r=>setTimeout(r,600));
   const folder=S.company.drive?.[DRIVE_SUB[col]]||S.company.drive?.root;
@@ -1543,9 +1554,25 @@ async function driveSave(col,rec,{quiet=false}={}){
     return true;
   }catch(e){toast(driveErr(e));console.warn(e);return false}
 }
+// サイト版：PDFをサーバー（Apps Script）が直接ドライブに保存する。編集用ドキュメントは作れるときだけ
+async function driveSaveServer(col,rec,{quiet=false}={}){
+  const folder=S.company.drive?.[DRIVE_SUB[col]]||S.company.drive?.root||"";
+  const prev=S.ed; S.ed={col,data:rec}; const doc=currentDoc(); S.ed=prev;
+  if(!quiet) toast("Googleドライブに保存しています…");
+  try{
+    const pdf=await b64(await pdfBlob(doc.html));
+    const r=await TW.api("saveDoc",{folderId:folder,filename:doc.file,pdf,html:inlineHTML(doc.html)});
+    const log={at:new Date().toISOString(),status:rec.status||"",docUrl:r.docUrl||"",pdfUrl:r.pdfUrl||""};
+    const cur=byId(col,rec.id)||rec;
+    await save(col,{...cur,drive:[...(cur.drive||[]),log]});
+    if(S.ed&&S.ed.col===col&&S.ed.data.id===rec.id){S.ed.data.drive=[...(S.ed.data.drive||[]),log];renderEditor()}
+    toast(r.docUrl?"Googleドライブに保存しました（PDF＋編集用ドキュメント）":"Googleドライブに保存しました（PDF）");
+    return true;
+  }catch(e){toast(e&&e.code==="bad_request"?"ドライブに保存するには、Apps Script を v2.3 に更新してください":"Googleドライブに保存できませんでした："+(e.message||e));return false}
+}
 function driveLogHTML(d){
-  const ls=d.drive||[]; if(!ls.length) return "";
-  return `<fieldset><legend>Googleドライブの保存履歴</legend><div class="items">${ls.slice().reverse().map(l=>`<div class="linkbox"><span class="mono">${esc(new Date(l.at).toLocaleString("ja-JP",{hour12:false}))}</span>${l.status?pill(l.status):""}${l.docUrl?`<a href="${esc(l.docUrl)}" target="_blank" rel="noopener">ドキュメント</a>`:""}${l.pdfUrl?`<a href="${esc(l.pdfUrl)}" target="_blank" rel="noopener">PDF</a>`:""}</div>`).join("")}</div></fieldset>`;
+  const ls=d.drive||[]; if(!ls.length) return sentLogHTML(d);
+  return sentLogHTML(d)+`<fieldset><legend>Googleドライブの保存履歴</legend><div class="items">${ls.slice().reverse().map(l=>`<div class="linkbox"><span class="mono">${esc(new Date(l.at).toLocaleString("ja-JP",{hour12:false}))}</span>${l.status?pill(l.status):""}${l.docUrl?`<a href="${esc(l.docUrl)}" target="_blank" rel="noopener">ドキュメント</a>`:""}${l.pdfUrl?`<a href="${esc(l.pdfUrl)}" target="_blank" rel="noopener">PDF</a>`:""}</div>`).join("")}</div></fieldset>`;
 }
 async function exportLedger(){
   if(!MCP){toast("この画面ではGoogleドライブに保存できません");return}
@@ -2041,6 +2068,81 @@ function agentNoticeView(d){
 async function markNoticeRead(id){
   if(S.noticeReads.some(r=>r.noticeId===id&&r.agentId===MY.uid)) return;
   try{await save("noticeReads",{noticeId:id,agentId:MY.uid,readAt:new Date().toISOString()});renderNav()}catch(_){}
+}
+
+// ===== 書類の送付（見積書・請求書・契約書） =====
+// 「送付する」1回で：PDFを作る → Googleドライブに保存 → お客様へメール（PDF添付）→ 状態を「提出済／送付済」に進める。
+// メールとドライブ保存はサーバー（Apps Script）が行う。サイト版の中核メンバーだけが使える。
+const SEND_ST={quotes:{from:["下書き"],to:"提出済"},invoices:{from:["未送付"],to:"送付済"},contracts:{from:["作成中"],to:"送付済"}};
+const canSend=()=>!!TW&&!isAgent();
+const brandOf=()=>S.company.brandName||S.company.tradeName||"TRESWIN";
+function mailSig(){
+  const c=S.company;
+  if(c.mailSig) return c.mailSig;
+  return ["――――――――――――",c.tradeName||"TRESWIN",c.person||"",[c.zip?"〒"+c.zip:"",c.address].filter(Boolean).join(" "),c.tel?"TEL "+c.tel:"",c.personEmail||c.email||""].filter(Boolean).join("\n");
+}
+// 宛名：法人は「会社名＋担当者 様」、担当者がいなければ「御中」
+function addressee(d){
+  const cl=byId("clients",d.clientId)||{};
+  const person=String(d.contact&&d.contact!=="-"?d.contact:(cl.person||"")).replace(/\s*様\s*$/,"").trim();
+  if(cl.kind==="個人") return `${person||cl.name||""} 様`;
+  return person?`${cl.name||""}\n${person} 様`:`${cl.name||""} 御中`;
+}
+function mailDraft(col,d){
+  const cl=byId("clients",d.clientId)||{}, co=S.company, me=co.person?`${brandOf()}の${co.person}`:brandOf();
+  const to=String((col==="quotes"&&d.cmail&&d.cmail!=="-"?d.cmail:"")||cl.email||"").trim();
+  const head=`${addressee(d)}\n\nいつもお世話になっております。\n${me}です。\n\n`;
+  const tail=`\n\nご不明な点がございましたら、お気軽にお問い合わせください。\n何卒よろしくお願いいたします。\n\n${mailSig()}`;
+  if(col==="quotes"){
+    const r=calcQ(d), amt=[r.onceTotal?`初期費用 ${yen(r.onceTotal)}（税込）`:"",r.monthlyTotal?`月額 ${yen(r.monthlyTotal)}（税込）`:""].filter(Boolean).join("／")||yen(0);
+    return {to,subject:`【${brandOf()}】御見積書のご送付（${d.no||""}）`,body:head+`${d.title&&d.title!=="-"?`「${d.title}」の`:""}お見積書をお送りいたします。\n添付のPDFをご確認ください。\n\n見積番号：${d.no||""}\nお見積金額：${amt}\n有効期限：${jdate(d.validUntil)}`+tail};
+  }
+  if(col==="invoices"){
+    const r=calcI(d), total=(r.onceTotal||0)+(r.monthlyTotal||0);
+    return {to,subject:`【${brandOf()}】ご請求書のご送付（${d.month?jym(d.month+"-01")+"分・":""}${d.no||""}）`,body:head+`${d.month?jym(d.month+"-01")+"分の":""}ご請求書をお送りいたします。\n添付のPDFをご確認ください。\n\n請求番号：${d.no||""}\nご請求金額：${yen(total)}（税込）\nお支払期限：${jdate(d.dueDate)}${co.bank?`\nお振込先：\n${co.bank}`:""}`+tail};
+  }
+  const name=TPL_NAME[d.template||"std"]||"契約書";
+  return {to,subject:`【${brandOf()}】${name}のご送付（${d.no||""}）`,body:head+`${d.title?`「${d.title}」に関する`:""}${name}をお送りいたします。\n内容をご確認いただき、問題がなければご締結のお手続きをお願いいたします。\n\n契約番号：${d.no||""}`+tail};
+}
+function sendPanel(){
+  const f=S.pv&&S.pv.send; if(!f) return "";
+  const st=SEND_ST[S.ed.col], adv=st&&st.from.includes(S.ed.data.status);
+  return `<div class="panel" style="max-width:794px;margin:0 auto 16px"><h2>メールで送付<small>PDFを添付して送ります</small></h2><div class="body"><div class="f">
+    <label class="fld">宛先<input class="inp" id="sd-to" value="${esc(f.to)}" placeholder="例：sato@example.com（複数はカンマ区切り）"></label>
+    <label class="fld">CC（任意）<input class="inp" id="sd-cc" value="${esc(f.cc||"")}"></label>
+    <div class="full"><label class="fld">件名<input class="inp" id="sd-subject" value="${esc(f.subject)}"></label></div>
+    <div class="full"><label class="fld">本文<textarea class="inp" id="sd-body" style="min-height:260px;line-height:1.7">${esc(f.body)}</textarea></label></div>
+    <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" id="sd-drive" ${f.drive?"checked":""}>Googleドライブにも保存する</label>
+  </div>
+  <p class="hint">添付：${esc(S.pv.file)}.pdf${adv?`　／　送ると状態が「${st.to}」になります`:""}。返信先は設定のメール（${esc(S.company.email||"未設定")}）です。</p>
+  <div class="tools" style="margin-top:10px"><button class="btn pri" data-act="senddo">送信する</button><button class="btn ghost" data-act="sendcancel">やめる</button></div></div></div>`;
+}
+async function sendDo(btn){
+  const e=S.ed; if(!e||!S.pv) return;
+  const f={to:$("#sd-to").value.trim(),cc:$("#sd-cc").value.trim(),subject:$("#sd-subject").value.trim(),body:$("#sd-body").value,drive:$("#sd-drive").checked};
+  Object.assign(S.pv.send,f);
+  if(!f.to){toast("宛先のメールアドレスを入れてください");return}
+  if(btn){btn.disabled=true;btn.textContent="送信しています…"}
+  try{
+    const col=e.col, doc=currentDoc();
+    const pdf=await b64(await pdfBlob(doc.html));
+    const folder=f.drive?(S.company.drive?.[DRIVE_SUB[col]]||S.company.drive?.root||""):"";
+    const r=await TW.api("sendDoc",{to:f.to,cc:f.cc,subject:f.subject,body:f.body,filename:doc.file,pdf,saveDrive:f.drive,folderId:folder,html:f.drive?inlineHTML(doc.html):""});
+    const cur=byId(col,e.data.id)||e.data, st=SEND_ST[col], at=new Date().toISOString();
+    const next={...cur,sent:[...(cur.sent||[]),{at,to:f.to,cc:f.cc,subject:f.subject,pdfUrl:r.pdfUrl||""}]};
+    if(st&&st.from.includes(cur.status)) next.status=st.to;
+    if(r.pdfUrl||r.docUrl) next.drive=[...(cur.drive||[]),{at,status:next.status||"",docUrl:r.docUrl||"",pdfUrl:r.pdfUrl||""}];
+    await save(col,next); e.data={...next,id:cur.id};
+    closePreview(); renderEditor();
+    toast(`${f.to} に送信しました`+(r.pdfUrl?"（PDFをGoogleドライブに保存）":"")+(r.driveError?`。ドライブには保存できませんでした：${r.driveError}`:""));
+  }catch(err){
+    toast(err&&err.code==="bad_request"?"送付するには、Apps Script を v2.3 に更新してください":"送信できませんでした："+(err.message||err));
+    if(btn){btn.disabled=false;btn.textContent="送信する"}
+  }
+}
+function sentLogHTML(d){
+  const ls=d.sent||[]; if(!ls.length) return "";
+  return `<fieldset><legend>送付の履歴</legend><div class="items">${ls.slice().reverse().map(l=>`<div class="linkbox"><span class="mono">${esc(new Date(l.at).toLocaleString("ja-JP",{hour12:false}))}</span><span>${esc(l.to)}${l.cc?`（CC：${esc(l.cc)}）`:""}</span>${l.pdfUrl?`<a href="${esc(l.pdfUrl)}" target="_blank" rel="noopener">送ったPDF</a>`:""}</div>`).join("")}</div></fieldset>`;
 }
 
 boot();
