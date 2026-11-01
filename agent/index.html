@@ -441,7 +441,14 @@ const LOGO_SRC="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL0AAAC6CAYAAAD70k
 // ===== Core =====
 const DIVS = ["TRESWEB","TRESLINK","啓道塾","ハレマ","商流舎","その他"];
 const DIV_TPL = {TRESWEB:"web",TRESLINK:"sns","啓道塾":"consult","ハレマ":"general","商流舎":"general","その他":"general"};
-const TPL_NAME = {sns:"SNS運用代行業務委託契約書",web:"ホームページ制作業務委託契約書",consult:"経営支援コンサルティング契約書",general:"業務委託契約書"};
+const TPL_NAME = {std:"業務委託契約書",sns:"SNS運用代行業務委託契約書",web:"ホームページ制作業務委託契約書",consult:"経営支援コンサルティング契約書",general:"業務委託契約書"};
+// ひな形の選択肢（std＝行政書士監修の標準ひな形。新しい契約書はこれが初期値）
+const TPL_LABEL = {std:"業務委託契約書（行政書士監修・標準）",sns:"SNS運用代行業務委託契約書（旧）",web:"ホームページ制作業務委託契約書（旧）",consult:"経営支援コンサルティング契約書（旧）",general:"業務委託契約書（簡易・旧）"};
+// 監修版ひな形 第1条の業務（監修済みの5項目）。事業や見積の内容から初期値を選ぶ
+const ART1_STD=[["hp","ホームページの企画、制作及びこれに付随する業務"],["doc","営業資料の企画、作成及びこれに付随する業務"],["career","キャリアコンサルティング業務"],["sales","営業活動の代行、営業支援及び販売促進に関する業務"],["resale","商品又はサービスの紹介、販売及び販売代理に関する業務"]];
+const ART1_DIV={TRESWEB:{std:["hp"]},"ハレマ":{std:["career"]},"商流舎":{std:["sales","resale"]},TRESLINK:{custom:"SNSアカウントの運用代行及びこれに付随する業務"},"啓道塾":{custom:"経営に関する助言及び支援業務"}};
+const ART1_INC="前各号に付随し、甲乙が別途合意した業務";
+const SUPERVISION=["本契約書ひな形の監修：行政書士　樋渡章太郎（東京都行政書士会所属　第20080498号）","※個別の契約締結に際して変更・追加された条項は、監修の対象外です"];
 const Q_ST = ["下書き","提出済","受注","失注"];
 const Q_OLD = "改訂済";
 // 見積番号：TW+発行日-連番(2桁)-版(2桁)　例 TW20261010-01-01 → 修正すると TW20261010-01-02
@@ -730,7 +737,7 @@ function defaults(col){
   const t=today(), co=S.company;
   if(col==="clients") return {kind:"法人",divisions:[]};
   if(col==="quotes") return {status:"下書き",issueDate:t,validUntil:addDays(t,co.quoteValid??30),division:"TRESLINK",items:[{name:"",qty:1,unit:"式",price:"",kind:"once"}],clientId:"",taxIncl:co.taxIncl!==false,payment:co.defPayment||"",notes:co.defNotes??DEF_NOTES,delivery:""};
-  if(col==="contracts") return {status:"作成中",template:"general",division:"その他",termMonths:3,autoRenew:true,renewMonths:1,noticeDays:30,payDays:co.payDays??30,signMethod:"電子",monthly:0,initial:0,clientId:""};
+  if(col==="contracts") return {status:"作成中",template:"std",division:"その他",termMonths:3,autoRenew:true,renewMonths:1,noticeDays:30,payDays:co.payDays??30,signMethod:"電子",monthly:0,initial:0,clientId:""};
   if(col==="invoices") return {status:"未送付",issueDate:t,dueDate:addDays(t,co.payDays??30),month:ym(t),items:[{name:"",qty:1,unit:"式",price:0,kind:"once"}],clientId:""};
   if(col==="partners") return {rate:10,basis:"初回のみ"};
   if(col==="income") return {date:t,partner:"",status:"見込み",amount:0};
@@ -830,7 +837,7 @@ function renderEditor(){
     const tpl=d.template||"general";
     const q=d.quoteId?byId("quotes",d.quoteId):null;
     body=`<fieldset><legend>契約の種類と相手方</legend><div class="f">
-      ${esel("template","契約書のひな形",Object.entries(TPL_NAME))}
+      ${esel("template","契約書のひな形",Object.entries(TPL_LABEL))}
       ${sel("e-clientId","相手方（甲）",clientOpts().filter(o=>o[0]!=="__new"),d.clientId,'data-b="clientId"')}
       ${esel("division","事業",DIVS)}
       ${efld("title","業務の名称","例：Instagramアカウント運用代行業務")}
@@ -846,19 +853,19 @@ function renderEditor(){
       ${efld("initial",tpl==="web"?"制作費":"初期費用","0なら「なし」と記載","number")}
       ${tpl==="web"?efld("deliveryDate","納期","","date"):""}
       ${tpl==="web"?esel("payPlan","制作費の支払方法",["検収後一括","着手時50%・検収後50%"]):""}
-    </div><p class="hint">終了日：${contractEnd(d)?jdate(contractEnd(d)):"開始日と期間を入れると表示"}</p></fieldset>
-    <fieldset><legend>業務の内容</legend>
+    </div><p class="hint">終了日：${contractEnd(d)?jdate(contractEnd(d)):"開始日と期間を入れると表示"}</p>${tpl==="std"?`<p class="hint">監修版のひな形では、金額・期間は契約書に書かれません（第3条・第9条で「別途合意」）。MRRと請求書のために入力してください。</p>`:""}</fieldset>
+    ${tpl==="std"?art1Editor(d):`<fieldset><legend>業務の内容</legend>
       ${fld("e-scope","委託業務（1行に1項目）",d.scope,"契約書の第1条に箇条書きで入ります","textarea",'data-b="scope"')}
       ${tpl==="sns"?efld("accounts","対象アカウント・プラットフォーム","例：Instagram（@xxxx）、TikTok"):""}
       ${fld("e-exclusions","対象外の業務（1行に1項目）",d.exclusions,"医療・士業など規制業種では必ず記載","textarea",'data-b="exclusions"')}
       ${fld("e-special","特約事項",d.special,"契約書の末尾に追加されます","textarea",'data-b="special"')}
-    </fieldset>
+    </fieldset>`}
     <fieldset><legend>締結</legend><div class="f c3">
       ${esel("signMethod","締結方法",[["電子","電子契約"],["書面","書面（紙）"]])}
       ${esel("status","状態",C_ST)}
       ${efld("signedDate","締結日","","date")}
     </div>${d.signMethod==="書面"?`<p class="hint warn">書面で締結する場合、契約の種類と金額によっては収入印紙が必要です（電子契約なら不要）。</p>`:""}
-    <p class="hint">ひな形は一般的な条項で作っています。初めて使う種類の契約や、金額の大きい契約は弁護士の確認をおすすめします。</p></fieldset>${driveLogHTML(d)}`;
+    <p class="hint">${tpl==="std"?"行政書士が監修したひな形です。第1条の業務の選択・追記や特約など、個別に変えた部分は監修の対象外です（契約書の末尾にもそう記載されます）。":"ひな形は一般的な条項で作っています。初めて使う種類の契約や、金額の大きい契約は弁護士の確認をおすすめします。"}</p></fieldset>${driveLogHTML(d)}`;
     const hasI=!e.isNew&&S.invoices.some(i=>i.contractId===d.id);
     foot=`${del}<span class="sp"></span><button class="btn" data-act="preview">プレビュー・保存</button><button class="btn" data-act="save">保存</button>${e.isNew?"":`<button class="btn pri" data-act="c2i">${hasI?"今月分の請求書":"請求書を作成"}</button>`}`;
   }
@@ -948,7 +955,7 @@ async function quoteToContract(qid){
   if(!q) return;
   if(q.status===Q_OLD){toast("旧版の見積からは契約書を作れません。最新版を開いてください");return}
   const ex=S.contracts.find(c=>c.quoteId===qid); if(ex){openEditor("contracts",ex.id);return}
-  const r=calcQ(q), tpl=DIV_TPL[q.division]||"general", co=S.company;
+  const r=calcQ(q), tpl=DIV_TPL[q.division]||"general", co=S.company; // 期間などの初期値は事業ごとの旧ひな形の考え方を使い、契約書は監修版で作る
   const nm=new Date(); nm.setMonth(nm.getMonth()+1,1);
   const start=ymd(nm);
   const c={...defaults("contracts"),template:tpl,clientId:q.clientId,quoteId:q.id,division:q.division,title:(q.title||"").replace(/の?お?見積(り|書)?$/,"")||TPL_NAME[tpl].replace("契約書",""),
@@ -957,6 +964,7 @@ async function quoteToContract(qid){
   if(tpl==="sns"){c.termMonths=3;c.autoRenew=true;c.renewMonths=1}
   if(tpl==="web"){c.termMonths=r.monthly?12:0;c.autoRenew=!!r.monthly;c.renewMonths=12;c.deliveryDate=addDays(start,60);c.payPlan="着手時50%・検収後50%"}
   if(tpl==="consult"){c.termMonths=6;c.autoRenew=true;c.renewMonths=1}
+  c.template="std"; Object.assign(c,art1Defaults(q.division,q.items));
   c.no=nextNo("contracts","C");
   const id=await save("contracts",c);
   if(q.status!=="受注") await save("quotes",{...q,status:"受注"});
@@ -1125,6 +1133,7 @@ document.addEventListener("input",ev=>{
     S.ed.data[f]=v;
     if(f==="clientId"&&S.ed.col==="quotes"){const c=byId("clients",v);if(c){if(!S.ed.data.contact)S.ed.data.contact=c.person||"";if(!S.ed.data.ctel)S.ed.data.ctel=c.tel||"";if(!S.ed.data.cmail)S.ed.data.cmail=c.email||""}}
     if(f==="taxIncl"){renderEditor();return}
+    if(f==="art1Custom"||f==="art1Note") updateArt1Prev();
     if(S.ed.col==="invoices"&&(f==="quoteId"||f==="contractId")&&v){
       const hasItems=(S.ed.data.items||[]).some(i=>i.name||Number(i.price));
       if(f==="quoteId") fillInvoice(S.ed.data,{quote:byId("quotes",v)}); else fillInvoice(S.ed.data,{contract:byId("contracts",v)});
@@ -1150,6 +1159,8 @@ document.addEventListener("input",ev=>{
 document.addEventListener("change",async ev=>{
   const el=ev.target;
   if(el.dataset.act==="agentf"){S.filter.agent=el.value;render();return}
+  if(el.dataset.act==="art1"&&S.ed){const ks=new Set(S.ed.data.art1Std||[]);el.checked?ks.add(el.dataset.k):ks.delete(el.dataset.k);S.ed.data.art1Std=ART1_STD.map(x=>x[0]).filter(k=>ks.has(k));updateArt1Prev();return}
+  if(el.dataset.act==="art1inc"&&S.ed){S.ed.data.art1Inc=el.checked;updateArt1Prev();return}
   if(el.dataset.act==="edassign"&&S.ed){const ids=new Set(S.ed.data.agentIds||[]);el.checked?ids.add(el.dataset.agent):ids.delete(el.dataset.agent);S.ed.data.agentIds=[...ids];return}
   if(el.dataset.act==="pexpose"||el.dataset.act==="passign"){
     const pid=el.closest("[data-pid]")?.dataset.pid; const p=byId("products",pid); if(!p) return;
@@ -1225,6 +1236,62 @@ function docInvoice(inv){
   ${co.invoiceNo?`<p class="small" style="margin-top:10px">本書は適格請求書です（登録番号 ${esc(co.invoiceNo)}）。</p>`:""}</div>`;
 }
 
+// ---- 監修版ひな形：第1条 ----
+const wareki=v=>{if(!v)return "令和　年　月　日";const [y,m,d]=v.split("-").map(Number);const r=y-2018;return `令和${r===1?"元":r}年${m}月${d}日`};
+function art1Defaults(division,items){
+  const m=ART1_DIV[division]||{}, std=new Set(m.std||[]);
+  if((items||[]).some(i=>/営業資料/.test(i.name||""))) std.add("doc");
+  return {art1Std:ART1_STD.map(x=>x[0]).filter(k=>std.has(k)),art1Custom:m.custom||"",art1Inc:true,art1Note:""};
+}
+function art1Items(c){
+  const std=new Set(c.art1Std||[]);
+  const items=[...ART1_STD.filter(([k])=>std.has(k)).map(x=>x[1]),...lines(c.art1Custom)];
+  if(c.art1Inc!==false&&items.length) items.push(ART1_INC);
+  return items;
+}
+function art1Text(c){
+  const items=art1Items(c);
+  return [{p:"甲は乙に対し、次の業務（以下「本業務」という。）を委託し、乙はこれを受託する。"},...(items.length?items:["（業務を選んでください）"]).map((t,i)=>({li:`（${i+1}）${t}`})),
+    {p:"具体的な業務内容、成果物、納期、実施方法、委託料、支払条件その他必要な事項は、甲乙協議のうえ、書面又は電子メール等により定めるものとする。個別に合意した事項が本契約の定めと異なる場合は、当該個別の合意を優先するものとする。"},
+    ...lines(c.art1Note).length?[{p:lines(c.art1Note).join("")}]:[]];
+}
+function art1PrevHTML(c){let n=0;return `<b>第1条（目的・委託業務）</b>`+art1Text(c).map(x=>x.li?`<div style="padding-left:2em">${esc(x.li)}</div>`:`<div>${(n++)?n+"．":""}${esc(x.p)}</div>`).join("")}
+function updateArt1Prev(){const b=$("#art1-prev");if(b&&S.ed)b.innerHTML=art1PrevHTML(S.ed.data)}
+function art1Editor(d){
+  if(d.art1Std===undefined){const q=d.quoteId?byId("quotes",d.quoteId):null;Object.assign(d,art1Defaults(d.division,q&&q.items))}
+  const std=new Set(d.art1Std||[]);
+  return `<fieldset><legend>第1条（目的・委託業務）</legend>
+    <p class="hint" style="margin:0 0 8px">受けた業務を選んでください。番号は自動で振られます。</p>
+    <div style="display:grid;gap:6px">${ART1_STD.map(([k,t])=>`<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px"><input type="checkbox" data-act="art1" data-k="${k}" ${std.has(k)?"checked":""} style="margin-top:3px">${esc(t)}</label>`).join("")}</div>
+    <div style="margin-top:10px">${fld("e-art1Custom","その他の業務（1行に1項目・任意）",d.art1Custom,"例：SNSアカウントの運用代行及びこれに付随する業務","textarea",'data-b="art1Custom" style="min-height:64px"')}</div>
+    <label style="display:flex;gap:8px;align-items:center;font-size:13px;margin-top:4px"><input type="checkbox" data-act="art1inc" ${d.art1Inc!==false?"checked":""}>最後に「${ART1_INC}」を入れる</label>
+    <div style="margin-top:10px">${fld("e-art1Note","第1条に追記する内容（任意・3項として入ります）",d.art1Note,"例：本業務の対象は、甲が運営する○○店のホームページとする。","textarea",'data-b="art1Note" style="min-height:56px"')}</div>
+    <div id="art1-prev" class="linkbox" style="display:block;font-size:12.5px;line-height:1.8;margin-top:10px">${art1PrevHTML(d)}</div>
+    <div style="margin-top:12px">${fld("e-special","特約（任意）",d.special,"入れると第13条（特約）として追加されます","textarea",'data-b="special"')}</div>
+  </fieldset>`;
+}
+function stdModel(c,cl,co){
+  const A=cl.name||"（甲）", Bn=co.tradeName||"（乙）";
+  const arts=[]; const art=(h,...ps)=>arts.push({h,ps:ps.flat().filter(Boolean)});
+  art("目的・委託業務",art1Text(c).map(x=>x.li?{li:x.li}:x.p));
+  art("業務の遂行","乙は、善良な管理者の注意をもって本業務を遂行する。","甲は、本業務の遂行に必要な資料及び情報を乙に提供し、業務の遂行に協力するものとする。");
+  art("委託料及び支払方法","甲は乙に対し、本業務の委託料として、甲乙が別途合意した金額を支払う。","支払期限及び支払方法は、甲乙協議のうえ定めるものとする。","振込手数料は、甲の負担とする。");
+  art("成果物の取扱い","本業務により成果物が作成される場合、その著作権その他の知的財産権の帰属及び利用条件については、甲乙協議のうえ、別途合意するものとする。","前項の合意がない場合、成果物の著作権は乙に帰属するものとし、甲は、委託料の支払完了後、当該成果物を本業務の目的の範囲内で利用することができるものとする。","乙が従前から保有するノウハウ、汎用的な素材、テンプレートその他の知的財産権は、乙に留保されるものとする。");
+  art("成果物の確認","本業務において成果物の納品がある場合、甲は、納品後速やかにその内容を確認し、不備がある場合は乙に通知するものとする。","成果物に合意した仕様との不一致が認められる場合、乙は、甲乙協議のうえ、合理的な範囲で修正その他必要な対応を行うものとする。");
+  art("秘密保持","甲及び乙は、本業務に関連して知り得た相手方の営業上、技術上その他業務上の秘密情報を、相手方の事前の承諾なく第三者に開示又は漏えいしてはならない。ただし、法令に基づき開示が必要な場合は、この限りでない。","本条の義務は、本契約終了後も存続するものとする。");
+  art("個人情報の取扱い","甲及び乙は、本業務に関連して取り扱う個人情報について、関係法令を遵守し、本業務の目的の範囲内で適切に取り扱うものとする。");
+  art("再委託","乙は、本業務の全部又は一部を第三者に再委託する場合、あらかじめ甲の承諾を得るものとする。");
+  art("契約期間及び解除","本契約の有効期間は、契約締結日から本業務の終了日までとする。ただし、甲乙が別途合意した場合は、その合意に従うものとする。","甲又は乙は、相手方が本契約に違反し、相当の期間を定めて是正を求めても改善されない場合、本契約の全部又は一部を解除することができる。","本契約が途中で終了した場合、甲乙は、終了の原因、終了時点までに実施された業務の内容及び進捗状況、既に発生した費用等を踏まえ、委託料その他の精算について協議するものとする。ただし、甲の都合により本契約が終了した場合、甲は、乙が終了時点までに履行した業務に相当する委託料及び乙が負担した合理的な実費を支払うものとする。");
+  art("損害賠償及び成果の非保証","甲又は乙が本契約に違反し、相手方に損害を与えた場合、法令の定めに従い、その損害を賠償する責任を負うものとする。","乙は、本業務の遂行にあたり善良な管理者の注意をもって業務を行うものとする。ただし、甲乙間で別途合意した場合を除き、売上、成約、採用、転職その他の特定の成果を保証するものではない。");
+  art("協議事項","本契約に定めのない事項又は本契約の解釈について疑義が生じた場合、甲乙は誠意をもって協議し、解決するものとする。");
+  art("合意管轄","本契約に関する紛争は、東京地方裁判所を第一審の専属的合意管轄裁判所とする。");
+  if(lines(c.special).length) art("特約",lines(c.special));
+  const paper=c.signMethod!=="電子";
+  return {title:"業務委託契約書",pre:"委託者（以下「甲」という。）と受託者（以下「乙」という。）は、甲が乙に委託する業務について、次のとおり業務委託契約（以下「本契約」という。）を締結する。",arts,
+    closing:paper?"本契約締結の証として本書2通を作成し、記名押印のうえ甲乙各1通を保有するものとする。":"本契約締結の証として本契約書の電磁的記録を作成し、甲乙が電子署名を施したうえ、各自その電磁的記録を保管するものとする。",
+    date:c.signedDate,dateText:"契約締結日："+wareki(c.signedDate),firstPlain:true,labels:{name:"氏名・法人名",rep:"代表者"},foot:SUPERVISION,
+    A:{name:cl.name||"",address:[cl.zip?"〒"+cl.zip:"",cl.address].filter(Boolean).join(" "),rep:cl.kind==="法人"?cl.person:""},B:{name:Bn,address:[co.zip?"〒"+co.zip:"",co.address].filter(Boolean).join(" "),rep:co.rep},paper};
+}
 // ---- Contract model ----
 function lines(s){return String(s||"").split(/\n+/).map(x=>x.trim()).filter(Boolean)}
 const KANSUJI=["","一","二","三","四","五","六","七","八","九","十"];
@@ -1232,6 +1299,7 @@ function contractModel(c){
   const cl=byId("clients",c.clientId)||{name:""}, co=S.company;
   const A=cl.name||"（甲）", Bn=co.tradeName||"（乙）";
   const t=c.template||"general";
+  if(t==="std") return stdModel(c,cl,co);
   const m=Number(c.monthly)||0, ini=Number(c.initial)||0;
   const end=contractEnd(c);
   const scope=lines(c.scope), excl=lines(c.exclusions);
@@ -1325,14 +1393,18 @@ function contractModel(c){
   const closing=c.signMethod==="書面"?`本契約の成立を証するため、本書2通を作成し、甲乙記名押印のうえ、各1通を保有する。`:`本契約の成立を証するため、本契約書の電磁的記録を作成し、甲乙合意の後、電子署名を施し、各自その電磁的記録を保管する。`;
   return {title:TPL_NAME[t],pre,arts,closing,date:c.signedDate,A:{name:A,address:cl.address,rep:cl.kind==="法人"?cl.person:""},B:{name:Bn,address:[co.zip?"〒"+co.zip:"",co.address].filter(Boolean).join(" "),rep:co.rep},paper:c.signMethod==="書面"};
 }
+// 項の番号：旧ひな形は「1　2　」、監修版は1項に番号を付けず「2．3．」
+function paraNo(M,a,p){const plain=a.ps.filter(x=>typeof x!=="object"),i=plain.indexOf(p);if(plain.length<2)return "";if(M.firstPlain)return i?(i+1)+"．":"";return (i+1)+"　"}
 function docContract(c){
   const M=contractModel(c);
-  const arts=M.arts.map((a,i)=>`<div class="art"><h4>第${i+1}条（${esc(a.h)}）</h4>${a.ps.map((p,j)=>typeof p==="object"?`<p class="li">${esc(p.li)}</p>`:`<p class="i">${a.ps.filter(x=>typeof x!=="object").length>1?(a.ps.filter(x=>typeof x!=="object").indexOf(p)+1)+"　":""}${esc(p)}</p>`).join("")}</div>`).join("");
-  const party=(r,p)=>`<div><b>${r}</b><br>住所<span class="ln">${esc(p.address||"")}</span>名称<span class="ln">${esc(p.name)}</span>${r.startsWith("乙")?"代表":"代表者"}<span class="ln">${esc(p.rep||"")}${M.paper?'<span class="stamp">印</span>':""}</span></div>`;
+  const arts=M.arts.map((a,i)=>`<div class="art"><h4>第${i+1}条（${esc(a.h)}）</h4>${a.ps.map((p,j)=>typeof p==="object"?`<p class="li">${esc(p.li)}</p>`:`<p class="i">${paraNo(M,a,p)}${esc(p)}</p>`).join("")}</div>`).join("");
+  const L=M.labels||{name:"名称"};
+  const party=(r,p)=>`<div><b>${r}</b><br>住所<span class="ln">${esc(p.address||"")}</span>${L.name}<span class="ln">${esc(p.name)}</span>${L.rep||(r.startsWith("乙")?"代表":"代表者")}<span class="ln">${esc(p.rep||"")}${M.paper?'<span class="stamp">印</span>':""}</span></div>`;
   return `<div class="paper"><h1 class="k">${esc(M.title)}</h1><p class="pre">${esc(M.pre)}</p>${arts}
-  <p class="pre" style="margin-top:18px">${esc(M.closing)}</p><p style="margin:12px 0 0">${jdate(M.date)}</p>
+  <p class="pre" style="margin-top:18px">${esc(M.closing)}</p><p style="margin:12px 0 0">${esc(M.dateText||jdate(M.date))}</p>
   <div class="sig">${party("甲（委託者）",M.A)}${party("乙（受託者）",M.B)}</div>
-  <p class="small" style="margin-top:22px">契約番号 ${esc(c.no||"")}</p></div>`;
+  ${(M.foot||[]).map((t,i)=>`<p class="small" style="margin:${i?2:22}px 0 0">${esc(t)}</p>`).join("")}
+  <p class="small" style="margin-top:${M.foot?10:22}px">契約番号 ${esc(c.no||"")}</p></div>`;
 }
 function currentDoc(){
   const e=S.ed; if(!e) return null;
@@ -1391,13 +1463,15 @@ async function exportDocx(){
       const plain=a.ps.filter(x=>typeof x!=="object");
       a.ps.forEach(p=>{
         if(typeof p==="object") kids.push(P(p.li,{indent:{left:420,hanging:210}}));
-        else kids.push(P((plain.length>1?(plain.indexOf(p)+1)+"　":"")+p,{indent:{left:210,hanging:210}}));
+        else kids.push(P(paraNo(M,a,p)+p,{indent:{left:210,hanging:210}}));
       });
       kids.push(P("",{after:80}));
     });
-    kids.push(P(M.closing,{indent:{firstLine:210},after:200}),P(jdate(M.date),{after:300}));
-    const party=(r,p)=>[P(r,{bold:true}),P("住所　"+(p.address||"")),P("名称　"+p.name),P((r.startsWith("乙")?"代表　":"代表者　")+(p.rep||"")+(M.paper?"　　　　　印":""),{after:240})];
+    kids.push(P(M.closing,{indent:{firstLine:210},after:200}),P(M.dateText||jdate(M.date),{after:300}));
+    const L=M.labels||{name:"名称"};
+    const party=(r,p)=>[P(r,{bold:true}),P("住所　"+(p.address||"")),P(L.name+"　"+p.name),P((L.rep||(r.startsWith("乙")?"代表":"代表者"))+"　"+(p.rep||"")+(M.paper?"　　　　　印":""),{after:240})];
     kids.push(...party("甲（委託者）",M.A),...party("乙（受託者）",M.B));
+    (M.foot||[]).forEach((t,i)=>kids.push(P(t,{size:17,after:20})));
     const doc=new D.Document({styles:{default:{document:{run:{font:F,size:21}}}},sections:[{properties:{page:{margin:{top:1418,bottom:1418,left:1418,right:1418}}},children:kids}]});
     const blob=await D.Packer.toBlob(doc);
     await saveFile(currentDoc().file+".docx",blob);
