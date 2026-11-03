@@ -1,190 +1,368 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<link rel="icon" type="image/png" href="/treswinlogo2.png">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>プライバシーポリシー | 日本人財開発機構 J-TAD</title>
-<link rel="stylesheet" href="shared.css">
-<style>
-.legal-layout {
-  display: grid; grid-template-columns: 220px 1fr; gap: 60px; align-items: start;
-}
-@media(max-width:760px){ .legal-layout{grid-template-columns:1fr;} }
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="/treswinlogo2.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシーポリシー | TRESWIN（トレスウィン）</title>
+    <meta name="description" content="TRESWIN（トレスウィン）のプライバシーポリシー。TRESWEB・TRESLINK・商流舎・日本人財開発機構（ハレマ）を含む全事業での個人情報の取り扱いについて定めています。">
+    <link rel="canonical" href="https://tres-win.com/privacy.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="TRESWIN（トレスウィン）">
+    <meta property="og:title" content="プライバシーポリシー | TRESWIN（トレスウィン）">
+    <meta property="og:description" content="TRESWIN（トレスウィン）の個人情報の取り扱いについて。">
+    <meta property="og:url" content="https://tres-win.com/privacy.html">
+    <meta property="og:image" content="https://tres-win.com/treswinlogo2.png">
+    <meta property="og:locale" content="ja_JP">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #ffffff; color: #333; line-height: 1.8; overflow-x: hidden;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+        a { color: #1d184a; }
 
-.legal-toc { position: sticky; top: 80px; }
-.legal-toc-title {
-  font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--light);
-  margin-bottom: 14px; padding-bottom: 8px;
-  border-bottom: 1px solid var(--rule);
-}
-.legal-toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-.legal-toc-list a {
-  display: block; padding: 6px 10px;
-  font-size: 12px; color: var(--mid); text-decoration: none;
-  border-left: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-}
-.legal-toc-list a:hover { color: var(--navy); border-left-color: var(--gold); }
+        /* ヘッダー（共通） */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: fixed; width: 100%; top: 0; z-index: 1000;
+        }
+        .logo-area { display: flex; align-items: center; text-decoration: none; color: #1a1a1a; }
+        .logo-svg { width: 40px; height: 40px; margin-right: 12px; object-fit: contain; }
+        .logo-text { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; }
+        .hamburger { display: none; background: transparent; border: none; cursor: pointer; width: 30px; height: 22px; position: relative; z-index: 1001; }
+        .hamburger span { position: absolute; left: 0; width: 100%; height: 2px; background-color: #1a1a1a; transition: all 0.3s ease; }
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { top: 10px; }
+        .hamburger span:nth-child(3) { bottom: 0; }
+        nav ul { display: flex; list-style: none; }
+        nav ul li { margin-left: 30px; }
+        nav ul li a { text-decoration: none; color: #1a1a1a; font-size: 14px; font-weight: 600; letter-spacing: 1px; transition: color 0.3s; }
+        nav ul li a:hover { color: #dfd71c; }
 
-.legal-body { max-width: 680px; }
-.legal-updated {
-  font-family: var(--mono); font-size: 11px; color: var(--light);
-  letter-spacing: 0.08em; margin-bottom: 40px;
-  padding: 10px 14px; background: var(--off); border-left: 2px solid var(--gold);
-}
-.legal-article { margin-bottom: 48px; scroll-margin-top: 80px; }
-.legal-article-num {
-  font-family: var(--mono); font-size: 10px; color: var(--gold);
-  letter-spacing: 0.14em; margin-bottom: 6px;
-}
-.legal-article-title {
-  font-family: var(--serif); font-size: 18px; font-weight: 700;
-  color: var(--navy); margin-bottom: 14px; padding-bottom: 10px;
-  border-bottom: 1px solid var(--rule);
-}
-.legal-article p { font-size: 13px; color: var(--mid); line-height: 2.1; margin-bottom: 12px; }
-.legal-article ul { padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-.legal-article li { font-size: 13px; color: var(--mid); line-height: 1.9; }
-.legal-article table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
-.legal-article table th { background: var(--off); padding: 10px 12px; text-align: left; font-weight: 700; color: var(--navy); border: 1px solid var(--rule); font-size: 12px; }
-.legal-article table td { padding: 10px 12px; color: var(--mid); border: 1px solid var(--rule); line-height: 1.7; vertical-align: top; }
-</style>
+        /* ヒーロー */
+        .hero {
+            min-height: 280px; padding: 120px 5% 50px;
+            display: flex; flex-direction: column; justify-content: center;
+            background-color: #1d184a; color: #fff; position: relative; overflow: hidden;
+        }
+        .hero::after {
+            content: ''; position: absolute; right: -10%; bottom: -60px; width: 70%; height: 120px;
+            border-top: 10px solid #dfd71c; transform: rotate(-4deg); opacity: 0.9;
+        }
+        .hero h1 { font-size: clamp(30px, 5.5vw, 52px); font-weight: 900; letter-spacing: 5px; position: relative; z-index: 2; }
+        .hero p { font-size: 14px; letter-spacing: 3px; color: rgba(255,255,255,0.8); position: relative; z-index: 2; }
+
+        /* 本文 */
+        .main-content { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 60px 5% 100px; }
+        .legal-layout { display: grid; grid-template-columns: 230px 1fr; gap: 56px; align-items: start; }
+        .legal-toc { position: sticky; top: 96px; }
+        .legal-toc-title { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; color: #888; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+        .legal-toc ul { list-style: none; }
+        .legal-toc a { display: block; padding: 5px 10px; font-size: 13px; color: #555; text-decoration: none; border-left: 2px solid transparent; transition: color .2s, border-color .2s; }
+        .legal-toc a:hover { color: #1d184a; border-left-color: #dfd71c; }
+
+        .legal-body { min-width: 0; }
+        .lead { font-size: 15px; margin-bottom: 28px; }
+        .legal-dates { font-size: 12px; color: #666; padding: 10px 14px; background: #fcfcfc; border-left: 3px solid #dfd71c; margin-bottom: 44px; }
+        .article { margin-bottom: 48px; scroll-margin-top: 96px; }
+        .article h2 { font-size: 19px; color: #1d184a; padding-bottom: 10px; margin-bottom: 16px; border-bottom: 1px solid #eee; }
+        .article h2 .num { display: block; font-size: 11px; color: #b3ac0f; letter-spacing: 0.14em; margin-bottom: 2px; font-weight: 700; }
+        .article h3 { font-size: 15px; color: #1d184a; margin: 18px 0 8px; }
+        .article p { font-size: 14px; color: #444; line-height: 2; margin-bottom: 12px; }
+        .article ol, .article ul { padding-left: 1.4em; margin-bottom: 12px; }
+        .article li { font-size: 14px; color: #444; line-height: 1.9; margin-bottom: 4px; }
+        .table-wrap { width: 100%; overflow-x: auto; margin-bottom: 14px; }
+        .article table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 520px; }
+        .article th { background: #fcfcfc; color: #1d184a; text-align: left; padding: 10px 12px; border: 1px solid #eee; font-size: 13px; white-space: nowrap; }
+        .article td { padding: 10px 12px; border: 1px solid #eee; color: #444; line-height: 1.75; vertical-align: top; }
+        .article table.info th { width: 28%; white-space: normal; }
+        .article table.info { min-width: 0; }
+        .note { font-size: 12.5px !important; color: #777 !important; }
+        .contact-box { background: #fcfcfc; border: 1px solid #eee; border-top: 3px solid #1d184a; padding: 20px 22px; margin-top: 8px; }
+        .contact-box p { margin-bottom: 6px; }
+        .end { text-align: right; font-size: 14px; color: #444; margin-top: 24px; }
+
+        /* フッター（共通） */
+        .decoration-footer { position: relative; width: 100%; height: 200px; background-color: #1d184a; margin-top: auto; overflow: hidden; }
+        .slanted-line { position: absolute; top: -50px; left: -5%; width: 110%; height: 100px; background-color: #ffffff; transform: rotate(-3deg); border-bottom: 12px solid #dfd71c; z-index: 2; }
+        .footer-content { position: absolute; bottom: 30px; width: 100%; text-align: center; color: #fff; z-index: 3; }
+        .footer-content .logo-text { color: #fff; margin-bottom: 10px; display: block; }
+        .footer-content .copyright { font-size: 12px; color: #888; margin-top: 10px; }
+        .footer-legal { font-size: 12px; }
+        .footer-legal a { color: rgba(255,255,255,0.75); text-decoration: none; }
+        .footer-legal a:hover { color: #dfd71c; }
+
+        @media (max-width: 860px) {
+            .legal-layout { grid-template-columns: 1fr; gap: 32px; }
+            .legal-toc { position: static; background: #fcfcfc; border: 1px solid #eee; padding: 16px; }
+        }
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            nav { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background-color: rgba(255,255,255,0.98); box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: right 0.3s ease; display: flex; align-items: center; justify-content: center; }
+            nav.active { right: 0; }
+            nav ul { flex-direction: column; text-align: center; }
+            nav ul li { margin: 20px 0; }
+            nav ul li a { font-size: 18px; display: block; padding: 10px; }
+            .hamburger.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+            .main-content { padding: 40px 16px 80px; }
+            .hero::after { bottom: -90px; }
+            .article table.info th, .article table.info td { display: block; width: 100%; }
+            .article table.info th { border-bottom: none; }
+        }
+    </style>
 </head>
 <body>
 
-<div id="nav-placeholder"></div>
+    <header>
+        <a href="index.html" class="logo-area">
+            <img src="treswinlogo2.png" alt="TRESWIN" class="logo-svg">
+            <div class="logo-text">TRESWIN</div>
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="メニュー"><span></span><span></span><span></span></button>
+        <nav id="nav-menu">
+            <ul>
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="company.html">COMPANY</a></li>
+                <li><a href="partners.html">PARTNER</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<div class="breadcrumb">
-  <a href="jtad-corp.html">J-TAD</a>
-  <span class="breadcrumb-sep">›</span>
-  <span>プライバシーポリシー</span>
-</div>
-
-<div class="page-hero">
-  <div class="page-hero-inner">
-    <div class="page-hero-kicker">
-      <div class="page-hero-kicker-line"></div>
-      <span class="page-hero-kicker-text">Privacy Policy</span>
+    <div class="hero">
+        <h1>PRIVACY POLICY</h1>
+        <p>プライバシーポリシー（個人情報保護方針）</p>
     </div>
-    <h1 class="page-hero-title">プライバシーポリシー</h1>
-    <p class="page-hero-sub">日本人財開発機構は、個人情報の取り扱いを事業の根幹に関わる重要事項と位置づけています。以下の方針に基づき、適切に管理・保護します。</p>
-  </div>
-</div>
 
-<section class="sec">
-  <div class="sec-inner">
-    <div class="legal-layout">
+    <main class="main-content">
+        <div class="legal-layout">
 
-      <!-- TOC -->
-      <nav class="legal-toc">
-        <div class="legal-toc-title">目次</div>
-        <ul class="legal-toc-list">
-          <li><a href="#art1">第1条　定義</a></li>
-          <li><a href="#art2">第2条　取得する情報</a></li>
-          <li><a href="#art3">第3条　利用目的</a></li>
-          <li><a href="#art4">第4条　第三者提供</a></li>
-          <li><a href="#art5">第5条　安全管理措置</a></li>
-          <li><a href="#art6">第6条　開示・訂正・削除</a></li>
-          <li><a href="#art7">第7条　Cookie・解析ツール</a></li>
-          <li><a href="#art8">第8条　お問い合わせ</a></li>
-        </ul>
-      </nav>
+            <aside class="legal-toc" aria-label="目次">
+                <div class="legal-toc-title">目次</div>
+                <ul>
+                    <li><a href="#art1">1. 事業者情報</a></li>
+                    <li><a href="#art2">2. 適用範囲</a></li>
+                    <li><a href="#art3">3. 取得する個人情報</a></li>
+                    <li><a href="#art4">4. 利用目的</a></li>
+                    <li><a href="#art5">5. 要配慮個人情報</a></li>
+                    <li><a href="#art6">6. 第三者提供</a></li>
+                    <li><a href="#art7">7. 業務委託・外部サービス</a></li>
+                    <li><a href="#art8">8. 安全管理措置</a></li>
+                    <li><a href="#art9">9. Cookie・外部送信</a></li>
+                    <li><a href="#art10">10. お客様からお預かりする情報</a></li>
+                    <li><a href="#art11">11. 開示等の請求</a></li>
+                    <li><a href="#art12">12. 未成年の方の利用</a></li>
+                    <li><a href="#art13">13. ポリシーの変更</a></li>
+                    <li><a href="#art14">14. お問い合わせ窓口</a></li>
+                </ul>
+            </aside>
 
-      <!-- BODY -->
-      <div class="legal-body">
-        <div class="legal-updated">最終更新日：2025年12月1日</div>
+            <div class="legal-body">
+                <p class="lead">トレスウィン（TRESWIN）（以下「TRESWIN」といいます）は、お客様・お取引先・パートナーの皆さまからお預かりする個人情報を、事業の信頼を支える大切な情報と考えています。個人情報の保護に関する法律（以下「個人情報保護法」といいます）その他の関係法令とガイドラインを守り、以下の方針に基づいて適切に取り扱います。</p>
+                <div class="legal-dates">制定：2025年12月1日　／　最終改定：2026年11月1日</div>
 
-        <div class="legal-article" id="art1">
-          <div class="legal-article-num">第1条</div>
-          <div class="legal-article-title">定義</div>
-          <p>本プライバシーポリシーにおいて「個人情報」とは、個人情報の保護に関する法律（個人情報保護法）に定める個人情報を指します。氏名、メールアドレス、その他の記述等により特定の個人を識別できる情報を含みます。</p>
-          <p>「当機構」とは、日本人財開発機構（J-TAD）を指します。</p>
+                <section class="article" id="art1">
+                    <h2><span class="num">ARTICLE 01</span>事業者情報</h2>
+                    <div class="table-wrap">
+                        <table class="info">
+                            <tr><th>屋号</th><td>トレスウィン（TRESWIN）</td></tr>
+                            <tr><th>代表者</th><td>大槻 雄人、安達 友哉</td></tr>
+                            <tr><th>所在地</th><td>〒530-0001 大阪府大阪市北区梅田1丁目2番2号 大阪駅前第2ビル12-12</td></tr>
+                            <tr><th>お問い合わせ</th><td><a href="mailto:info@tres-win.com">info@tres-win.com</a></td></tr>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="article" id="art2">
+                    <h2><span class="num">ARTICLE 02</span>適用範囲</h2>
+                    <p>本ポリシーは、TRESWINが運営するすべての事業・ブランド・ウェブサイトにおける個人情報の取り扱いに適用されます。</p>
+                    <ul>
+                        <li>トレーディング事業（商社機能、商流舎、取扱商材の販売）</li>
+                        <li>クリエイティブ事業（TRESWEB：ホームページ・動画制作）</li>
+                        <li>SNS支援事業（TRESLINK）</li>
+                        <li>キャリアコーチング事業（日本人財開発機構〔J-TAD〕、個別キャリアコーチング「ハレマ」）</li>
+                        <li>エージェント（販売パートナー）・紹介パートナー向けのサービス</li>
+                        <li>ウェブサイト（tres-win.com）および各公式SNS・LINE公式アカウント</li>
+                    </ul>
+                    <p>各サービスで個別に定める規約等に個人情報の取り扱いについて定めがある場合は、その定めも併せて適用されます。</p>
+                </section>
+
+                <section class="article" id="art3">
+                    <h2><span class="num">ARTICLE 03</span>取得する個人情報</h2>
+                    <p>TRESWINは、適正な手段により、利用目的の達成に必要な範囲で以下の個人情報を取得します。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>場面</th><th>主な情報</th><th>取得方法</th></tr></thead>
+                            <tbody>
+                                <tr><td>お問い合わせ・ご相談</td><td>氏名、会社名、メールアドレス、電話番号、お問い合わせ内容</td><td>お問い合わせフォーム、メール、電話、LINE、SNSのメッセージ</td></tr>
+                                <tr><td>ご契約・お取引</td><td>ご担当者の氏名・部署・役職、連絡先、請求先、見積書・契約書・請求書に記載の情報、お打ち合わせの内容</td><td>ご本人からの提供、書面・メール・オンライン会議</td></tr>
+                                <tr><td>パートナー応募・エージェント登録</td><td>氏名、会社名、連絡先、経歴・ご提案内容、添付資料、報酬の振込先口座、ログインID、販売実績</td><td>パートナー募集フォーム、エージェントポータル、メール</td></tr>
+                                <tr><td>キャリアコーチング（ハレマ）</td><td>氏名またはニックネーム、LINEの表示名、メールアドレス、年齢層、就業状況、職歴、ご相談内容、セッションの記録</td><td>LINE公式アカウント、申込フォーム、オンラインセッション</td></tr>
+                                <tr><td>採用への応募</td><td>氏名、連絡先、履歴書・職務経歴書の記載事項、面接の内容</td><td>応募書類、メール、面接</td></tr>
+                                <tr><td>ウェブサイトの利用</td><td>IPアドレス、ブラウザの種類、アクセス日時、送信元ページ</td><td>サーバーによる自動記録（迷惑メール・不正送信の防止を含む）</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="article" id="art4">
+                    <h2><span class="num">ARTICLE 04</span>利用目的</h2>
+                    <p>TRESWINは、取得した個人情報を以下の目的の範囲内で利用します。</p>
+                    <ol>
+                        <li>お問い合わせ・ご相談への回答、資料の送付</li>
+                        <li>ご依頼いただいたサービス（ホームページ・動画制作、SNS運用代行、商材の販売・導入支援、キャリアコーチング等）の提供、それに伴うご連絡</li>
+                        <li>お見積り、ご契約の締結・履行、請求・入金確認などのお取引の管理</li>
+                        <li>エージェント・紹介パートナーの選考、登録、商材やお知らせの案内、販売実績の管理、報酬の計算・お支払い</li>
+                        <li>TRESWINが代理店として取り扱う他社商材について、お客様のご希望に応じて提供元へお取り次ぎすること（第6条の範囲で行います）</li>
+                        <li>サービスの品質向上、新しいサービスの企画・開発（個人を特定しない統計情報に加工して行います）</li>
+                        <li>TRESWINのサービス・セミナー・キャンペーン等のご案内（ご希望されない場合はいつでも停止できます）</li>
+                        <li>採用選考とその連絡</li>
+                        <li>ウェブサイトの安全な運営、迷惑メール・不正アクセスの防止</li>
+                        <li>利用規約や契約に違反する行為への対応、法令に基づく対応</li>
+                    </ol>
+                    <p>上記の目的と関連性があると合理的に認められる範囲を超えて利用目的を変更する場合は、あらかじめご本人の同意を得ます。</p>
+                </section>
+
+                <section class="article" id="art5">
+                    <h2><span class="num">ARTICLE 05</span>要配慮個人情報</h2>
+                    <p>TRESWINは、法令に基づく場合などを除き、ご本人の同意を得ずに要配慮個人情報（病歴など、取り扱いに特に配慮を要する情報）を取得しません。</p>
+                    <p>キャリアコーチングでは、ご相談の流れでご本人が健康状態などをお話しになることがあります。その場合は、ご本人の同意のもとで、コーチングの提供に必要な範囲に限って取り扱い、他の目的には利用しません。</p>
+                </section>
+
+                <section class="article" id="art6">
+                    <h2><span class="num">ARTICLE 06</span>第三者への提供</h2>
+                    <p>TRESWINは、次の場合を除き、あらかじめご本人の同意を得ずに個人情報を第三者に提供しません。</p>
+                    <ol>
+                        <li>法令に基づく場合</li>
+                        <li>人の生命・身体・財産の保護のために必要で、ご本人の同意を得ることが困難な場合</li>
+                        <li>公衆衛生の向上または児童の健全な育成の推進のために特に必要で、ご本人の同意を得ることが困難な場合</li>
+                        <li>国の機関・地方公共団体またはその委託を受けた者が法令の定める事務を行うことに協力する必要があり、ご本人の同意を得ることで事務の遂行に支障を及ぼすおそれがある場合</li>
+                        <li>第7条のとおり、利用目的の達成に必要な範囲で業務を委託する場合</li>
+                        <li>事業の承継に伴って個人情報が提供される場合</li>
+                    </ol>
+                    <p>他社商材のお取り次ぎや、エージェント・紹介パートナーを通じたご紹介に伴って、お客様の情報を提供元企業やパートナーと共有する必要がある場合は、その都度、提供先と提供する情報をお伝えし、ご本人の同意を得たうえで行います。</p>
+                </section>
+
+                <section class="article" id="art7">
+                    <h2><span class="num">ARTICLE 07</span>業務委託・外部サービスの利用</h2>
+                    <p>TRESWINは、利用目的の達成に必要な範囲で、個人情報の取り扱いの全部または一部を外部に委託することがあります。その場合は、個人情報を適切に取り扱う委託先を選び、必要かつ適切な監督を行います。</p>
+                    <p>また、業務の効率化と情報の安全な保管のため、以下のような外部サービスを利用しています。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>用途</th><th>サービス（提供事業者）</th><th>データの所在国</th></tr></thead>
+                            <tbody>
+                                <tr><td>ウェブサイト・お問い合わせフォームのサーバー</td><td>エックスサーバー（エックスサーバー株式会社）</td><td>日本</td></tr>
+                                <tr><td>メール、書類・業務データの保管、業務システム</td><td>Google Workspace／Googleドライブ等（Google LLC）</td><td>米国ほか</td></tr>
+                                <tr><td>お客様・会員の皆さまとの連絡</td><td>LINE公式アカウント（LINEヤフー株式会社）</td><td>日本ほか</td></tr>
+                                <tr><td>オンラインでのお打ち合わせ・コーチングセッション</td><td>Zoom、Google Meet等のビデオ会議サービス</td><td>米国ほか</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="note">※ 上記は主なものです。外国の事業者のサービスを利用する場合、その国の個人情報保護制度は、個人情報保護委員会のウェブサイト（「外国における個人情報の保護に関する制度等の調査」）で確認できます。米国には日本の個人情報保護法に相当する包括的な連邦法はありませんが、各提供事業者は利用規約等で個人情報の保護措置を定めています。</p>
+                </section>
+
+                <section class="article" id="art8">
+                    <h2><span class="num">ARTICLE 08</span>安全管理措置</h2>
+                    <p>TRESWINは、個人情報の漏えい・滅失・き損を防ぐため、以下の措置を講じています。</p>
+                    <h3>基本方針・規律の整備</h3>
+                    <p>本ポリシーを定め、個人情報の取得・利用・保存・削除の各段階での取り扱い方法をルール化しています。</p>
+                    <h3>組織的安全管理措置</h3>
+                    <p>個人情報を取り扱う者と、その者が扱える情報の範囲を限定しています。たとえばエージェントは、ご自身が担当するお客様・案件の情報しか閲覧できない仕組みにしています。漏えい等の事案が発生した場合は、速やかに事実関係を確認し、法令に従って個人情報保護委員会への報告とご本人への通知を行います。</p>
+                    <h3>人的安全管理措置</h3>
+                    <p>個人情報を取り扱う者に、秘密保持と適切な取り扱いを義務づけています。業務委託先・パートナーとも秘密保持に関する取り決めを行います。</p>
+                    <h3>物理的安全管理措置</h3>
+                    <p>個人情報を扱う端末や書類の盗難・紛失を防止し、第三者から閲覧されない環境で取り扱います。不要になった書類・データは、復元できない方法で廃棄・削除します。</p>
+                    <h3>技術的安全管理措置</h3>
+                    <p>ウェブサイトとフォームの通信をSSL/TLSで暗号化しています。業務システムにはIDとパスワードによるアクセス制御を設け、外部からの不正アクセスや不正な送信を防ぐ対策を行っています。</p>
+                    <h3>外的環境の把握</h3>
+                    <p>外国の事業者のサービスで個人情報を保管する場合は、その国の個人情報保護制度を把握したうえで安全管理措置を講じています（第7条をご覧ください）。</p>
+                </section>
+
+                <section class="article" id="art9">
+                    <h2><span class="num">ARTICLE 09</span>Cookie・外部送信について</h2>
+                    <p>当ウェブサイトでは、表示や機能のために外部のサービスを読み込んでおり、ページを閲覧すると、お使いの端末の情報が以下の事業者に送信されることがあります。これらの情報だけでTRESWINが個人を特定することはありません。</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>送信先</th><th>送信される主な情報</th><th>目的</th></tr></thead>
+                            <tbody>
+                                <tr><td>Google Fonts（Google LLC）</td><td>IPアドレス、ブラウザの種類、閲覧ページ</td><td>文字（フォント）の表示</td></tr>
+                                <tr><td>Unsplash（Unsplash Inc.）</td><td>IPアドレス、ブラウザの種類</td><td>ページ内の画像の表示</td></tr>
+                                <tr><td>LINE（LINEヤフー株式会社）</td><td>IPアドレス、ブラウザの種類、閲覧ページ</td><td>LINE友だち追加ボタンの表示</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>現在、当ウェブサイトではアクセス解析ツールや広告配信のためのCookieは使用していません。今後これらを導入する場合は、本ポリシーを改定し、送信先・送信される情報・目的を公表します。Cookieはブラウザの設定で無効にすることができます。</p>
+                </section>
+
+                <section class="article" id="art10">
+                    <h2><span class="num">ARTICLE 10</span>お客様からお預かりする情報の取り扱い</h2>
+                    <p>ホームページ制作、SNS運用代行、業務システムの構築などのご依頼に伴い、お客様が保有する個人情報（お客様の顧客情報、問い合わせ情報、SNSアカウントのログイン情報など）をお預かりすることがあります。</p>
+                    <p>これらの情報は、お客様との契約に基づく受託業務として、ご依頼の範囲内でのみ取り扱い、契約終了後は返却または削除します。</p>
+                </section>
+
+                <section class="article" id="art11">
+                    <h2><span class="num">ARTICLE 11</span>保有個人データの開示等の請求</h2>
+                    <p>ご本人は、TRESWINが保有するご自身の個人データについて、以下の請求を行うことができます。</p>
+                    <ul>
+                        <li>利用目的の通知</li>
+                        <li>開示（第三者提供の記録の開示を含みます）</li>
+                        <li>内容の訂正・追加・削除</li>
+                        <li>利用の停止・消去</li>
+                        <li>第三者への提供の停止</li>
+                    </ul>
+                    <h3>請求の方法</h3>
+                    <p>第14条の窓口へメールでご連絡ください。ご本人（または代理人）であることを確認したうえで、法令に従い、遅滞なく対応します。開示の方法は、電子データでのご提供を基本とし、ご希望に応じて書面でも対応します。</p>
+                    <h3>手数料</h3>
+                    <p>利用目的の通知・開示の請求に手数料はいただきません。</p>
+                    <p class="note">※ 法令により開示等に応じられない場合は、その理由をご説明します。</p>
+                </section>
+
+                <section class="article" id="art12">
+                    <h2><span class="num">ARTICLE 12</span>未成年の方の利用</h2>
+                    <p>キャリアコーチング「ハレマ」は18歳以上の方を対象としています。未成年の方がTRESWINのサービスを利用し、個人情報を提供される場合は、保護者の同意を得たうえでご利用ください。</p>
+                </section>
+
+                <section class="article" id="art13">
+                    <h2><span class="num">ARTICLE 13</span>本ポリシーの変更</h2>
+                    <p>TRESWINは、法令の改正や事業内容の変更に応じて、本ポリシーを改定することがあります。改定後のポリシーは、本ページに掲載した時点から効力を生じます。重要な変更がある場合は、当ウェブサイトでお知らせします。</p>
+                </section>
+
+                <section class="article" id="art14">
+                    <h2><span class="num">ARTICLE 14</span>お問い合わせ窓口</h2>
+                    <p>個人情報の取り扱いに関するご質問・ご相談・苦情、開示等の請求は、以下までご連絡ください。</p>
+                    <div class="contact-box">
+                        <p><strong>TRESWIN　個人情報お問い合わせ窓口</strong></p>
+                        <p>〒530-0001 大阪府大阪市北区梅田1丁目2番2号 大阪駅前第2ビル12-12</p>
+                        <p>メール：<a href="mailto:info@tres-win.com">info@tres-win.com</a></p>
+                        <p class="note">件名に「個人情報について」とご記入ください。日本人財開発機構（ハレマ）に関するお問い合わせは <a href="mailto:info@j-tad.jp">info@j-tad.jp</a> でも受け付けています。</p>
+                    </div>
+                    <p class="end">以上</p>
+                </section>
+            </div>
         </div>
+    </main>
 
-        <div class="legal-article" id="art2">
-          <div class="legal-article-num">第2条</div>
-          <div class="legal-article-title">取得する情報</div>
-          <p>当機構は、以下の情報を取得することがあります。</p>
-          <table>
-            <thead><tr><th>情報の種類</th><th>取得方法</th><th>具体例</th></tr></thead>
-            <tbody>
-              <tr><td>登録情報</td><td>ご本人による入力</td><td>メールアドレス、年齢層、就業状況</td></tr>
-              <tr><td>利用状況情報</td><td>自動取得</td><td>アクセスログ、操作ログ、セッション情報</td></tr>
-              <tr><td>診断・対話情報</td><td>サービス利用時</td><td>キャリア診断結果、AIとの対話内容（匿名化後に分析）</td></tr>
-              <tr><td>端末情報</td><td>自動取得</td><td>ブラウザ種別、OS、IPアドレス</td></tr>
-            </tbody>
-          </table>
+    <div class="decoration-footer">
+        <div class="slanted-line"></div>
+        <div class="footer-content">
+            <span class="logo-text">TRESWIN</span>
+            <div class="footer-legal"><a href="privacy.html">プライバシーポリシー</a></div>
+            <div class="copyright">&copy; 2026 TRESWIN. All Rights Reserved.</div>
         </div>
-
-        <div class="legal-article" id="art3">
-          <div class="legal-article-num">第3条</div>
-          <div class="legal-article-title">利用目的</div>
-          <p>取得した個人情報は、以下の目的に限り使用します。</p>
-          <ul>
-            <li>ハレマサービスの提供・改善・パーソナライズ</li>
-            <li>お問い合わせへの回答・サポート対応</li>
-            <li>サービスに関する重要なお知らせの送信</li>
-            <li>利用規約違反等への対応</li>
-            <li>匿名化・統計処理した上での研究・分析（個人が特定されない形でのみ実施）</li>
-          </ul>
-          <p>上記以外の目的で個人情報を使用する場合は、事前にご本人の同意を得ます。</p>
-        </div>
-
-        <div class="legal-article" id="art4">
-          <div class="legal-article-num">第4条</div>
-          <div class="legal-article-title">第三者への提供</div>
-          <p>当機構は、以下の場合を除き、個人情報を第三者に提供しません。</p>
-          <ul>
-            <li>ご本人の事前の同意がある場合</li>
-            <li>法令に基づく場合（裁判所・警察等の公的機関からの適法な要請）</li>
-            <li>人の生命・身体・財産の保護のために必要で、ご本人の同意を得ることが困難な場合</li>
-          </ul>
-          <p>なお、当機構のサービス提供のために業務委託先（サーバー事業者等）に個人情報を提供する場合がありますが、その際は適切な安全管理措置を講じた委託先のみに限定し、個人情報の取り扱いに関する契約を締結します。</p>
-        </div>
-
-        <div class="legal-article" id="art5">
-          <div class="legal-article-num">第5条</div>
-          <div class="legal-article-title">安全管理措置</div>
-          <p>当機構は、個人情報の漏洩・滅失・毀損の防止のため、以下の安全管理措置を講じています。</p>
-          <ul>
-            <li>通信の暗号化（SSL/TLS）</li>
-            <li>アクセス権限の管理と最小権限の原則の適用</li>
-            <li>定期的なセキュリティ監査の実施</li>
-            <li>従業員への個人情報保護に関する教育・研修</li>
-          </ul>
-        </div>
-
-        <div class="legal-article" id="art6">
-          <div class="legal-article-num">第6条</div>
-          <div class="legal-article-title">個人情報の開示・訂正・削除</div>
-          <p>ご本人は、当機構が保有するご自身の個人情報について、開示・訂正・利用停止・削除を請求する権利を有します。</p>
-          <p>請求される場合は、<a href="mailto:privacy@j-tad.jp" style="color:var(--navy);border-bottom:1px solid rgba(11,31,58,0.2);">privacy@j-tad.jp</a> までご連絡ください。本人確認の上、合理的な期間内に対応いたします。</p>
-        </div>
-
-        <div class="legal-article" id="art7">
-          <div class="legal-article-num">第7条</div>
-          <div class="legal-article-title">Cookieおよび解析ツールの使用</div>
-          <p>当機構のウェブサイトでは、サービス改善のためCookieおよびアクセス解析ツールを使用しています。これらにより取得される情報は個人を特定するものではありません。</p>
-          <p>ブラウザの設定によりCookieを無効にすることが可能ですが、一部機能が使用できなくなる場合があります。</p>
-        </div>
-
-        <div class="legal-article" id="art8">
-          <div class="legal-article-num">第8条</div>
-          <div class="legal-article-title">お問い合わせ窓口</div>
-          <p>個人情報の取り扱いに関するご質問・ご意見は、以下までご連絡ください。</p>
-          <p><strong>日本人財開発機構 個人情報管理担当</strong><br>
-          メール：<a href="mailto:privacy@j-tad.jp" style="color:var(--navy);border-bottom:1px solid rgba(11,31,58,0.2);">privacy@j-tad.jp</a></p>
-          <p>本ポリシーは、法令の改正や事業内容の変更に応じて適宜改定します。重要な変更がある場合は、ウェブサイト上でお知らせします。</p>
-        </div>
-      </div>
-
     </div>
-  </div>
-</section>
 
-<div id="footer-placeholder"></div>
-<script src="shared.js"></script>
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => { hamburger.classList.toggle('active'); navMenu.classList.toggle('active'); });
+        navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { hamburger.classList.remove('active'); navMenu.classList.remove('active'); }));
+    </script>
 </body>
 </html>
