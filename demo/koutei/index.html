@@ -9,7 +9,7 @@
    PICTURE: 時間グリッドの週カレンダーと、隣のLINEトーク画面
    COLOUR and TYPE: 白地、罫線は薄いグレー、予定は青、期限接近はオレンジ、遅延は赤、完了は淡い緑。Noto Sans JP
    LAYOUT: 上に1行のツールバー、左に担当者、中央にカレンダー、右にLINE。狭い画面は日表示＋タブ切替 */
-:root{color-scheme:light dark;--bg:light-dark(#fff,#131314);--ink:light-dark(#1f1f1f,#e3e3e3);--mute:light-dark(#5f6368,#9aa0a6);--line:light-dark(#dadce0,#3c4043);--soft:light-dark(#f1f3f4,#28292c);--blue:#1a73e8;--org:#f4511e;--red:#d93025;--okbg:light-dark(#e6f4ea,#1d3526);--okink:light-dark(#137333,#81c995);--green:#06c755;--chat:light-dark(#8eaad6,#25303f);--hh:48px}
+:root{color-scheme:light dark;--bg:light-dark(#fff,#131314);--ink:light-dark(#1f1f1f,#e3e3e3);--mute:light-dark(#5f6368,#9aa0a6);--line:light-dark(#dadce0,#3c4043);--soft:light-dark(#f1f3f4,#28292c);--blue:#1a73e8;--org:#f4511e;--red:#d93025;--okbg:light-dark(#e6f4ea,#1d3526);--okink:light-dark(#137333,#81c995);--green:#06c755;--chat:light-dark(#8eaad6,#25303f);--ngbg:light-dark(#fce8e6,#3a1d1b);--rw:#8430ce;--hh:48px}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 html,body{height:100%}
@@ -120,6 +120,25 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
 .snack button{color:light-dark(#8ab4f8,#1a73e8);font-weight:700}.snack button:hover{background:transparent}
 @media(max-width:999px){.fab{right:20px}}
 @media(max-width:600px){#form{width:auto;left:12px;right:12px;transform:translateY(-50%)}.two{grid-template-columns:minmax(0,1fr)}.snack{left:12px;bottom:88px}}
+.ev{cursor:grab;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.ev.dragging{z-index:6;box-shadow:0 8px 18px rgba(0,0,0,.35);cursor:grabbing;filter:none}
+.grip{position:absolute;right:0;top:0;bottom:0;width:14px;cursor:ew-resize}
+.grip::after{content:"";position:absolute;right:5px;top:30%;bottom:30%;width:3px;border-radius:2px;background:currentColor;opacity:0}
+.ev:hover .grip::after,.ev.dragging .grip::after{opacity:.6}
+.ev.rw{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.24) 0 6px,transparent 6px 12px)}
+.ev.ng{color:var(--red)}.ev.ng b{text-decoration:line-through}
+.rwtag{display:inline-block;font-size:11px;font-weight:700;padding:0 6px;border-radius:4px;background:var(--rw);color:#fff;margin-right:4px;vertical-align:1px}
+#rw{left:50%;top:50%;transform:translate(-50%,-50%);width:480px;max-height:calc(100dvh - 24px);overflow-y:auto}
+#rw h3{margin:0 0 6px;font-size:22px;font-weight:400}
+#rw .lead{margin:0 0 14px;color:var(--mute)}
+.opts{display:grid;gap:6px;margin:4px 0 12px}
+.opts label{display:flex;gap:12px;align-items:center;min-height:46px;border:1px solid var(--line);border-radius:8px;padding:0 12px;color:var(--ink);font-size:15px;cursor:pointer}
+.opts label:has(input:checked){border-color:var(--rw);background:light-dark(#f3e8fd,#2a1c38)}
+.opts input{width:18px;height:18px;margin:0;accent-color:var(--rw)}
+.opts small{color:var(--mute);margin-left:auto;white-space:nowrap}
+.preview{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:13px;margin:4px 0 12px;line-height:1.6}
+.rwbtn{background:var(--rw)!important;color:#fff!important}
+@media(max-width:600px){#rw{width:auto;left:12px;right:12px;transform:translateY(-50%)}}
 @keyframes pop{from{transform:translateY(8px);opacity:0}}
 @media(prefers-reduced-motion:no-preference){.new{animation:pop .35s ease-out}}
 </style></head><body>
@@ -147,6 +166,10 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
     <div class="lg"><i class="sw" style="background:var(--org)"></i>期限が近い（LINE通知中）</div>
     <div class="lg"><i class="sw" style="background:var(--red)"></i>期限を過ぎた</div>
     <div class="lg"><i class="sw" style="background:var(--okbg);border:1px solid var(--okink)"></i>完了</div>
+    <div class="lg"><i class="sw" style="background:var(--blue);background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.35) 0 3px,transparent 3px 6px)"></i>手戻りでやり直す工程</div>
+    <div class="lg"><i class="sw" style="background:var(--ngbg);border:1px solid var(--red)"></i>NG（手戻りへ）</div>
+    <h3>操作</h3>
+    <p class="hint" style="margin:0">予定をドラッグすると日程をずらせます。右端をドラッグすると期限を延ばせます。スマホでは長押ししてから動かします。</p>
     <p class="note">品番・担当者・日程はデモ用の架空データです。</p>
   </aside>
   <main class="cal" id="cal"><div class="chead" id="chead"></div><div class="cbody"><div class="wk" id="grid"></div></div></main>
@@ -158,8 +181,17 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
 </div>
 
 <button class="fab" id="fab" data-a="new" aria-label="工程を追加"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
-<div class="snack" id="snack" role="status"><span id="snackT"></span><button data-a="snack-undo">元に戻す</button></div>
+<div class="snack" id="snack" role="status"><span id="snackT"></span><span id="snackB"></span></div>
 <div id="veil" data-a="close"></div>
+<div class="pop" id="rw" role="dialog" aria-labelledby="rwTitle">
+  <div class="ptop"><button class="ic" data-a="close" aria-label="閉じる"><svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg></button></div>
+  <h3 id="rwTitle">手戻りを登録</h3>
+  <p class="lead" id="rwLead"></p>
+  <div class="fl">どの工程からやり直しますか？<div class="opts" id="rwOpts"></div></div>
+  <label class="fl">理由（任意）<input id="rwReason" placeholder="例：寸法不良、外観キズ" autocomplete="off"></label>
+  <div class="preview" id="rwPrev"></div>
+  <div class="pbtn" style="padding:0;justify-content:flex-end"><button class="ol" data-a="close">キャンセル</button><button class="rwbtn" data-a="rw-save">手戻りを登録</button></div>
+</div>
 <div class="pop" id="form" role="dialog" aria-labelledby="fTitle">
   <div class="ptop"><button class="ic" data-a="close" aria-label="閉じる"><svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg></button></div>
   <h3 id="fTitle">工程を追加</h3>
@@ -196,8 +228,8 @@ const SEED=[
 ['B1','B','成形','田中',H(11,23,8),H(11,24,12)],['B2','B','塗装','佐藤',H(11,24,13),H(11,25,15)],['B3','B','組立','鈴木',H(11,25,15),H(11,26,17)],['B4','B','出荷','小林',H(11,27,9),H(11,27,11)],
 ['C1','C','成形','田中',H(11,19,8),H(11,20,17),1],['C2','C','塗装','佐藤',H(11,23,8),H(11,24,10)],['C3','C','組立','鈴木',H(11,24,10),H(11,25,12)],['C4','C','出荷','小林',H(11,26,9),H(11,26,11)],
 ['D1','D','成形','田中',H(11,26,8),H(11,27,17)],['D2','D','組立','鈴木',H(11,30,8),H(12,1,12)],['D3','D','出荷','小林',H(12,2,9),H(12,2,11)]];
-const SL={plan:'予定',doing:'作業中',near:'期限が近い',late:'期限超過',done:'完了'};
-const COL={plan:'var(--blue)',doing:'var(--blue)',near:'var(--org)',late:'var(--red)',done:'var(--okbg)'};
+const SL={plan:'予定',doing:'作業中',near:'期限が近い',late:'期限超過',done:'完了',ng:'NG（手戻り）'};
+const COL={plan:'var(--blue)',doing:'var(--blue)',near:'var(--org)',late:'var(--red)',done:'var(--okbg)',ng:'var(--ngbg)'};
 const BELL='<svg viewBox="0 0 24 24"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.1-1.6-5.6-4.5-6.3V4a1.5 1.5 0 0 0-3 0v.7C7.6 5.4 6 7.9 6 11v5l-2 2v1h16v-1z"/></svg>';
 const PLAY='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',PAUSE='<svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>';
 const CLOSE='<svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg>';
@@ -206,7 +238,7 @@ const TRASH='<svg viewBox="0 0 24 24"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2
 const AUTO={'金型設計':'山本','設計':'山本','評価・試験':'山本','評価':'山本','金型製作':'高橋','試作成形':'田中','成形':'田中','量産成形':'田中','塗装':'佐藤','組立':'鈴木','検査':'鈴木','出荷':'小林'};
 const WORKERS=Object.keys(ROLE).filter(p=>p!=='中村');
 const S={lead:4,iv:1,esc:3,work:true};
-let panel=null,editId=null,whoTouched=false,lastDs=[],snackFn=null,snackTimer=null,seq=0;
+let panel=null,editId=null,whoTouched=false,lastDs=[],snackActs=[],snackTimer=null,seq=0,drag=null,suppress=false,rwCur=null;
 let now,T,M,push,reply,unread,sel,mid,seen,vd,tab='cal',hidden=new Set(),popT=null,popRect=null,timer=null;
 const $=id=>document.getElementById(id);
 const date=h=>new Date(B.getTime()+Math.round(h*60)*6e4);
@@ -218,7 +250,7 @@ const we=d=>date(d*24).getDay()%6===0;
 const isWork=h=>{const d=date(h);return !we(dayOf(h))&&d.getHours()>=8&&d.getHours()<18};
 const ord=id=>ORD.find(o=>o.id===id);
 const task=id=>T.find(t=>t.id===id);
-const st=t=>t.done?'done':now>t.due?'late':t.due-now<=S.lead?'near':now>=t.start?'doing':'plan';
+const st=t=>t.ng?'ng':t.done?'done':now>t.due?'late':t.due-now<=S.lead?'near':now>=t.start?'doing':'plan';
 const tn=t=>`【${t.proc}】${ord(t.o).name}`;
 const mode=()=>innerWidth<600?3:5;
 const lineVisible=()=>innerWidth>=1000||tab==='line';
@@ -277,6 +309,7 @@ function delay(id){
 function stopPlay(){clearInterval(timer);timer=null}
 
 function render(){
+  if(drag&&drag.active)return;
   if(lineVisible())unread[sel]=0;
   const ds=days(),f=date(ds[0]*24),l=date(ds[ds.length-1]*24);
   $('title').textContent=f.getMonth()===l.getMonth()?`2026年${f.getMonth()+1}月`:`2026年${f.getMonth()+1}月〜${l.getMonth()+1}月`;
@@ -306,7 +339,7 @@ function renderCal(ds){
   let h=`<div class="bg">${ds.map(()=>'<div></div>').join('')}</div>`;
   h+=bars.map(({t,c1,c2,cl,cr,r})=>{
     const s2=st(t),due=dayOf(t.due)<=l0?`〆${dayOf(t.due)===td?'今日':dd(t.due)} ${hm(t.due)}`:'';
-    return `<button class="ev ${s2}${cl?' cl':''}${cr?' cr':''}" data-a="ev" data-t="${t.id}" style="--c:${COL[s2]};grid-column:${c1+1}/${c2+2};grid-row:${r+1}"><span class="tx"><b>${t.proc}｜${ord(t.o).short}</b><span>${t.who}${due?'・'+due:''}</span></span>${t.n&&!t.done?`<span class="bell">${BELL}${t.n}</span>`:''}</button>`;
+    return `<button class="ev ${s2}${cl?' cl':''}${cr?' cr':''}${t.rw?' rw':''}" data-a="ev" data-t="${t.id}" data-c1="${c1}" data-c2="${c2}" style="--c:${COL[s2]};grid-column:${c1+1}/${c2+2};grid-row:${r+1}"><span class="tx"><b>${t.ng?'NG ':''}${t.proc}｜${ord(t.o).short}</b><span>${t.who}${due?'・'+due:''}</span></span>${t.n&&!t.done?`<span class="bell">${BELL}${t.n}</span>`:''}${t.done?'':'<span class="grip"></span>'}</button>`;
   }).join('')||'<p class="nil">この期間の工程はありません</p>';
   const ci=ds.indexOf(td),fr=Math.min(Math.max((now-td*24-8)/10,0),1);
   if(ci>=0)h+=`<div class="nowl" style="left:calc(${(ci+fr)/n*100}%)"></div>`;
@@ -314,12 +347,20 @@ function renderCal(ds){
 }
 function card(m){
   const t=task(m.task),o=ord(t.o);
-  const stamp=`<div class="stamp">✓ 完了済み（${hm(t.doneAt)}）</div>`;
+  const stamp=t.ng?`<div class="stamp" style="color:var(--red)">NG・手戻りを登録済み（${hm(t.doneAt)}）</div>`:`<div class="stamp">✓ 完了済み（${hm(t.doneAt)}）</div>`;
+  const ngb=hasPrev(t)?`<button class="ol" data-a="rw" data-t="${t.id}">NG・手戻り</button>`:'';
   let head,col,body,foot;
+  const work=t.done?stamp:`<div class="cf"><button class="ok" data-a="done" data-t="${t.id}">完了</button>${t.delay?'<button class="ol" disabled>遅れを連絡済み</button>':`<button class="ol" data-a="late" data-t="${t.id}">遅れそう</button>`}${ngb}</div>`;
   if(m.kind==='alert'||m.kind==='late'){
     const late=m.kind==='late';head=late?'期限を過ぎています':'作業の期限が迫っています';col=late?'var(--red)':'var(--org)';
     body=`<b>${tn(t)}</b> の作業の期限が${late?'過ぎています':'迫っています'}。<p>期限 ${dd(t.due)} ${hm(t.due)}・${m.n}回目の通知</p>`;
-    foot=t.done?stamp:`<div class="cf"><button class="ok" data-a="done" data-t="${t.id}">完了</button>${t.delay?'<button class="ol" disabled>遅れを連絡済み</button>':`<button class="ol" data-a="late" data-t="${t.id}">遅れそう</button>`}</div>`;
+    foot=work;
+  }else if(m.kind==='rw'){
+    head='手戻り：やり直しのお願い';col='var(--rw)';
+    body=`<b>${tn(t)}</b> のやり直しをお願いします。<p>${m.text}</p><p>期限 ${dd(t.due)} ${hm(t.due)}</p>`;foot=work;
+  }else if(m.kind==='rwB'){
+    head='手戻りが発生しました';col='var(--rw)';
+    body=`<b>${o.name}</b>（${o.no}）<p>${m.text}</p>`;foot=`<div class="cf"><button class="ol" data-a="see-ev" data-t="${m.ref||t.id}">カレンダーで見る</button></div>`;
   }else if(m.kind==='info'){
     head='遅れの連絡';col='var(--blue)';
     body=`${t.who}さんから <b>${tn(t)}</b> が遅れそうと連絡がありました。<p>期限 ${dd(t.due)} ${hm(t.due)}</p>`;
@@ -345,15 +386,15 @@ function renderLine(){
 }
 function renderPop(){
   const p=$('ev-pop');
-  $('set').style.display=panel==='set'?'block':'none';$('form').style.display=panel==='form'?'block':'none';
+  $('set').style.display=panel==='set'?'block':'none';$('form').style.display=panel==='form'?'block':'none';$('rw').style.display=panel==='rw'?'block':'none';
   $('veil').style.display=popT||panel?'block':'none';
   if(!popT){p.style.display='none';return}
   const t=task(popT),o=ord(t.o),s=st(t);
   const range=dayOf(t.start)===dayOf(t.due)?`${dd(t.start)} ${hm(t.start)}〜${hm(t.due)}`:`${dd(t.start)} ${hm(t.start)} 〜 ${dd(t.due)} ${hm(t.due)}`;
   p.innerHTML=`<div class="ptop"><button class="ic" data-a="edit" data-t="${t.id}" aria-label="編集">${EDIT}</button><button class="ic" data-a="del" data-t="${t.id}" aria-label="削除">${TRASH}</button><button class="ic" data-a="close" aria-label="閉じる">${CLOSE}</button></div>
   <div class="pt"><i class="sw" style="background:${COL[s]};${s==='done'?'border:1px solid var(--okink)':''}"></i><div><h3>${t.proc}｜${o.name}</h3><p>${range}</p>
-  <dl><dt>担当</dt><dd>${t.who}さん（${ROLE[t.who]}）</dd><dt>品番</dt><dd>${o.no}・${o.kind}</dd><dt>状態</dt><dd>${SL[s]}${t.done?`（${dd(t.doneAt)} ${hm(t.doneAt)}）`:''}${t.delay&&!t.done?'・遅れの連絡あり':''}</dd><dt>LINE通知</dt><dd>${t.n}回${t.escN||t.escL?'（班長にも通知）':''}</dd></dl></div></div>
-  <div class="pbtn">${t.done?`<button class="ol" data-a="undo" data-t="${t.id}">未完了に戻す</button>`:`<button class="pri" data-a="adm" data-t="${t.id}">完了にする</button>`}<button class="ol" data-a="see" data-t="${t.id}">${t.who}さんのLINE</button></div>`;
+  <dl><dt>担当</dt><dd>${t.who}さん（${ROLE[t.who]}）</dd><dt>品番</dt><dd>${o.no}・${o.kind}</dd><dt>状態</dt><dd>${SL[s]}${t.done?`（${dd(t.doneAt)} ${hm(t.doneAt)}）`:''}${t.delay&&!t.done?'・遅れの連絡あり':''}</dd><dt>LINE通知</dt><dd>${t.n}回${t.escN||t.escL?'（班長にも通知）':''}</dd>${t.ngReason!==undefined?`<dt>NG理由</dt><dd>${t.ngReason||'未記入'}</dd>`:''}${o.rw?`<dt>手戻り</dt><dd>この品番で${o.rw}回</dd>`:''}</dl></div></div>
+  <div class="pbtn">${t.ng?'':t.done?`<button class="ol" data-a="undo" data-t="${t.id}">未完了に戻す</button>`:`<button class="pri" data-a="adm" data-t="${t.id}">完了にする</button>${hasPrev(t)?`<button class="rwbtn" data-a="rw" data-t="${t.id}">NG・手戻り</button>`:''}`}<button class="ol" data-a="see" data-t="${t.id}">${t.who}さんのLINE</button></div>`;
   p.style.display='block';
   if(innerWidth>600&&popRect){
     const w=p.offsetWidth,hgt=p.offsetHeight;
@@ -397,17 +438,115 @@ function save(){
   }else{
     t={id:'X'+(++seq),o,proc,who,start:s0,due:d0,done:false,doneAt:null,n:0,last:null,escN:false,escL:false,delay:false};
     T.push(t);const id=t.id;msg='工程を追加しました';
-    snack(msg,()=>{T.splice(T.findIndex(x=>x.id===id),1);render()});
+    snack(msg,[{l:'元に戻す',f:()=>{T.splice(T.findIndex(x=>x.id===id),1);render()}}]);
   }
-  if(editId)snack(msg,null);
+  if(editId)snack(msg,[]);
   panel=null;tick();vd=nextWd(dayOf(s0)>dayOf(now)||dayOf(d0)<dayOf(now)?dayOf(s0):dayOf(now));render();
 }
-function snack(text,fn){
-  snackFn=fn;$('snackT').textContent=text;$('snack').querySelector('button').style.display=fn?'':'none';
+const snap=()=>({T:structuredClone(T),R:ORD.map(o=>o.rw||0)});
+const restore=x=>{T=x.T;ORD.forEach((o,i)=>o.rw=x.R[i]||0);popT=null;render()};
+const resetAlert=t=>{t.n=0;t.last=null;t.escN=false;t.escL=false;t.delay=false};
+function addWd(h,k){let d=dayOf(h);const fr=h-d*24,sg=Math.sign(k);for(let i=0;i<Math.abs(k);i++){d+=sg;while(we(d))d+=sg}return d*24+fr}
+function wdBetween(a,b){let c=0;for(let d=a+1;d<=b;d++)if(!we(d))c++;return c}
+function workH(a,b){let c=0;for(let h=a;h<b;h+=0.5)if(isWork(h))c+=0.5;return Math.max(c,0.5)}
+function addWork(s,w){let h=s;while(w>0){if(isWork(h))w-=0.5;h+=0.5}return h}
+const baseP=p=>p.replace(/（再）$/,'');
+const downstream=t=>T.filter(x=>x.o===t.o&&x.id!==t.id&&!x.done&&x.start>t.start);
+const hasPrev=t=>!t.done&&T.some(x=>x.o===t.o&&x.id!==t.id&&!x.ng&&x.start<t.start);
+function shiftDown(list,k){for(const x of list){x.start=addWd(x.start,k);x.due=addWd(x.due,k);resetAlert(x)}}
+// ---- drag ----
+function commitDrag(d){
+  const t=task(d.id);if(!t)return render();
+  const before=snap(),o0=t.start,k=d.k;
+  if(d.type==='move'){t.start=addWd(t.start,k);t.due=addWd(t.due,k)}
+  else{const nd=addWd(t.due,k);if(nd<=t.start)return render();t.due=nd}
+  resetAlert(t);tick();
+  const down=downstream({...t,start:o0}).filter(x=>x.id!==t.id);
+  const dir=k>0?`${k}日後ろへ`:`${-k}日前へ`;
+  const msg=d.type==='move'?`を${dir}移動しました`:k>0?`の期限を${k}日延ばしました`:`の期限を${-k}日早めました`;
+  const acts=[];
+  if(down.length&&!(d.type==='resize'&&k<0))acts.push({l:`後工程${down.length}件もずらす`,f:()=>{shiftDown(down,k);tick();render();snack(`後工程${down.length}件も${dir}ずらしました`,[{l:'元に戻す',f:()=>restore(before)}])}});
+  acts.push({l:'元に戻す',f:()=>restore(before)});
+  render();snack(`${t.proc}｜${ord(t.o).short} ${msg}`,acts);
+}
+function dragVis(){
+  const d=drag,el=d.el,n=lastDs.length;
+  let a=d.c1,b=d.c2;
+  if(d.type==='move'){a+=d.k;b+=d.k}else{b=Math.max(d.c1,d.c2+d.k)}
+  el.style.gridColumn=`${Math.min(Math.max(a,0),n-1)+1}/${Math.min(Math.max(b,0),n-1)+2}`;
+}
+$('grid').addEventListener('pointerdown',e=>{
+  const el=e.target.closest('.ev');if(!el||e.button>0)return;
+  const t=task(el.dataset.t);if(!t||t.done)return;
+  drag={el,id:t.id,x0:e.clientX,y0:e.clientY,type:e.target.closest('.grip')?'resize':'move',k:0,active:false,touch:e.pointerType!=='mouse',colW:$('grid').clientWidth/lastDs.length,c1:+el.dataset.c1,c2:+el.dataset.c2};
+  if(drag.touch){const d=drag;d.timer=setTimeout(()=>{if(drag===d){d.active=true;el.classList.add('dragging');try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}}},380)}
+});
+addEventListener('pointermove',e=>{
+  const d=drag;if(!d)return;
+  const dx=e.clientX-d.x0,dy=e.clientY-d.y0;
+  if(!d.active){
+    if(d.touch){if(Math.hypot(dx,dy)>8){clearTimeout(d.timer);drag=null}return}
+    if(Math.abs(dx)<6)return;
+    d.active=true;d.el.classList.add('dragging');
+  }
+  const k=Math.round(dx/d.colW);if(k!==d.k){d.k=k;dragVis()}
+});
+addEventListener('pointerup',()=>{
+  const d=drag;if(!d)return;clearTimeout(d.timer);drag=null;
+  if(!d.active)return;
+  suppress=true;setTimeout(()=>{suppress=false},300);
+  if(d.k===0)render();else commitDrag(d);
+});
+addEventListener('pointercancel',()=>{const d=drag;if(!d)return;clearTimeout(d.timer);drag=null;if(d.active)render()});
+addEventListener('touchmove',e=>{if(drag&&drag.active)e.preventDefault()},{passive:false});
+addEventListener('contextmenu',e=>{if(e.target.closest('.ev'))e.preventDefault()});
+// ---- rework ----
+function rwCands(cur){
+  const list=T.filter(x=>x.o===cur.o&&!x.ng&&(x.start<cur.start||x.id===cur.id)).sort((a,b)=>a.start-b.start);
+  const m=new Map();for(const x of list)m.set(baseP(x.proc),x);
+  const out=[...m.values()].sort((a,b)=>a.start-b.start);
+  return out.filter(x=>x.id!==cur.id).concat([cur]);
+}
+function rwPlan(cur,target){
+  const c=rwCands(cur),chain=c.slice(c.findIndex(x=>x.id===target.id));
+  let s=now;if(isWork(s))s=Math.ceil(s*2)/2;while(!isWork(s))s+=0.5;
+  const copies=chain.map(x=>{const st0=s,due=addWork(s,workH(x.start,x.due));s=due;return {proc:baseP(x.proc)+'（再）',who:x.who,start:st0,due}});
+  const down=T.filter(x=>x.o===cur.o&&!x.done&&!x.ng&&x.id!==cur.id&&x.start>cur.start);
+  const k=s>cur.due?wdBetween(dayOf(cur.due),dayOf(s)):0;
+  return {chain,copies,down,k,end:s};
+}
+function openRw(id){
+  const cur=task(id);if(!cur)return;rwCur=id;
+  const c=rwCands(cur);
+  $('rwLead').innerHTML=`<b>${tn(cur)}</b> でNGが出た場合などに、前の工程からやり直す予定を自動で組みます。`;
+  $('rwOpts').innerHTML=c.map((x,i)=>`<label><input type="radio" name="rwt" value="${x.id}" ${i===Math.max(c.length-2,0)?'checked':''}>${baseP(x.proc)}${x.id===cur.id?'（この工程だけ）':''}<small>${x.who}さん</small></label>`).join('');
+  $('rwReason').value='';popT=null;panel='rw';rwPreview();renderPop();
+}
+function rwPreview(){
+  const cur=task(rwCur),tg=task(document.querySelector('[name=rwt]:checked').value),p=rwPlan(cur,tg);
+  $('rwPrev').innerHTML=`<b>やり直す工程：</b>${p.copies.map(x=>`${x.proc}（${x.who}）`).join(' → ')}<br><b>やり直しの完了見込み：</b>${dd(p.end)} ${hm(p.end)}<br>${p.down.length?`<b>後工程：</b>${p.down.map(x=>x.proc).join('・')} を${p.k?`${p.k}日後ろにずらします`:'そのままにします（間に合う見込み）'}`:'<b>後工程：</b>なし'}<br><b>LINE：</b>${p.copies[0].who}さんと班長に通知します`;
+}
+$('rwOpts').addEventListener('change',rwPreview);
+function doRw(){
+  const cur=task(rwCur),tg=task(document.querySelector('[name=rwt]:checked').value);if(!cur||!tg)return;
+  const before=snap(),p=rwPlan(cur,tg),o=ord(cur.o),reason=$('rwReason').value.trim().slice(0,60);
+  cur.done=true;cur.ng=true;cur.doneAt=now;cur.ngReason=reason;o.rw=(o.rw||0)+1;
+  const made=p.copies.map(x=>{const t={id:'R'+(++seq),o:cur.o,...x,rw:true,done:false,doneAt:null,n:0,last:null,escN:false,escL:false,delay:false};T.push(t);return t});
+  if(p.k)shiftDown(p.down,p.k);
+  const esc=v=>v.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const why=`${cur.proc}でNG${reason?`（${esc(reason)}）`:''}`;
+  add({to:made[0].who,kind:'rw',task:made[0].id,api:'push',text:`${why}。${made[0].proc.replace('（再）','')}からやり直します。`});
+  add({to:BOSS,kind:'rwB',task:cur.id,ref:made[0].id,api:'push',text:`${why}。${p.copies.map(x=>x.proc).join(' → ')} を組み直しました。${p.k?`後工程${p.down.length}件を${p.k}日後ろにずらしました。`:''}`});
+  panel=null;tick();follow();render();
+  snack(`手戻りを登録しました（${p.copies.length}工程を追加）`,[{l:'元に戻す',f:()=>restore(before)}]);
+}
+function snack(text,acts){
+  snackActs=acts||[];$('snackT').textContent=text;$('snackB').innerHTML=snackActs.map((x,i)=>`<button data-a="snack" data-i="${i}">${x.l}</button>`).join('');
   $('snack').style.display='flex';clearTimeout(snackTimer);snackTimer=setTimeout(()=>{$('snack').style.display='none'},6000);
 }
 
 document.addEventListener('click',e=>{
+  if(suppress){suppress=false;return}
   const b=e.target.closest('[data-a]');
   if(!b&&e.target.closest('#grid')){const g=$('grid').getBoundingClientRect();const c=Math.floor((e.clientX-g.left)/g.width*lastDs.length);if(lastDs[c]!==undefined)openForm(null,lastDs[c]);return}
   if(!b||b.disabled)return;
@@ -424,8 +563,10 @@ document.addEventListener('click',e=>{
   else if(a==='new')openForm(null);
   else if(a==='edit')openForm(task(id));
   else if(a==='save')save();
-  else if(a==='del'){const i=T.findIndex(t=>t.id===id),[t]=T.splice(i,1);popT=null;render();snack(`「${t.proc}｜${ord(t.o).short}」を削除しました`,()=>{T.splice(i,0,t);render()})}
-  else if(a==='snack-undo'){if(snackFn)snackFn();snackFn=null;$('snack').style.display='none'}
+  else if(a==='del'){const i=T.findIndex(t=>t.id===id),[t]=T.splice(i,1);popT=null;render();snack(`「${t.proc}｜${ord(t.o).short}」を削除しました`,[{l:'元に戻す',f:()=>{T.splice(i,0,t);render()}}])}
+  else if(a==='snack'){const x=snackActs[+b.dataset.i];$('snack').style.display='none';snackActs=[];if(x)x.f()}
+  else if(a==='rw')openRw(id);
+  else if(a==='rw-save')doRw();
   else if(a==='adm'){complete(id)}
   else if(a==='undo'){const t=task(id);t.done=false;t.doneAt=null;render()}
   else if(a==='see'){sel=task(id).who;tab='line';popT=null;render()}
