@@ -5,10 +5,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* VOICE: 余計なものを置かない、カレンダーアプリの静けさ
-   IDEA: 工程表を「予定」として見るカレンダー。期限が近い予定だけ色が変わり、LINEが鳴る
-   PICTURE: 時間グリッドの週カレンダーと、隣のLINEトーク画面
+   IDEA: 工程表を「予定」として見るカレンダー。期限が近い予定だけ色が変わり、現場の端末が光って鳴る
+   PICTURE: 週カレンダーと、隣の現場端末（持ち場ごとのタブレット）画面
    COLOUR and TYPE: 白地、罫線は薄いグレー、予定は青、期限接近はオレンジ、遅延は赤、完了は淡い緑。Noto Sans JP
-   LAYOUT: 上に1行のツールバー、左に担当者、中央にカレンダー、右にLINE。狭い画面は日表示＋タブ切替 */
+   LAYOUT: 上に1行のツールバー、左に担当者、中央にカレンダー、右に現場端末。狭い画面は日表示＋タブ切替 */
 :root{color-scheme:light dark;--bg:light-dark(#fff,#131314);--ink:light-dark(#1f1f1f,#e3e3e3);--mute:light-dark(#5f6368,#9aa0a6);--line:light-dark(#dadce0,#3c4043);--soft:light-dark(#f1f3f4,#28292c);--blue:#1a73e8;--org:#f4511e;--red:#d93025;--okbg:light-dark(#e6f4ea,#1d3526);--okink:light-dark(#137333,#81c995);--green:#06c755;--chat:light-dark(#8eaad6,#25303f);--ngbg:light-dark(#fce8e6,#3a1d1b);--rw:#8430ce;--hh:48px}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
@@ -101,7 +101,7 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
 .f input[type=checkbox]{width:22px;min-height:22px;justify-self:end}
 @media(max-width:1199px){.app{grid-template-columns:minmax(0,1fr) 360px}.side{display:none}}
 @media(max-width:600px){.ev{padding:4px 7px;margin:0 3px}.bell{padding:1px 5px 1px 3px}}
-@media(max-width:999px){.tabs{display:flex}.app{grid-template-columns:minmax(0,1fr)}.app[data-tab=cal] .line,.app[data-tab=line] .cal{display:none}.line{border-left:0}}
+@media(max-width:999px){.lhead .tm{display:none}.tabs{display:flex}.app{grid-template-columns:minmax(0,1fr)}.app[data-tab=cal] .line,.app[data-tab=line] .cal{display:none}.line{border-left:0}}
 @media(max-width:600px){header{padding:6px 8px;gap:2px}.logo{display:none}h1{font-size:18px;margin-left:4px}.hide-s{display:none}.clock{padding:0 10px;font-size:13px}
 #veil{background:rgba(0,0,0,.3)}#ev-pop{left:0!important;right:0;top:auto!important;bottom:0;width:auto;max-width:none;border-radius:16px 16px 0 0}#set{width:auto;left:12px;right:12px;transform:translateY(-50%)}}
 .create{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 22px 0 14px;border-radius:16px;background:light-dark(#c2e7ff,#004a77);color:light-dark(#001d35,#c2e7ff);font-weight:500;font-size:15px;margin:2px 0 14px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
@@ -139,6 +139,28 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
 .preview{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:13px;margin:4px 0 12px;line-height:1.6}
 .rwbtn{background:var(--rw)!important;color:#fff!important}
 @media(max-width:600px){#rw{width:auto;left:12px;right:12px;transform:translateY(-50%)}}
+.lhead .tm{color:var(--ink);white-space:nowrap}
+.snd{min-height:40px;padding:0 12px;font-size:13px}.snd[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.term{flex:1;overflow-y:auto;background:var(--soft);padding:12px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.alarm{border-radius:12px;padding:14px 16px;color:#fff;background:var(--org);display:grid;gap:2px}
+.alarm.late{background:var(--red)}
+.alarm b{font-size:19px}.alarm span{font-size:16px;font-weight:500}.alarm small{font-size:13px;opacity:.92}
+@keyframes flash{to{filter:brightness(1.2) saturate(1.2)}}
+@media(prefers-reduced-motion:no-preference){.alarm{animation:flash .9s ease-in-out infinite alternate}}
+.sec{font-size:13px;color:var(--mute);font-weight:500;margin:6px 2px 0}
+.job{background:var(--bg);border-radius:12px;padding:12px 14px;border-left:6px solid var(--c)}
+.jt{font-size:15px;line-height:1.45}.jt b{font-size:19px;margin-right:6px}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:1px 9px;border-radius:999px;color:#fff;background:var(--c);margin:0 6px 4px 0}
+.jd{color:var(--mute);margin-top:2px}.jd strong{color:var(--ink);font-size:17px;white-space:nowrap}
+.why{margin:6px 0 0;color:var(--rw);font-size:13px;font-weight:500}
+.jb{display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;margin-top:10px}.jb.two2{grid-template-columns:2fr 1fr}
+.jb button{border-radius:10px;min-height:54px;font-weight:700;font-size:14px;padding:0 6px;white-space:normal;line-height:1.25}
+.jb .ok{font-size:19px}
+.mini{background:var(--bg);border-radius:10px;padding:9px 12px;display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.mini span{color:var(--mute);white-space:nowrap}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sum div{background:var(--bg);border-radius:10px;padding:10px 12px;color:var(--mute);font-size:13px}.sum b{display:block;font-size:26px;color:var(--ink);font-weight:500}
+.term .card{width:auto;max-width:none}
+.empty2{color:var(--mute);text-align:center;padding:28px 12px}
 @keyframes pop{from{transform:translateY(8px);opacity:0}}
 @media(prefers-reduced-motion:no-preference){.new{animation:pop .35s ease-out}}
 </style></head><body>
@@ -155,7 +177,7 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
   <button class="ol" data-a="adv">＋1時間</button>
   <button class="ic" data-a="set" aria-label="設定"><svg viewBox="0 0 24 24"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg></button>
 </header>
-<nav class="tabs" role="tablist"><button data-a="tab" data-v="cal" role="tab" id="tcal">カレンダー</button><button data-a="tab" data-v="line" role="tab" id="tline">LINE</button></nav>
+<nav class="tabs" role="tablist"><button data-a="tab" data-v="cal" role="tab" id="tcal">カレンダー</button><button data-a="tab" data-v="line" role="tab" id="tline">現場端末</button></nav>
 
 <div class="app" id="app" data-tab="cal">
   <aside class="side">
@@ -163,7 +185,7 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
     <h3>担当者</h3><div id="people"></div>
     <h3>色の意味</h3>
     <div class="lg"><i class="sw" style="background:var(--blue)"></i>予定・作業中</div>
-    <div class="lg"><i class="sw" style="background:var(--org)"></i>期限が近い（LINE通知中）</div>
+    <div class="lg"><i class="sw" style="background:var(--org)"></i>期限が近い（通知中）</div>
     <div class="lg"><i class="sw" style="background:var(--red)"></i>期限を過ぎた</div>
     <div class="lg"><i class="sw" style="background:var(--okbg);border:1px solid var(--okink)"></i>完了</div>
     <div class="lg"><i class="sw" style="background:var(--blue);background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.35) 0 3px,transparent 3px 6px)"></i>手戻りでやり直す工程</div>
@@ -174,9 +196,9 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
   </aside>
   <main class="cal" id="cal"><div class="chead" id="chead"></div><div class="cbody"><div class="wk" id="grid"></div></div></main>
   <section class="line">
-    <div class="lhead"><strong>LINE</strong><select id="who" aria-label="表示する担当者"></select></div>
-    <div class="chat" id="chat"></div>
-    <div class="lfoot">［完了］が押されるまで通知が続きます（デモ表示）</div>
+    <div class="lhead"><strong class="tm">現場端末</strong><select id="who" aria-label="表示する持ち場"></select><button class="ol snd" data-a="sound" aria-pressed="false">音オフ</button></div>
+    <div class="term" id="chat"></div>
+    <div class="lfoot">［完了］が押されるまで、画面表示と音で知らせ続けます（デモ表示）</div>
   </section>
 </div>
 
@@ -239,7 +261,7 @@ const AUTO={'金型設計':'山本','設計':'山本','評価・試験':'山本'
 const WORKERS=Object.keys(ROLE).filter(p=>p!=='中村');
 const S={lead:4,iv:1,esc:3,work:true};
 let panel=null,editId=null,whoTouched=false,lastDs=[],snackActs=[],snackTimer=null,seq=0,drag=null,suppress=false,rwCur=null;
-let now,T,M,push,reply,unread,sel,mid,seen,vd,tab='cal',hidden=new Set(),popT=null,popRect=null,timer=null;
+let now,T,M,push,reply,unread,sel,mid,seen,vd,soundOn=false,actx=null,beepNext=false,tab='cal',hidden=new Set(),popT=null,popRect=null,timer=null;
 const $=id=>document.getElementById(id);
 const date=h=>new Date(B.getTime()+Math.round(h*60)*6e4);
 const p2=n=>String(n).padStart(2,'0');
@@ -254,6 +276,10 @@ const st=t=>t.ng?'ng':t.done?'done':now>t.due?'late':t.due-now<=S.lead?'near':no
 const tn=t=>`【${t.proc}】${ord(t.o).name}`;
 const mode=()=>innerWidth<600?3:5;
 const lineVisible=()=>innerWidth>=1000||tab==='line';
+const STN={'高橋':'金型エリア','山本':'設計・評価室','田中':'成形エリア','佐藤':'塗装ブース','鈴木':'組立ライン','小林':'出荷場','中村':'事務所（班長）'};
+const alerting=p=>T.filter(t=>t.who===p&&!t.done&&t.n>0&&(st(t)==='near'||st(t)==='late'));
+const openEsc=()=>M.filter(m=>m.to===BOSS&&task(m.task)&&!task(m.task).done);
+function beep(){try{const c=actx,t0=c.currentTime;[880,660,880].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain(),a=t0+i*.2;o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.0001,a);g.gain.exponentialRampToValueAtTime(.25,a+.02);g.gain.exponentialRampToValueAtTime(.0001,a+.17);o.start(a);o.stop(a+.18)})}catch(_){}}
 
 function init(){
   now=H(11,24,8);M=[];push=0;reply=0;unread={};sel='田中';mid=0;seen=0;vd=dayOf(now);popT=null;
@@ -262,8 +288,8 @@ function init(){
 }
 function add(m){
   m.id=++mid;m.t=now;M.push(m);
-  if(m.kind!=='me'&&!(m.to===sel&&lineVisible()))unread[m.to]=(unread[m.to]||0)+1;
-  if(m.api==='push')push++;if(m.api==='reply')reply++;
+  if(m.api==='push')push++;
+  if(soundOn&&m.to===sel)beepNext=true;
 }
 function tick(){
   if(S.work&&!isWork(now))return;
@@ -293,37 +319,31 @@ function advance(min){for(let i=0;i<min/30;i++)if(!step())break;follow();render(
 function morning(){let i=0;do{if(!step())break;i++}while(!(isWork(now)&&date(now).getHours()===8&&date(now).getMinutes()===0)&&i<200);follow();render()}
 function complete(id,by){
   const t=task(id);if(!t||t.done)return;t.done=true;t.doneAt=now;
-  if(by===undefined)return render();
-  const to=by||t.who;
-  add({to,kind:'me',text:'完了しました'});
-  add({to,kind:'reply',text:`${tn(t)} の完了を記録しました。カレンダーに反映済みです。おつかれさまです。`,api:'reply'});
-  render();
+  render();snack(`${t.proc}｜${ord(t.o).short} を完了にしました`,[{l:'元に戻す',f:()=>{t.done=false;t.doneAt=null;render()}}]);
 }
 function delay(id){
   const t=task(id);if(!t||t.done||t.delay)return;t.delay=true;
-  add({to:t.who,kind:'me',text:'少し遅れそうです'});
-  add({to:t.who,kind:'reply',text:'班長に共有しました。終わったら［完了］を押してください。',api:'reply'});
   add({to:BOSS,kind:'info',task:t.id,api:'push'});
-  render();
+  render();snack('事務所（班長）に遅れを知らせました',[]);
 }
 function stopPlay(){clearInterval(timer);timer=null}
 
 function render(){
   if(drag&&drag.active)return;
-  if(lineVisible())unread[sel]=0;
   const ds=days(),f=date(ds[0]*24),l=date(ds[ds.length-1]*24);
   $('title').textContent=f.getMonth()===l.getMonth()?`2026年${f.getMonth()+1}月`:`2026年${f.getMonth()+1}月〜${l.getMonth()+1}月`;
   $('clock').textContent=`${dd(now)} ${hm(now)}`;
   $('play').innerHTML=timer?PAUSE:PLAY;$('play').setAttribute('aria-label',timer?'一時停止':'自動で時間を進める');
-  const tot=Object.entries(unread).reduce((a,[k,v])=>a+(k===sel&&lineVisible()?0:v),0);
-  $('tline').innerHTML='LINE'+(tot?`<span class="badge">${tot}</span>`:'');
+  const tot=WORKERS.reduce((a,p)=>a+alerting(p).length,0)+openEsc().length;
+  $('tline').innerHTML='現場端末'+(tot?`<span class="badge">${tot}</span>`:'');
   $('tcal').setAttribute('aria-selected',tab==='cal');$('tline').setAttribute('aria-selected',tab==='line');
   $('app').dataset.tab=tab;
   $('fab').style.display=innerWidth>=1200||(innerWidth<1000&&tab==='line')?'none':'grid';
   const people=[...new Set(T.map(t=>t.who))];
   $('people').innerHTML=people.map(p=>`<label><input type="checkbox" data-p="${p}" ${hidden.has(p)?'':'checked'}>${p}さん <small>${ROLE[p]}</small></label>`).join('');
   renderCal(ds);renderLine();renderPop();
-  $('cnt').textContent=`このデモでの送信：通知 ${push}通（LINEの月間通数に計上）／完了への返信 ${reply}通（無料）`;
+  $('cnt').textContent=`このデモでの通知：${push}回（現場端末・事務所への表示）`;
+  if(beepNext){beepNext=false;beep()}
   seen=mid;
 }
 function renderCal(ds){
@@ -372,17 +392,33 @@ function card(m){
   }
   return `<div class="card"><div class="ch" style="background:${col}">${head}</div><div class="cb">${body}</div>${foot}</div>`;
 }
+function job(t,big){
+  const s2=st(t),o=ord(t.o),c=COL[s2]==='var(--okbg)'?'var(--okink)':COL[s2];
+  const ng=hasPrev(t);
+  return `<div class="job" style="--c:${c}"><div class="jt"><span class="chip">${SL[s2]}${t.n&&!t.done?`・通知${t.n}回`:''}</span>${t.rw?'<span class="rwtag">やり直し</span>':''}<br><b>${t.proc}</b>${o.name}</div>
+  <div class="jd">${o.no}　期限 <strong>${dayOf(t.due)===dayOf(now)?'今日':dd(t.due)} ${hm(t.due)}</strong></div>${t.rwWhy?`<p class="why">${t.rwWhy}</p>`:''}${t.delay?'<p class="why" style="color:var(--mute)">遅れを事務所に連絡済み</p>':''}
+  ${big?`<div class="jb${ng?'':' two2'}"><button class="ok" data-a="done" data-t="${t.id}">完了</button>${t.delay?'<button class="ol" disabled>連絡済み</button>':`<button class="ol" data-a="late" data-t="${t.id}">遅れそう</button>`}${ng?`<button class="ol" data-a="rw" data-t="${t.id}">NG・<br>手戻り</button>`:''}</div>`:''}</div>`;
+}
 function renderLine(){
-  const people=[...new Set(T.map(t=>t.who)),BOSS];
-  $('who').innerHTML=people.map(p=>`<option value="${p}" ${p===sel?'selected':''}>${p}さん（${ROLE[p]}）${unread[p]&&p!==sel?`・未読${unread[p]}`:''}</option>`).join('');
-  let h='',last='';
-  for(const m of M.filter(m=>m.to===sel&&(!m.task||task(m.task)))){
-    const d=dd(m.t);if(d!==last){h+=`<div class="day">${d}</div>`;last=d}
-    const nw=m.id>seen?' new':'';
-    if(m.kind==='me')h+=`<div class="m me${nw}"><time>${hm(m.t)}</time><div class="bubble">${m.text}</div></div>`;
-    else h+=`<div class="m${nw}"><div class="av">工</div>${m.kind==='reply'?`<div class="bubble">${m.text}</div>`:card(m)}<time>${hm(m.t)}</time></div>`;
+  $('who').innerHTML=[...WORKERS,BOSS].map(p=>{const n=p===BOSS?openEsc().length:alerting(p).length;return `<option value="${p}" ${p===sel?'selected':''}>${STN[p]}・${p}${n?`（通知${n}）`:''}</option>`}).join('');
+  const c=$('chat');let h='';
+  if(sel===BOSS){
+    const es=openEsc(),late=T.filter(t=>!t.done&&st(t)==='late').length,near=T.filter(t=>!t.done&&st(t)==='near').length;
+    h=`<div class="sum"><div>期限超過<b>${late}</b></div><div>期限が近い<b>${near}</b></div></div><p class="sec">対応が必要な工程</p>`;
+    h+=es.length?es.slice().reverse().map(m=>card(m)).join(''):'<p class="empty2">今、対応が必要な工程はありません</p>';
+    const past=M.filter(m=>m.to===BOSS&&task(m.task)&&task(m.task).done).slice(-3).reverse();
+    if(past.length)h+='<p class="sec">対応済み</p>'+past.map(m=>card(m)).join('');
+  }else{
+    const day=dayOf(now),mine=T.filter(t=>t.who===sel&&!t.done).sort((a,b)=>a.due-b.due);
+    const al=alerting(sel).sort((a,b)=>a.due-b.due);
+    if(al.length){const t=al[0],late=st(t)==='late';h+=`<div class="alarm${late?' late':''}" role="alert"><b>${late?'期限を過ぎています':'作業の期限が迫っています'}</b><span>${t.proc}｜${ord(t.o).name}　${hm(t.due)}</span><small>${t.n}回目の通知・［完了］を押すまで続きます${al.length>1?`・ほか${al.length-1}件`:''}</small></div>`}
+    const today=mine.filter(t=>dayOf(t.start)<=day),next=mine.filter(t=>dayOf(t.start)>day).slice(0,3);
+    const doneToday=T.filter(t=>t.who===sel&&t.done&&t.doneAt!==null&&dayOf(t.doneAt)===day);
+    h+=`<p class="sec">今日の作業（${STN[sel]}）</p>`+(today.length?today.map(t=>job(t,true)).join(''):'<p class="empty2">今日の作業はありません</p>');
+    if(next.length)h+='<p class="sec">この先の作業</p>'+next.map(t=>`<div class="mini"><b>${t.proc}｜${ord(t.o).short}</b><span>${dd(t.start)}〜</span></div>`).join('');
+    if(doneToday.length)h+='<p class="sec">今日完了した作業</p>'+doneToday.map(t=>`<div class="mini"><b style="color:var(--okink)">✓ ${t.proc}｜${ord(t.o).short}</b><span>${hm(t.doneAt)}</span></div>`).join('');
   }
-  const c=$('chat');c.innerHTML=h||'<p class="empty">まだ通知はありません。<br>▶ か「＋1時間」で時間を進めてください。</p>';c.scrollTop=c.scrollHeight;
+  const top=c.scrollTop;c.innerHTML=h;c.scrollTop=top;
 }
 function renderPop(){
   const p=$('ev-pop');
@@ -393,8 +429,8 @@ function renderPop(){
   const range=dayOf(t.start)===dayOf(t.due)?`${dd(t.start)} ${hm(t.start)}〜${hm(t.due)}`:`${dd(t.start)} ${hm(t.start)} 〜 ${dd(t.due)} ${hm(t.due)}`;
   p.innerHTML=`<div class="ptop"><button class="ic" data-a="edit" data-t="${t.id}" aria-label="編集">${EDIT}</button><button class="ic" data-a="del" data-t="${t.id}" aria-label="削除">${TRASH}</button><button class="ic" data-a="close" aria-label="閉じる">${CLOSE}</button></div>
   <div class="pt"><i class="sw" style="background:${COL[s]};${s==='done'?'border:1px solid var(--okink)':''}"></i><div><h3>${t.proc}｜${o.name}</h3><p>${range}</p>
-  <dl><dt>担当</dt><dd>${t.who}さん（${ROLE[t.who]}）</dd><dt>品番</dt><dd>${o.no}・${o.kind}</dd><dt>状態</dt><dd>${SL[s]}${t.done?`（${dd(t.doneAt)} ${hm(t.doneAt)}）`:''}${t.delay&&!t.done?'・遅れの連絡あり':''}</dd><dt>LINE通知</dt><dd>${t.n}回${t.escN||t.escL?'（班長にも通知）':''}</dd>${t.ngReason!==undefined?`<dt>NG理由</dt><dd>${t.ngReason||'未記入'}</dd>`:''}${o.rw?`<dt>手戻り</dt><dd>この品番で${o.rw}回</dd>`:''}</dl></div></div>
-  <div class="pbtn">${t.ng?'':t.done?`<button class="ol" data-a="undo" data-t="${t.id}">未完了に戻す</button>`:`<button class="pri" data-a="adm" data-t="${t.id}">完了にする</button>${hasPrev(t)?`<button class="rwbtn" data-a="rw" data-t="${t.id}">NG・手戻り</button>`:''}`}<button class="ol" data-a="see" data-t="${t.id}">${t.who}さんのLINE</button></div>`;
+  <dl><dt>担当</dt><dd>${t.who}さん（${ROLE[t.who]}）</dd><dt>品番</dt><dd>${o.no}・${o.kind}</dd><dt>状態</dt><dd>${SL[s]}${t.done?`（${dd(t.doneAt)} ${hm(t.doneAt)}）`:''}${t.delay&&!t.done?'・遅れの連絡あり':''}</dd><dt>通知</dt><dd>${t.n}回${t.escN||t.escL?'（班長にも通知）':''}</dd>${t.ngReason!==undefined?`<dt>NG理由</dt><dd>${t.ngReason||'未記入'}</dd>`:''}${o.rw?`<dt>手戻り</dt><dd>この品番で${o.rw}回</dd>`:''}</dl></div></div>
+  <div class="pbtn">${t.ng?'':t.done?`<button class="ol" data-a="undo" data-t="${t.id}">未完了に戻す</button>`:`<button class="pri" data-a="adm" data-t="${t.id}">完了にする</button>${hasPrev(t)?`<button class="rwbtn" data-a="rw" data-t="${t.id}">NG・手戻り</button>`:''}`}<button class="ol" data-a="see" data-t="${t.id}">${STN[t.who]}の端末</button></div>`;
   p.style.display='block';
   if(innerWidth>600&&popRect){
     const w=p.offsetWidth,hgt=p.offsetHeight;
@@ -524,14 +560,15 @@ function openRw(id){
 }
 function rwPreview(){
   const cur=task(rwCur),tg=task(document.querySelector('[name=rwt]:checked').value),p=rwPlan(cur,tg);
-  $('rwPrev').innerHTML=`<b>やり直す工程：</b>${p.copies.map(x=>`${x.proc}（${x.who}）`).join(' → ')}<br><b>やり直しの完了見込み：</b>${dd(p.end)} ${hm(p.end)}<br>${p.down.length?`<b>後工程：</b>${p.down.map(x=>x.proc).join('・')} を${p.k?`${p.k}日後ろにずらします`:'そのままにします（間に合う見込み）'}`:'<b>後工程：</b>なし'}<br><b>LINE：</b>${p.copies[0].who}さんと班長に通知します`;
+  $('rwPrev').innerHTML=`<b>やり直す工程：</b>${p.copies.map(x=>`${x.proc}（${x.who}）`).join(' → ')}<br><b>やり直しの完了見込み：</b>${dd(p.end)} ${hm(p.end)}<br>${p.down.length?`<b>後工程：</b>${p.down.map(x=>x.proc).join('・')} を${p.k?`${p.k}日後ろにずらします`:'そのままにします（間に合う見込み）'}`:'<b>後工程：</b>なし'}<br><b>通知：</b>${STN[p.copies[0].who]}の端末と事務所（班長）に表示します`;
 }
 $('rwOpts').addEventListener('change',rwPreview);
 function doRw(){
   const cur=task(rwCur),tg=task(document.querySelector('[name=rwt]:checked').value);if(!cur||!tg)return;
   const before=snap(),p=rwPlan(cur,tg),o=ord(cur.o),reason=$('rwReason').value.trim().slice(0,60);
   cur.done=true;cur.ng=true;cur.doneAt=now;cur.ngReason=reason;o.rw=(o.rw||0)+1;
-  const made=p.copies.map(x=>{const t={id:'R'+(++seq),o:cur.o,...x,rw:true,done:false,doneAt:null,n:0,last:null,escN:false,escL:false,delay:false};T.push(t);return t});
+  const why0=`${cur.proc}でNG${reason?`（${reason.replace(/[&<>"]/g,'')}）`:''}のため、やり直し`;
+  const made=p.copies.map(x=>{const t={id:'R'+(++seq),o:cur.o,...x,rw:true,rwWhy:why0,done:false,doneAt:null,n:0,last:null,escN:false,escL:false,delay:false};T.push(t);return t});
   if(p.k)shiftDown(p.down,p.k);
   const esc=v=>v.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const why=`${cur.proc}でNG${reason?`（${esc(reason)}）`:''}`;
@@ -566,6 +603,7 @@ document.addEventListener('click',e=>{
   else if(a==='del'){const i=T.findIndex(t=>t.id===id),[t]=T.splice(i,1);popT=null;render();snack(`「${t.proc}｜${ord(t.o).short}」を削除しました`,[{l:'元に戻す',f:()=>{T.splice(i,0,t);render()}}])}
   else if(a==='snack'){const x=snackActs[+b.dataset.i];$('snack').style.display='none';snackActs=[];if(x)x.f()}
   else if(a==='rw')openRw(id);
+  else if(a==='sound'){soundOn=!soundOn;if(soundOn){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume();beep()}catch(_){soundOn=false}}b.setAttribute('aria-pressed',soundOn);b.textContent=soundOn?'音オン':'音オフ'}
   else if(a==='rw-save')doRw();
   else if(a==='adm'){complete(id)}
   else if(a==='undo'){const t=task(id);t.done=false;t.doneAt=null;render()}
