@@ -161,6 +161,40 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
 .sum{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sum div{background:var(--bg);border-radius:10px;padding:10px 12px;color:var(--mute);font-size:13px}.sum b{display:block;font-size:26px;color:var(--ink);font-weight:500}
 .term .card{width:auto;max-width:none}
 .empty2{color:var(--mute);text-align:center;padding:28px 12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-left:8px;flex:none}
+.seg button{border-radius:0;min-height:36px;padding:0 14px}
+.seg button[aria-pressed=true]{background:light-dark(#e8f0fe,#1f3354);color:var(--blue);font-weight:700}
+.gv{flex:1;overflow:auto;min-height:0;display:none}
+.cal[data-view=all] .gv{display:block}.cal[data-view=all] .chead,.cal[data-view=all] .cbody{display:none}
+.gin{position:relative;padding-bottom:24px}
+.grow{display:flex;min-height:38px;border-top:1px solid var(--line)}
+.glab{position:sticky;left:0;z-index:3;width:var(--lw);flex:none;background:var(--bg);border-right:1px solid var(--line);padding:5px 10px;font-size:13px;line-height:1.3;display:flex;flex-direction:column;justify-content:center}
+.glab small{color:var(--mute);font-size:12px}
+.gtr{position:relative;flex:none}
+.ghead{position:sticky;top:0;z-index:5;background:var(--bg);border-top:0;border-bottom:1px solid var(--line);min-height:48px}
+.ghead .glab{z-index:6;flex-direction:row;align-items:center;justify-content:space-between;gap:6px;color:var(--mute);font-size:12px}
+.ghead .glab button{min-height:32px;padding:0 10px;font-size:12px}
+.gd{position:absolute;top:0;bottom:0;text-align:center;font-size:11px;color:var(--mute);padding-top:5px;line-height:1.25;overflow:hidden}
+.gd b{display:block;font-size:13px;color:var(--ink);font-weight:500;width:22px;height:22px;line-height:22px;margin:0 auto;border-radius:50%}
+.gd.td{color:var(--blue)}.gd.td b{color:#fff;background:var(--blue)}
+.gbg{position:absolute;top:0;bottom:0;pointer-events:none;z-index:0}
+.gbg i{position:absolute;top:0;bottom:0;border-left:1px solid var(--line)}
+.gbg i.we{background:light-dark(rgba(60,64,67,.05),rgba(255,255,255,.04))}
+.gnow{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--red);z-index:2}
+.ggrp,.ggrp .glab{background:var(--soft)}
+.ggrp{min-height:54px}.ggrp .glab{cursor:pointer;flex-direction:row;align-items:center;gap:8px;justify-content:flex-start}
+.ggrp .glab:hover{background:light-dark(#e8eaed,#303134)}
+.chev{flex:none;width:16px;color:var(--mute);font-size:12px}
+.ggrp .glab b{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd{display:inline-block;font-size:11px;font-weight:700;padding:0 6px;border-radius:4px;color:#fff;margin:2px 4px 0 0}
+.gsum{position:absolute;top:50%;height:12px;margin-top:-6px;border-radius:6px;background:light-dark(#d2d6dc,#45484d);overflow:hidden;z-index:1}
+.gsum i{position:absolute;left:0;top:0;bottom:0;background:#34a853}
+.gsum.lateg{box-shadow:0 0 0 2px var(--red)}
+.gtask .glab{padding-left:34px}
+.gtask .glab b{font-weight:500;font-size:13px}
+.gv .ev{position:absolute;top:5px;height:28px;margin:0;padding:0 8px;font-size:12px;border-radius:6px;z-index:1}
+.gv .ev.dragging{z-index:6}
+@media(max-width:600px){.seg{margin-left:0}.seg button{padding:0 9px;min-height:34px;min-width:0}header>button.ol{padding:0 10px}.clock{padding:0 9px;gap:0}.clock::before{display:none}.gtask .glab{padding-left:12px}.ghead .glab span{display:none}.ghead .glab{justify-content:center;padding:4px}.ghead .glab button{padding:0 6px;font-size:11px;white-space:normal;line-height:1.2}}
 @keyframes pop{from{transform:translateY(8px);opacity:0}}
 @media(prefers-reduced-motion:no-preference){.new{animation:pop .35s ease-out}}
 </style></head><body>
@@ -171,6 +205,7 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
   <button class="ic" data-a="prev" aria-label="前へ"><svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg></button>
   <button class="ic" data-a="next" aria-label="次へ"><svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6z"/></svg></button>
   <h1 id="title"></h1>
+  <div class="seg" role="group" aria-label="表示"><button data-a="view" data-v="week" id="vw">週</button><button data-a="view" data-v="all" id="va">全体</button></div>
   <span class="sp"></span>
   <span class="clock" id="clock" title="デモ内の現在時刻"></span>
   <button class="ic" data-a="play" id="play" aria-label="自動で時間を進める"></button>
@@ -194,7 +229,7 @@ select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);
     <p class="hint" style="margin:0">予定をドラッグすると日程をずらせます。右端をドラッグすると期限を延ばせます。スマホでは長押ししてから動かします。</p>
     <p class="note">品番・担当者・日程はデモ用の架空データです。</p>
   </aside>
-  <main class="cal" id="cal"><div class="chead" id="chead"></div><div class="cbody"><div class="wk" id="grid"></div></div></main>
+  <main class="cal" id="cal" data-view="week"><div class="chead" id="chead"></div><div class="cbody"><div class="wk" id="grid"></div></div><div class="gv" id="gv"></div></main>
   <section class="line">
     <div class="lhead"><strong class="tm">現場端末</strong><select id="who" aria-label="表示する持ち場"></select><button class="ol snd" data-a="sound" aria-pressed="false">音オフ</button></div>
     <div class="term" id="chat"></div>
@@ -260,7 +295,7 @@ const TRASH='<svg viewBox="0 0 24 24"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2
 const AUTO={'金型設計':'山本','設計':'山本','評価・試験':'山本','評価':'山本','金型製作':'高橋','試作成形':'田中','成形':'田中','量産成形':'田中','塗装':'佐藤','組立':'鈴木','検査':'鈴木','出荷':'小林'};
 const WORKERS=Object.keys(ROLE).filter(p=>p!=='中村');
 const S={lead:4,iv:1,esc:3,work:true};
-let panel=null,editId=null,whoTouched=false,lastDs=[],snackActs=[],snackTimer=null,seq=0,drag=null,suppress=false,rwCur=null;
+let view='week',coll=new Set(),gDW=30,gD0=0,gLW=190,gNeedScroll=false,panel=null,editId=null,whoTouched=false,lastDs=[],snackActs=[],snackTimer=null,seq=0,drag=null,suppress=false,rwCur=null;
 let now,T,M,push,reply,unread,sel,mid,seen,vd,soundOn=false,actx=null,beepNext=false,tab='cal',hidden=new Set(),popT=null,popRect=null,timer=null;
 const $=id=>document.getElementById(id);
 const date=h=>new Date(B.getTime()+Math.round(h*60)*6e4);
@@ -341,11 +376,37 @@ function render(){
   $('fab').style.display=innerWidth>=1200||(innerWidth<1000&&tab==='line')?'none':'grid';
   const people=[...new Set(T.map(t=>t.who))];
   $('people').innerHTML=people.map(p=>`<label><input type="checkbox" data-p="${p}" ${hidden.has(p)?'':'checked'}>${p}さん <small>${ROLE[p]}</small></label>`).join('');
-  renderCal(ds);renderLine();renderPop();
+  $('cal').dataset.view=view;$('vw').setAttribute('aria-pressed',view==='week');$('va').setAttribute('aria-pressed',view==='all');
+  if(view==='all')renderGantt();else renderCal(ds);renderLine();renderPop();
   $('cnt').textContent=`このデモでの通知：${push}回（現場端末・事務所への表示）`;
   if(beepNext){beepNext=false;beep()}
   seen=mid;
 }
+function renderGantt(){
+  const g=$('gv'),vis=T.filter(t=>!hidden.has(t.who));
+  const d0=Math.min(...vis.map(t=>dayOf(t.start)),dayOf(now))-1,d1=Math.max(...vis.map(t=>dayOf(t.due)),dayOf(now))+1,nd=d1-d0+1;
+  const lw=innerWidth<600?118:200,dw=Math.max(innerWidth<600?30:26,(g.clientWidth-lw)/nd),W=nd*dw,X=h=>(h-d0*24)/24*dw;
+  gDW=dw;gD0=d0;gLW=lw;
+  $('title').textContent=innerWidth<600?'全体':`全体 ${dd(d0*24+24).replace(/\(.\)/,'')}〜${dd(d1*24-24).replace(/\(.\)/,'')}`;
+  const td=dayOf(now),days=[...Array(nd)].map((_,i)=>d0+i);
+  const allOpen=coll.size===0;
+  let h=`<div class="grow ghead"><div class="glab"><span>品番・工程</span><button class="ol" data-a="grpall">${allOpen?'すべて閉じる':'すべて開く'}</button></div><div class="gtr" style="width:${W}px">${days.map(d=>{const x=date(d*24);return `<div class="gd${d===td?' td':''}" style="left:${(d-d0)*dw}px;width:${dw}px">${x.getDate()===1||d===d0?`${x.getMonth()+1}月`:WD[x.getDay()]}<b>${x.getDate()}</b></div>`}).join('')}</div></div>`;
+  const groups=ORD.map(o=>{const ts=vis.filter(t=>t.o===o.id).sort((a,b)=>a.start-b.start);return {o,ts,end:ts.length?Math.max(...ts.map(t=>t.due)):0}}).filter(x=>x.ts.length).sort((a,b)=>a.end-b.end);
+  for(const {o,ts,end} of groups){
+    const real=ts.filter(t=>!t.ng),done=real.filter(t=>t.done).length,first=Math.min(...ts.map(t=>t.start));
+    const late=ts.some(t=>st(t)==='late'),near=ts.some(t=>st(t)==='near'),op=!coll.has(o.id);
+    h+=`<div class="grow ggrp"><div class="glab" data-a="grp" data-o="${o.id}" role="button" tabindex="0" aria-expanded="${op}"><span class="chev">${op?'▼':'▶'}</span><span style="min-width:0"><b>${o.name}</b><small>${o.no}・${done}/${real.length}完了・〆${dd(end)}</small><br>${late?'<span class="bd" style="background:var(--red)">遅延</span>':near?'<span class="bd" style="background:var(--org)">期限接近</span>':''}${o.rw?`<span class="bd" style="background:var(--rw)">手戻り${o.rw}</span>`:''}</span></div><div class="gtr" style="width:${W}px"><div class="gsum${late?' lateg':''}" style="left:${X(first)}px;width:${Math.max(X(end)-X(first),8)}px"><i style="width:${real.length?done/real.length*100:0}%"></i></div></div></div>`;
+    if(op)for(const t of ts){
+      const s2=st(t);
+      h+=`<div class="grow gtask"><div class="glab"><b>${t.ng?'NG ':''}${t.proc}</b><small>${t.who}</small></div><div class="gtr" style="width:${W}px"><button class="ev ${s2}${t.rw?' rw':''}" data-a="ev" data-t="${t.id}" style="--c:${COL[s2]};left:${X(t.start)}px;width:${Math.max(X(t.due)-X(t.start),10)}px"><span class="tx"><b>${t.who}</b></span>${t.n&&!t.done?`<span class="bell">${BELL}${t.n}</span>`:''}${t.done?'':'<span class="grip"></span>'}</button></div></div>`;
+    }
+  }
+  if(!groups.length)h+='<p class="nil">表示する工程がありません</p>';
+  const bg=`<div class="gbg" style="left:${lw}px;width:${W}px">${days.map(d=>`<i class="${we(d)?'we':''}" style="left:${(d-d0)*dw}px;width:${dw}px"></i>`).join('')}<div class="gnow" style="left:${X(now)}px"></div></div>`;
+  g.innerHTML=`<div class="gin" style="width:${lw+W}px;--lw:${lw}px">${bg}${h}</div>`;
+  if(gNeedScroll){gNeedScroll=false;gToday()}
+}
+function gToday(){const g=$('gv');g.scrollLeft=Math.max(0,(now-gD0*24)/24*gDW-(g.clientWidth-gLW)*0.3)}
 function renderCal(ds){
   lastDs=ds;const td=dayOf(now),n=ds.length,f0=ds[0],l0=ds[n-1];
   $('cal').style.setProperty('--n',n);
@@ -489,34 +550,39 @@ function addWork(s,w){let h=s;while(w>0){if(isWork(h))w-=0.5;h+=0.5}return h}
 const baseP=p=>p.replace(/（再）$/,'');
 const downstream=t=>T.filter(x=>x.o===t.o&&x.id!==t.id&&!x.done&&x.start>t.start);
 const hasPrev=t=>!t.done&&T.some(x=>x.o===t.o&&x.id!==t.id&&!x.ng&&x.start<t.start);
-function shiftDown(list,k){for(const x of list){x.start=addWd(x.start,k);x.due=addWd(x.due,k);resetAlert(x)}}
+function calShift(h,k){let x=h+k*24;const sg=k>0?1:-1;while(we(dayOf(x)))x+=24*sg;return x}
+function shiftDown(list,k,fn=addWd){for(const x of list){x.start=fn(x.start,k);x.due=fn(x.due,k);resetAlert(x)}}
 // ---- drag ----
 function commitDrag(d){
   const t=task(d.id);if(!t)return render();
   const before=snap(),o0=t.start,k=d.k;
-  if(d.type==='move'){t.start=addWd(t.start,k);t.due=addWd(t.due,k)}
-  else{const nd=addWd(t.due,k);if(nd<=t.start)return render();t.due=nd}
+  const fn=d.mode==='cal'?calShift:addWd;
+  if(d.type==='move'){t.start=fn(t.start,k);t.due=fn(t.due,k)}
+  else{const nd=fn(t.due,k);if(nd<=t.start)return render();t.due=nd}
   resetAlert(t);tick();
   const down=downstream({...t,start:o0}).filter(x=>x.id!==t.id);
   const dir=k>0?`${k}日後ろへ`:`${-k}日前へ`;
   const msg=d.type==='move'?`を${dir}移動しました`:k>0?`の期限を${k}日延ばしました`:`の期限を${-k}日早めました`;
   const acts=[];
-  if(down.length&&!(d.type==='resize'&&k<0))acts.push({l:`後工程${down.length}件もずらす`,f:()=>{shiftDown(down,k);tick();render();snack(`後工程${down.length}件も${dir}ずらしました`,[{l:'元に戻す',f:()=>restore(before)}])}});
+  if(down.length&&!(d.type==='resize'&&k<0))acts.push({l:`後工程${down.length}件もずらす`,f:()=>{shiftDown(down,k,fn);tick();render();snack(`後工程${down.length}件も${dir}ずらしました`,[{l:'元に戻す',f:()=>restore(before)}])}});
   acts.push({l:'元に戻す',f:()=>restore(before)});
   render();snack(`${t.proc}｜${ord(t.o).short} ${msg}`,acts);
 }
 function dragVis(){
   const d=drag,el=d.el,n=lastDs.length;
+  if(d.mode==='cal'){if(d.type==='move')el.style.left=(d.l0+d.k*d.colW)+'px';else el.style.width=Math.max(10,d.w0+d.k*d.colW)+'px';return}
   let a=d.c1,b=d.c2;
   if(d.type==='move'){a+=d.k;b+=d.k}else{b=Math.max(d.c1,d.c2+d.k)}
   el.style.gridColumn=`${Math.min(Math.max(a,0),n-1)+1}/${Math.min(Math.max(b,0),n-1)+2}`;
 }
-$('grid').addEventListener('pointerdown',e=>{
+const onDown=e=>{
   const el=e.target.closest('.ev');if(!el||e.button>0)return;
   const t=task(el.dataset.t);if(!t||t.done)return;
-  drag={el,id:t.id,x0:e.clientX,y0:e.clientY,type:e.target.closest('.grip')?'resize':'move',k:0,active:false,touch:e.pointerType!=='mouse',colW:$('grid').clientWidth/lastDs.length,c1:+el.dataset.c1,c2:+el.dataset.c2};
+  const gm=!!el.closest('#gv');
+  drag={el,id:t.id,x0:e.clientX,y0:e.clientY,type:e.target.closest('.grip')?'resize':'move',k:0,active:false,touch:e.pointerType!=='mouse',mode:gm?'cal':'wd',colW:gm?gDW:$('grid').clientWidth/lastDs.length,c1:+el.dataset.c1,c2:+el.dataset.c2,l0:parseFloat(el.style.left)||0,w0:el.offsetWidth};
   if(drag.touch){const d=drag;d.timer=setTimeout(()=>{if(drag===d){d.active=true;el.classList.add('dragging');try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}}},380)}
-});
+};
+$('grid').addEventListener('pointerdown',onDown);$('gv').addEventListener('pointerdown',onDown);
 addEventListener('pointermove',e=>{
   const d=drag;if(!d)return;
   const dx=e.clientX-d.x0,dy=e.clientY-d.y0;
@@ -590,9 +656,12 @@ document.addEventListener('click',e=>{
   const a=b.dataset.a,id=b.dataset.t;
   if(a==='adv')advance(60);
   else if(a==='play'){if(timer){stopPlay();render()}else{timer=setInterval(()=>{if(now>=END-0.5){stopPlay();render();return}advance(30)},1000);render()}}
-  else if(a==='today'){vd=dayOf(now);while(we(vd))vd++;render()}
-  else if(a==='prev'){shift(-1);render()}
-  else if(a==='next'){shift(1);render()}
+  else if(a==='today'){if(view==='all')gToday();else{vd=dayOf(now);while(we(vd))vd++;render()}}
+  else if(a==='prev'){if(view==='all')$('gv').scrollBy({left:-gDW*7,behavior:'smooth'});else{shift(-1);render()}}
+  else if(a==='next'){if(view==='all')$('gv').scrollBy({left:gDW*7,behavior:'smooth'});else{shift(1);render()}}
+  else if(a==='view'){view=b.dataset.v;tab='cal';if(view==='all')gNeedScroll=true;render()}
+  else if(a==='grp'){const o=b.dataset.o;coll.has(o)?coll.delete(o):coll.add(o);render()}
+  else if(a==='grpall'){if(coll.size)coll.clear();else ORD.forEach(o=>coll.add(o.id));render()}
   else if(a==='tab'){tab=b.dataset.v;render()}
   else if(a==='ev'){popT=id;popRect=b.getBoundingClientRect();renderPop()}
   else if(a==='close')closeAll();
@@ -608,13 +677,13 @@ document.addEventListener('click',e=>{
   else if(a==='adm'){complete(id)}
   else if(a==='undo'){const t=task(id);t.done=false;t.doneAt=null;render()}
   else if(a==='see'){sel=task(id).who;tab='line';popT=null;render()}
-  else if(a==='see-ev'){const t=task(id);vd=Math.max(dayOf(t.start),Math.min(dayOf(now),dayOf(t.due)));while(we(vd))vd++;tab='cal';popT=id;popRect=null;render()}
+  else if(a==='see-ev'){const t=task(id);if(view==='all')gNeedScroll=true;vd=Math.max(dayOf(t.start),Math.min(dayOf(now),dayOf(t.due)));while(we(vd))vd++;tab='cal';popT=id;popRect=null;render()}
   else if(a==='done')complete(id,b.dataset.by||null);
   else if(a==='late')delay(id);
   else if(a==='morning'){closeAll();morning()}
   else if(a==='reset'){stopPlay();closeAll();init()}
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();if((e.key==='Enter'||e.key===' ')&&e.target.dataset&&e.target.dataset.a==='grp'){e.preventDefault();e.target.click()}});
 $('who').addEventListener('change',e=>{sel=e.target.value;render()});
 $('fOrd').addEventListener('change',e=>{$('fNew').style.display=e.target.value==='new'?'grid':'none';if(e.target.value==='new')$('fNo').focus()});
 $('fWho').addEventListener('change',()=>{whoTouched=true});
