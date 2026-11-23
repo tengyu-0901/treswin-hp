@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>工程アラート デモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: 余計なものを置かない、カレンダーアプリの静けさ
+   IDEA: 工程表を「予定」として見るカレンダー。期限が近い予定だけ色が変わり、LINEが鳴る
+   PICTURE: 時間グリッドの週カレンダーと、隣のLINEトーク画面
+   COLOUR and TYPE: 白地、罫線は薄いグレー、予定は青、期限接近はオレンジ、遅延は赤、完了は淡い緑。Noto Sans JP
+   LAYOUT: 上に1行のツールバー、左に担当者、中央にカレンダー、右にLINE。狭い画面は日表示＋タブ切替 */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#131314);--ink:light-dark(#1f1f1f,#e3e3e3);--mute:light-dark(#5f6368,#9aa0a6);--line:light-dark(#dadce0,#3c4043);--soft:light-dark(#f1f3f4,#28292c);--blue:#1a73e8;--org:#f4511e;--red:#d93025;--okbg:light-dark(#e6f4ea,#1d3526);--okink:light-dark(#137333,#81c995);--green:#06c755;--chat:light-dark(#8eaad6,#25303f);--hh:48px}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "Noto Sans JP",system-ui,sans-serif;overflow-x:clip;display:flex;flex-direction:column;height:100dvh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;border-radius:999px;min-height:40px;min-width:40px;padding:0 14px;white-space:nowrap}
+button:hover{background:var(--soft)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.ol{border:1px solid var(--line)}
+.pri{background:var(--blue);color:#fff;font-weight:500}.pri:hover{background:#1765cc}
+.ic{padding:0;display:inline-grid;place-items:center;position:relative}
+svg{width:22px;height:22px;fill:currentColor;flex:none}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);flex:none}
+.logo{display:flex;align-items:center;gap:10px;margin-right:18px;font-size:20px;color:var(--mute);white-space:nowrap}
+.logo i{width:36px;height:36px;border-radius:8px;background:var(--blue);color:#fff;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:16px}
+h1{font-size:22px;font-weight:400;margin:0 0 0 6px;white-space:nowrap}
+.sp{flex:1}
+.clock{font-variant-numeric:tabular-nums;white-space:nowrap;padding:0 14px;border-radius:999px;background:var(--soft);min-height:36px;display:inline-flex;align-items:center;gap:8px;font-weight:500}
+.clock::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red)}
+.tabs{display:none;border-bottom:1px solid var(--line);flex:none}
+.tabs button{flex:1;border-radius:0;min-height:44px;color:var(--mute);border-bottom:3px solid transparent}
+.tabs button[aria-selected=true]{color:var(--blue);border-bottom-color:var(--blue);font-weight:700}
+.badge{display:inline-block;background:var(--red);color:#fff;font-size:11px;border-radius:999px;min-width:18px;height:18px;line-height:18px;padding:0 5px;margin-left:6px;font-weight:700}
+.app{flex:1;min-height:0;display:grid;grid-template-columns:230px minmax(0,1fr) 370px}
+.side{padding:12px 16px;overflow-y:auto}
+.side h3{font-size:14px;font-weight:500;margin:10px 0 4px}
+.side label{display:flex;align-items:center;gap:12px;min-height:36px;cursor:pointer}
+.side input{width:18px;height:18px;margin:0}
+.side small{color:var(--mute)}
+.lg{display:flex;align-items:center;gap:12px;min-height:30px;color:var(--mute)}
+.sw{width:14px;height:14px;border-radius:4px;flex:none;display:inline-block}
+.note{font-size:12px;color:var(--mute);margin:16px 0 0}
+.cal{display:flex;flex-direction:column;min-height:0}
+.chead{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));border-bottom:1px solid var(--line);flex:none}
+.chead div{text-align:center;padding:8px 0 6px;color:var(--mute);font-size:12px;font-weight:500}
+.chead b{display:block;margin:2px auto 0;width:44px;height:44px;line-height:44px;border-radius:50%;font-size:24px;font-weight:400;color:var(--ink)}
+.chead .td{color:var(--blue)}.chead .td b{background:var(--blue);color:#fff}
+.cbody{flex:1;overflow-y:auto;min-height:0}
+.wk{position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));grid-auto-rows:50px;row-gap:6px;padding:10px 0 28px;min-height:100%}
+.bg{position:absolute;inset:0;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));pointer-events:none}
+.bg div+div{border-left:1px solid var(--line)}
+.ev{position:relative;z-index:1;margin:0 5px;border-radius:8px;padding:4px 10px;font-size:13px;line-height:1.35;color:#fff;background:var(--c);text-align:left;display:flex;align-items:center;gap:6px;min-height:0;white-space:normal}
+.ev:hover{background:var(--c);filter:brightness(.93)}
+.ev.cl{margin-left:0;border-top-left-radius:0;border-bottom-left-radius:0}
+.ev.cr{margin-right:0;border-top-right-radius:0;border-bottom-right-radius:0}
+.ev .tx{flex:1}
+.ev b,.ev span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev b{font-weight:500}.ev span{font-size:12px;opacity:.92}
+.ev.done{color:var(--okink)}.ev.done b{text-decoration:line-through}
+.bell{display:inline-flex;align-items:center;gap:2px;font-size:12px;font-weight:700;background:rgba(255,255,255,.28);border-radius:999px;padding:1px 7px 1px 4px;flex:none}
+.bell svg{width:13px;height:13px}
+.nowl{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--red);z-index:3;pointer-events:none}
+.nowl::before{content:"";position:absolute;left:-5px;top:-1px;width:12px;height:12px;border-radius:50%;background:var(--red)}
+.nil{grid-column:1/-1;text-align:center;color:var(--mute);padding:40px 0}
+.line{display:flex;flex-direction:column;min-height:0;border-left:1px solid var(--line)}
+.lhead{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);flex:none}
+.lhead strong{color:var(--green);font-size:15px}
+select{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);border-radius:8px;padding:0 8px;background:var(--bg);color:var(--ink);flex:1}
+.chat{flex:1;overflow-y:auto;background:var(--chat);padding:14px 10px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.day{align-self:center;background:rgba(0,0,0,.28);color:#fff;font-size:12px;padding:2px 10px;border-radius:999px}
+.m{display:flex;gap:6px;align-items:flex-end}.m.me{justify-content:flex-end}
+.av{flex:none;width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-size:13px;display:grid;place-items:center;font-weight:700;align-self:flex-start}
+.m time{font-size:11px;color:light-dark(#22324d,#aab6c8);white-space:nowrap}
+.card{background:var(--bg);border-radius:14px;overflow:hidden;width:250px;max-width:calc(100% - 80px)}
+.ch{padding:8px 12px;color:#fff;font-weight:700}
+.cb{padding:10px 12px}
+.cb p{margin:6px 0 0;color:var(--mute);font-size:13px}
+.cf{display:grid;gap:6px;padding:0 10px 10px}
+.cf button{border-radius:8px;font-weight:500;min-height:42px}
+.ok{background:var(--green)!important;color:#fff!important}
+.stamp{padding:0 12px 12px;color:var(--okink);font-weight:700}
+.bubble{background:var(--bg);padding:8px 12px;border-radius:16px;max-width:230px}
+.me .bubble{background:#8de055;color:#10131a}
+.empty{color:#fff;text-align:center;margin:auto;padding:20px}
+.lfoot{padding:8px 14px;font-size:12px;color:var(--mute);border-top:1px solid var(--line);flex:none}
+#veil{position:fixed;inset:0;z-index:19;display:none}
+.pop{position:fixed;z-index:20;width:340px;max-width:calc(100vw - 24px);background:var(--bg);border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.3);padding:8px 16px 18px;display:none}
+.ptop{display:flex;justify-content:flex-end;margin-right:-8px}
+.pt{display:grid;grid-template-columns:20px minmax(0,1fr);gap:6px 14px}
+.pt .sw{margin-top:8px}
+.pt h3{margin:0;font-size:20px;font-weight:400;line-height:1.35}
+.pt p{margin:0;color:var(--mute)}
+.pt dl{margin:6px 0 0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px}
+.pt dt{color:var(--mute)}.pt dd{margin:0}
+.pbtn{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-left:34px}
+#set{left:50%;top:50%;transform:translate(-50%,-50%);width:400px}
+#set h3{margin:0 0 12px;font-size:20px;font-weight:400}
+.f{display:grid;grid-template-columns:minmax(0,1fr) 90px;align-items:center;gap:12px;margin-bottom:10px}
+.f input{font:inherit;font-size:16px;min-height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:var(--bg);color:var(--ink);text-align:right;width:100%}
+.f input[type=checkbox]{width:22px;min-height:22px;justify-self:end}
+@media(max-width:1199px){.app{grid-template-columns:minmax(0,1fr) 360px}.side{display:none}}
+@media(max-width:600px){.ev{padding:4px 7px;margin:0 3px}.bell{padding:1px 5px 1px 3px}}
+@media(max-width:999px){.tabs{display:flex}.app{grid-template-columns:minmax(0,1fr)}.app[data-tab=cal] .line,.app[data-tab=line] .cal{display:none}.line{border-left:0}}
+@media(max-width:600px){header{padding:6px 8px;gap:2px}.logo{display:none}h1{font-size:18px;margin-left:4px}.hide-s{display:none}.clock{padding:0 10px;font-size:13px}
+#veil{background:rgba(0,0,0,.3)}#ev-pop{left:0!important;right:0;top:auto!important;bottom:0;width:auto;max-width:none;border-radius:16px 16px 0 0}#set{width:auto;left:12px;right:12px;transform:translateY(-50%)}}
+.create{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 22px 0 14px;border-radius:16px;background:light-dark(#c2e7ff,#004a77);color:light-dark(#001d35,#c2e7ff);font-weight:500;font-size:15px;margin:2px 0 14px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.create:hover{background:light-dark(#b3dcf7,#00568a)}
+.fab{position:fixed;z-index:15;right:380px;bottom:20px;width:56px;height:56px;border-radius:16px;background:light-dark(#c2e7ff,#004a77);color:light-dark(#001d35,#c2e7ff);display:none;place-items:center;padding:0;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.fab svg{width:28px;height:28px}
+.wk{cursor:cell}
+#form{left:50%;top:50%;transform:translate(-50%,-50%);width:460px;max-height:calc(100dvh - 24px);overflow-y:auto}
+#form h3{margin:0 0 14px;font-size:22px;font-weight:400}
+.fl{display:grid;gap:4px;margin-bottom:12px;color:var(--mute);font-size:13px}
+.fl input,.fl select{font:inherit;font-size:16px;min-height:44px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:var(--bg);color:var(--ink);width:100%}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.hint{font-size:12px;color:var(--mute)}
+.err{color:var(--red);margin:0 0 8px;min-height:1.2em}
+.snack{position:fixed;z-index:30;left:16px;bottom:16px;max-width:calc(100vw - 32px);background:light-dark(#303134,#e3e3e3);color:light-dark(#fff,#1f1f1f);border-radius:8px;padding:6px 8px 6px 16px;display:none;align-items:center;gap:12px;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+.snack button{color:light-dark(#8ab4f8,#1a73e8);font-weight:700}.snack button:hover{background:transparent}
+@media(max-width:999px){.fab{right:20px}}
+@media(max-width:600px){#form{width:auto;left:12px;right:12px;transform:translateY(-50%)}.two{grid-template-columns:minmax(0,1fr)}.snack{left:12px;bottom:88px}}
+@keyframes pop{from{transform:translateY(8px);opacity:0}}
+@media(prefers-reduced-motion:no-preference){.new{animation:pop .35s ease-out}}
+</style></head><body>
+
+<header>
+  <div class="logo"><i>工</i><span>工程カレンダー</span></div>
+  <button class="ol" data-a="today">今日</button>
+  <button class="ic" data-a="prev" aria-label="前へ"><svg viewBox="0 0 24 24"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg></button>
+  <button class="ic" data-a="next" aria-label="次へ"><svg viewBox="0 0 24 24"><path d="M8.6 16.6 10 18l6-6-6-6-1.4 1.4 4.6 4.6z"/></svg></button>
+  <h1 id="title"></h1>
+  <span class="sp"></span>
+  <span class="clock" id="clock" title="デモ内の現在時刻"></span>
+  <button class="ic" data-a="play" id="play" aria-label="自動で時間を進める"></button>
+  <button class="ol" data-a="adv">＋1時間</button>
+  <button class="ic" data-a="set" aria-label="設定"><svg viewBox="0 0 24 24"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg></button>
+</header>
+<nav class="tabs" role="tablist"><button data-a="tab" data-v="cal" role="tab" id="tcal">カレンダー</button><button data-a="tab" data-v="line" role="tab" id="tline">LINE</button></nav>
+
+<div class="app" id="app" data-tab="cal">
+  <aside class="side">
+    <button class="create" data-a="new"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>工程を追加</button>
+    <h3>担当者</h3><div id="people"></div>
+    <h3>色の意味</h3>
+    <div class="lg"><i class="sw" style="background:var(--blue)"></i>予定・作業中</div>
+    <div class="lg"><i class="sw" style="background:var(--org)"></i>期限が近い（LINE通知中）</div>
+    <div class="lg"><i class="sw" style="background:var(--red)"></i>期限を過ぎた</div>
+    <div class="lg"><i class="sw" style="background:var(--okbg);border:1px solid var(--okink)"></i>完了</div>
+    <p class="note">品番・担当者・日程はデモ用の架空データです。</p>
+  </aside>
+  <main class="cal" id="cal"><div class="chead" id="chead"></div><div class="cbody"><div class="wk" id="grid"></div></div></main>
+  <section class="line">
+    <div class="lhead"><strong>LINE</strong><select id="who" aria-label="表示する担当者"></select></div>
+    <div class="chat" id="chat"></div>
+    <div class="lfoot">［完了］が押されるまで通知が続きます（デモ表示）</div>
+  </section>
+</div>
+
+<button class="fab" id="fab" data-a="new" aria-label="工程を追加"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></button>
+<div class="snack" id="snack" role="status"><span id="snackT"></span><button data-a="snack-undo">元に戻す</button></div>
+<div id="veil" data-a="close"></div>
+<div class="pop" id="form" role="dialog" aria-labelledby="fTitle">
+  <div class="ptop"><button class="ic" data-a="close" aria-label="閉じる"><svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg></button></div>
+  <h3 id="fTitle">工程を追加</h3>
+  <label class="fl">品番<select id="fOrd"></select></label>
+  <div class="two" id="fNew"><label class="fl">新しい品番<input id="fNo" placeholder="例：CL-305" autocomplete="off"></label><label class="fl">品名<input id="fName" placeholder="例：クリップ" autocomplete="off"></label></div>
+  <label class="fl">工程<input id="fProc" list="procs" placeholder="例：成形" autocomplete="off"></label>
+  <datalist id="procs"><option value="金型設計"><option value="金型製作"><option value="試作成形"><option value="評価・試験"><option value="成形"><option value="量産成形"><option value="塗装"><option value="組立"><option value="検査"><option value="出荷"></datalist>
+  <label class="fl">担当<select id="fWho"></select><span class="hint">工程名を入れると、いつもの担当者が自動で入ります</span></label>
+  <div class="two"><label class="fl">開始<input type="datetime-local" id="fStart" step="1800"></label><label class="fl">期限<input type="datetime-local" id="fDue" step="1800"></label></div>
+  <p class="err" id="fErr" role="alert"></p>
+  <div class="pbtn" style="padding:0;justify-content:flex-end"><button class="ol" data-a="close">キャンセル</button><button class="pri" data-a="save">保存</button></div>
+</div>
+<div class="pop" id="ev-pop" role="dialog"></div>
+<div class="pop" id="set" role="dialog">
+  <div class="ptop"><button class="ic" data-a="close" aria-label="閉じる"><svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg></button></div>
+  <h3>通知ルール</h3>
+  <label class="f">期限の何時間前から通知<input type="number" id="sLead" min="1" max="48" value="4"></label>
+  <label class="f">未完了なら何時間ごとに再通知<input type="number" id="sIv" min="0.5" max="8" step="0.5" value="1"></label>
+  <label class="f">何回目で班長にも通知<input type="number" id="sEsc" min="1" max="10" value="3"></label>
+  <label class="f">平日8〜18時だけ通知する<input type="checkbox" id="sWork" checked></label>
+  <div class="pbtn" style="padding:0"><button class="ol" data-a="morning">翌営業日の朝へ</button><button class="ol" data-a="reset">最初に戻す</button></div>
+  <p class="note" id="cnt"></p>
+</div>
+
+<script>
+{
+const B=new Date(2026,10,19),HH=48;
+const H=(m,d,h)=>((m===11?d-19:11+d)*24+h);
+const END=15*24,BOSS='中村',WD='日月火水木金土';
+const ROLE={'田中':'成形','佐藤':'塗装','鈴木':'組立','高橋':'金型','山本':'設計・評価','小林':'出荷','中村':'班長'};
+const ORD=[{id:'A',no:'SC-U-2701',name:'ステアリングコラムカバー（上）',short:'コラムカバー上',kind:'新規立上げ'},{id:'B',no:'SP-4410',name:'サイドウィンドウフレームスペーサー',short:'スペーサー',kind:'量産'},{id:'C',no:'BC-1180',name:'ボードコウルサイドトリム',short:'サイドトリム',kind:'量産'},{id:'D',no:'VH-220',name:'バイザーホルダー',short:'バイザーホルダー',kind:'量産'}];
+const SEED=[
+['A1','A','金型設計','山本',H(11,19,8),H(11,20,17),1],['A2','A','金型製作','高橋',H(11,20,8),H(11,24,17)],['A3','A','試作成形','田中',H(11,25,8),H(11,25,17)],['A4','A','評価・試験','山本',H(11,26,8),H(11,27,17)],['A5','A','量産成形','田中',H(12,1,8),H(12,2,17)],
+['B1','B','成形','田中',H(11,23,8),H(11,24,12)],['B2','B','塗装','佐藤',H(11,24,13),H(11,25,15)],['B3','B','組立','鈴木',H(11,25,15),H(11,26,17)],['B4','B','出荷','小林',H(11,27,9),H(11,27,11)],
+['C1','C','成形','田中',H(11,19,8),H(11,20,17),1],['C2','C','塗装','佐藤',H(11,23,8),H(11,24,10)],['C3','C','組立','鈴木',H(11,24,10),H(11,25,12)],['C4','C','出荷','小林',H(11,26,9),H(11,26,11)],
+['D1','D','成形','田中',H(11,26,8),H(11,27,17)],['D2','D','組立','鈴木',H(11,30,8),H(12,1,12)],['D3','D','出荷','小林',H(12,2,9),H(12,2,11)]];
+const SL={plan:'予定',doing:'作業中',near:'期限が近い',late:'期限超過',done:'完了'};
+const COL={plan:'var(--blue)',doing:'var(--blue)',near:'var(--org)',late:'var(--red)',done:'var(--okbg)'};
+const BELL='<svg viewBox="0 0 24 24"><path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6v-5c0-3.1-1.6-5.6-4.5-6.3V4a1.5 1.5 0 0 0-3 0v.7C7.6 5.4 6 7.9 6 11v5l-2 2v1h16v-1z"/></svg>';
+const PLAY='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',PAUSE='<svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>';
+const CLOSE='<svg viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg>';
+const EDIT='<svg viewBox="0 0 24 24"><path d="M3 17.2V21h3.8l11-11-3.8-3.8zM20.7 7a1 1 0 0 0 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8 3.8 3.8z"/></svg>';
+const TRASH='<svg viewBox="0 0 24 24"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg>';
+const AUTO={'金型設計':'山本','設計':'山本','評価・試験':'山本','評価':'山本','金型製作':'高橋','試作成形':'田中','成形':'田中','量産成形':'田中','塗装':'佐藤','組立':'鈴木','検査':'鈴木','出荷':'小林'};
+const WORKERS=Object.keys(ROLE).filter(p=>p!=='中村');
+const S={lead:4,iv:1,esc:3,work:true};
+let panel=null,editId=null,whoTouched=false,lastDs=[],snackFn=null,snackTimer=null,seq=0;
+let now,T,M,push,reply,unread,sel,mid,seen,vd,tab='cal',hidden=new Set(),popT=null,popRect=null,timer=null;
+const $=id=>document.getElementById(id);
+const date=h=>new Date(B.getTime()+Math.round(h*60)*6e4);
+const p2=n=>String(n).padStart(2,'0');
+const hm=h=>{const d=date(h);return d.getHours()+':'+p2(d.getMinutes())};
+const dd=h=>{const d=date(h);return `${d.getMonth()+1}/${d.getDate()}(${WD[d.getDay()]})`};
+const dayOf=h=>Math.floor(h/24);
+const we=d=>date(d*24).getDay()%6===0;
+const isWork=h=>{const d=date(h);return !we(dayOf(h))&&d.getHours()>=8&&d.getHours()<18};
+const ord=id=>ORD.find(o=>o.id===id);
+const task=id=>T.find(t=>t.id===id);
+const st=t=>t.done?'done':now>t.due?'late':t.due-now<=S.lead?'near':now>=t.start?'doing':'plan';
+const tn=t=>`【${t.proc}】${ord(t.o).name}`;
+const mode=()=>innerWidth<600?3:5;
+const lineVisible=()=>innerWidth>=1000||tab==='line';
+
+function init(){
+  now=H(11,24,8);M=[];push=0;reply=0;unread={};sel='田中';mid=0;seen=0;vd=dayOf(now);popT=null;
+  T=SEED.map(([id,o,proc,who,start,due,done])=>({id,o,proc,who,start,due,done:!!done,doneAt:done?due-1:null,n:0,last:null,escN:false,escL:false,delay:false}));
+  tick();seen=0;render();
+}
+function add(m){
+  m.id=++mid;m.t=now;M.push(m);
+  if(m.kind!=='me'&&!(m.to===sel&&lineVisible()))unread[m.to]=(unread[m.to]||0)+1;
+  if(m.api==='push')push++;if(m.api==='reply')reply++;
+}
+function tick(){
+  if(S.work&&!isWork(now))return;
+  for(const t of T){
+    if(t.done)continue;
+    const left=t.due-now;
+    if(left>S.lead||(t.last!==null&&now-t.last<S.iv-1e-6))continue;
+    t.n++;t.last=now;
+    add({to:t.who,kind:left<0?'late':'alert',task:t.id,n:t.n,api:'push'});
+    if(t.n>=S.esc&&!t.escN){t.escN=true;add({to:BOSS,kind:'esc',task:t.id,n:t.n,api:'push'})}
+    if(left<0&&!t.escL){t.escL=true;add({to:BOSS,kind:'escL',task:t.id,n:t.n,api:'push'})}
+  }
+}
+function days(){
+  const m=mode();
+  if(m===5){const mon=vd-(date(vd*24).getDay()+6)%7;return [0,1,2,3,4].map(i=>mon+i)}
+  const r=[];let d=vd;while(r.length<m){if(!we(d))r.push(d);d++}return r;
+}
+function shift(dir){
+  const m=mode();
+  if(m===5){vd+=7*dir;return}
+  for(let k=0;k<m;){vd+=dir;if(!we(vd))k++}
+}
+function follow(){const d=dayOf(now);if(!days().includes(d)){vd=d;while(we(vd))vd++}}
+function step(){if(now>=END-0.5)return false;now+=0.5;tick();return true}
+function advance(min){for(let i=0;i<min/30;i++)if(!step())break;follow();render()}
+function morning(){let i=0;do{if(!step())break;i++}while(!(isWork(now)&&date(now).getHours()===8&&date(now).getMinutes()===0)&&i<200);follow();render()}
+function complete(id,by){
+  const t=task(id);if(!t||t.done)return;t.done=true;t.doneAt=now;
+  if(by===undefined)return render();
+  const to=by||t.who;
+  add({to,kind:'me',text:'完了しました'});
+  add({to,kind:'reply',text:`${tn(t)} の完了を記録しました。カレンダーに反映済みです。おつかれさまです。`,api:'reply'});
+  render();
+}
+function delay(id){
+  const t=task(id);if(!t||t.done||t.delay)return;t.delay=true;
+  add({to:t.who,kind:'me',text:'少し遅れそうです'});
+  add({to:t.who,kind:'reply',text:'班長に共有しました。終わったら［完了］を押してください。',api:'reply'});
+  add({to:BOSS,kind:'info',task:t.id,api:'push'});
+  render();
+}
+function stopPlay(){clearInterval(timer);timer=null}
+
+function render(){
+  if(lineVisible())unread[sel]=0;
+  const ds=days(),f=date(ds[0]*24),l=date(ds[ds.length-1]*24);
+  $('title').textContent=f.getMonth()===l.getMonth()?`2026年${f.getMonth()+1}月`:`2026年${f.getMonth()+1}月〜${l.getMonth()+1}月`;
+  $('clock').textContent=`${dd(now)} ${hm(now)}`;
+  $('play').innerHTML=timer?PAUSE:PLAY;$('play').setAttribute('aria-label',timer?'一時停止':'自動で時間を進める');
+  const tot=Object.entries(unread).reduce((a,[k,v])=>a+(k===sel&&lineVisible()?0:v),0);
+  $('tline').innerHTML='LINE'+(tot?`<span class="badge">${tot}</span>`:'');
+  $('tcal').setAttribute('aria-selected',tab==='cal');$('tline').setAttribute('aria-selected',tab==='line');
+  $('app').dataset.tab=tab;
+  $('fab').style.display=innerWidth>=1200||(innerWidth<1000&&tab==='line')?'none':'grid';
+  const people=[...new Set(T.map(t=>t.who))];
+  $('people').innerHTML=people.map(p=>`<label><input type="checkbox" data-p="${p}" ${hidden.has(p)?'':'checked'}>${p}さん <small>${ROLE[p]}</small></label>`).join('');
+  renderCal(ds);renderLine();renderPop();
+  $('cnt').textContent=`このデモでの送信：通知 ${push}通（LINEの月間通数に計上）／完了への返信 ${reply}通（無料）`;
+  seen=mid;
+}
+function renderCal(ds){
+  lastDs=ds;const td=dayOf(now),n=ds.length,f0=ds[0],l0=ds[n-1];
+  $('cal').style.setProperty('--n',n);
+  $('chead').innerHTML=ds.map(d=>{const x=date(d*24);return `<div class="${d===td?'td':''}">${WD[x.getDay()]}<b>${x.getDate()}</b></div>`}).join('');
+  const bars=T.filter(t=>!hidden.has(t.who)&&dayOf(t.due)>=f0&&dayOf(t.start)<=l0).map(t=>{
+    let c1=ds.findIndex(d=>d>=dayOf(t.start)),c2=-1;ds.forEach((d,i)=>{if(d<=dayOf(t.due))c2=i});
+    return {t,c1,c2,cl:dayOf(t.start)<f0,cr:dayOf(t.due)>l0};
+  }).filter(x=>x.c1>=0&&x.c2>=x.c1).sort((a,b)=>a.c1-b.c1||(b.c2-b.c1)-(a.c2-a.c1)||a.t.start-b.t.start);
+  const lanes=[];
+  for(const x of bars){let i=lanes.findIndex(e=>e<x.c1);if(i<0){i=lanes.length;lanes.push(-1)}lanes[i]=x.c2;x.r=i}
+  let h=`<div class="bg">${ds.map(()=>'<div></div>').join('')}</div>`;
+  h+=bars.map(({t,c1,c2,cl,cr,r})=>{
+    const s2=st(t),due=dayOf(t.due)<=l0?`〆${dayOf(t.due)===td?'今日':dd(t.due)} ${hm(t.due)}`:'';
+    return `<button class="ev ${s2}${cl?' cl':''}${cr?' cr':''}" data-a="ev" data-t="${t.id}" style="--c:${COL[s2]};grid-column:${c1+1}/${c2+2};grid-row:${r+1}"><span class="tx"><b>${t.proc}｜${ord(t.o).short}</b><span>${t.who}${due?'・'+due:''}</span></span>${t.n&&!t.done?`<span class="bell">${BELL}${t.n}</span>`:''}</button>`;
+  }).join('')||'<p class="nil">この期間の工程はありません</p>';
+  const ci=ds.indexOf(td),fr=Math.min(Math.max((now-td*24-8)/10,0),1);
+  if(ci>=0)h+=`<div class="nowl" style="left:calc(${(ci+fr)/n*100}%)"></div>`;
+  $('grid').innerHTML=h;
+}
+function card(m){
+  const t=task(m.task),o=ord(t.o);
+  const stamp=`<div class="stamp">✓ 完了済み（${hm(t.doneAt)}）</div>`;
+  let head,col,body,foot;
+  if(m.kind==='alert'||m.kind==='late'){
+    const late=m.kind==='late';head=late?'期限を過ぎています':'作業の期限が迫っています';col=late?'var(--red)':'var(--org)';
+    body=`<b>${tn(t)}</b> の作業の期限が${late?'過ぎています':'迫っています'}。<p>期限 ${dd(t.due)} ${hm(t.due)}・${m.n}回目の通知</p>`;
+    foot=t.done?stamp:`<div class="cf"><button class="ok" data-a="done" data-t="${t.id}">完了</button>${t.delay?'<button class="ol" disabled>遅れを連絡済み</button>':`<button class="ol" data-a="late" data-t="${t.id}">遅れそう</button>`}</div>`;
+  }else if(m.kind==='info'){
+    head='遅れの連絡';col='var(--blue)';
+    body=`${t.who}さんから <b>${tn(t)}</b> が遅れそうと連絡がありました。<p>期限 ${dd(t.due)} ${hm(t.due)}</p>`;
+    foot=t.done?stamp:`<div class="cf"><button class="ol" data-a="see-ev" data-t="${t.id}">カレンダーで見る</button></div>`;
+  }else{
+    head=m.kind==='escL'?'要確認：期限超過':'要確認：未完了';col='#3c4043';
+    body=`${t.who}さんの <b>${tn(t)}</b> が${m.kind==='escL'?'期限を過ぎても':`${m.n}回通知しても`}完了になっていません。<p>期限 ${dd(t.due)} ${hm(t.due)}</p>`;
+    foot=t.done?stamp:`<div class="cf"><button class="ok" data-a="done" data-t="${t.id}" data-by="${BOSS}">代わりに完了を登録</button><button class="ol" data-a="see-ev" data-t="${t.id}">カレンダーで見る</button></div>`;
+  }
+  return `<div class="card"><div class="ch" style="background:${col}">${head}</div><div class="cb">${body}</div>${foot}</div>`;
+}
+function renderLine(){
+  const people=[...new Set(T.map(t=>t.who)),BOSS];
+  $('who').innerHTML=people.map(p=>`<option value="${p}" ${p===sel?'selected':''}>${p}さん（${ROLE[p]}）${unread[p]&&p!==sel?`・未読${unread[p]}`:''}</option>`).join('');
+  let h='',last='';
+  for(const m of M.filter(m=>m.to===sel&&(!m.task||task(m.task)))){
+    const d=dd(m.t);if(d!==last){h+=`<div class="day">${d}</div>`;last=d}
+    const nw=m.id>seen?' new':'';
+    if(m.kind==='me')h+=`<div class="m me${nw}"><time>${hm(m.t)}</time><div class="bubble">${m.text}</div></div>`;
+    else h+=`<div class="m${nw}"><div class="av">工</div>${m.kind==='reply'?`<div class="bubble">${m.text}</div>`:card(m)}<time>${hm(m.t)}</time></div>`;
+  }
+  const c=$('chat');c.innerHTML=h||'<p class="empty">まだ通知はありません。<br>▶ か「＋1時間」で時間を進めてください。</p>';c.scrollTop=c.scrollHeight;
+}
+function renderPop(){
+  const p=$('ev-pop');
+  $('set').style.display=panel==='set'?'block':'none';$('form').style.display=panel==='form'?'block':'none';
+  $('veil').style.display=popT||panel?'block':'none';
+  if(!popT){p.style.display='none';return}
+  const t=task(popT),o=ord(t.o),s=st(t);
+  const range=dayOf(t.start)===dayOf(t.due)?`${dd(t.start)} ${hm(t.start)}〜${hm(t.due)}`:`${dd(t.start)} ${hm(t.start)} 〜 ${dd(t.due)} ${hm(t.due)}`;
+  p.innerHTML=`<div class="ptop"><button class="ic" data-a="edit" data-t="${t.id}" aria-label="編集">${EDIT}</button><button class="ic" data-a="del" data-t="${t.id}" aria-label="削除">${TRASH}</button><button class="ic" data-a="close" aria-label="閉じる">${CLOSE}</button></div>
+  <div class="pt"><i class="sw" style="background:${COL[s]};${s==='done'?'border:1px solid var(--okink)':''}"></i><div><h3>${t.proc}｜${o.name}</h3><p>${range}</p>
+  <dl><dt>担当</dt><dd>${t.who}さん（${ROLE[t.who]}）</dd><dt>品番</dt><dd>${o.no}・${o.kind}</dd><dt>状態</dt><dd>${SL[s]}${t.done?`（${dd(t.doneAt)} ${hm(t.doneAt)}）`:''}${t.delay&&!t.done?'・遅れの連絡あり':''}</dd><dt>LINE通知</dt><dd>${t.n}回${t.escN||t.escL?'（班長にも通知）':''}</dd></dl></div></div>
+  <div class="pbtn">${t.done?`<button class="ol" data-a="undo" data-t="${t.id}">未完了に戻す</button>`:`<button class="pri" data-a="adm" data-t="${t.id}">完了にする</button>`}<button class="ol" data-a="see" data-t="${t.id}">${t.who}さんのLINE</button></div>`;
+  p.style.display='block';
+  if(innerWidth>600&&popRect){
+    const w=p.offsetWidth,hgt=p.offsetHeight;
+    let x=popRect.right+8;if(x+w>innerWidth-8)x=popRect.left-w-8;if(x<8)x=Math.max(8,(innerWidth-w)/2);
+    const y=Math.min(Math.max(8,popRect.top),innerHeight-hgt-8);
+    p.style.left=x+'px';p.style.top=y+'px';
+  }
+}
+function closeAll(){popT=null;panel=null;renderPop()}
+const toL=h=>{const d=date(h);return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}T${p2(d.getHours())}:${p2(d.getMinutes())}`};
+const fromL=v=>{const d=new Date(v);return isNaN(d)?NaN:(d-B)/36e5};
+const nextWd=d=>{while(we(d))d++;return d};
+function openForm(t,day){
+  editId=t?t.id:null;whoTouched=!!t;
+  $('fTitle').textContent=t?'工程を編集':'工程を追加';
+  $('fOrd').innerHTML=ORD.map(o=>`<option value="${o.id}">${o.no}　${o.name}</option>`).join('')+'<option value="new">＋ 新しい品番を登録</option>';
+  $('fWho').innerHTML=WORKERS.map(p=>`<option value="${p}">${p}さん（${ROLE[p]}）</option>`).join('');
+  let s0,d0;
+  if(t){s0=t.start;d0=t.due}
+  else if(day!==undefined){s0=day*24+8;d0=day*24+17}
+  else{s0=Math.ceil(now);if(date(s0).getHours()>=17||!isWork(s0))s0=nextWd(dayOf(s0)+(date(s0).getHours()>=8?1:0))*24+8;d0=dayOf(s0)*24+17}
+  $('fOrd').value=t?t.o:ORD[0].id;$('fNo').value='';$('fName').value='';
+  $('fProc').value=t?t.proc:'';$('fWho').value=t?t.who:WORKERS[0];
+  $('fStart').value=toL(s0);$('fDue').value=toL(d0);$('fErr').textContent='';
+  $('fNew').style.display='none';popT=null;panel='form';renderPop();
+  setTimeout(()=>$(t?'fStart':'fProc').focus(),0);
+}
+function save(){
+  const proc=$('fProc').value.trim(),s0=fromL($('fStart').value),d0=fromL($('fDue').value);
+  let o=$('fOrd').value;const err=m=>{$('fErr').textContent=m};
+  if(o==='new'&&(!$('fNo').value.trim()||!$('fName').value.trim()))return err('新しい品番と品名を入力してください');
+  if(!proc)return err('工程名を入力してください');
+  if(!isFinite(s0)||!isFinite(d0))return err('開始と期限の日時を入力してください');
+  if(d0<=s0)return err('期限は開始より後にしてください');
+  if(o==='new'){const name=$('fName').value.trim();o='N'+(++seq);ORD.push({id:o,no:$('fNo').value.trim(),name,short:name.length>9?name.slice(0,9)+'…':name,kind:'量産'})}
+  const who=$('fWho').value;let t,msg;
+  if(editId){
+    t=task(editId);
+    if(d0!==t.due){t.n=0;t.last=null;t.escN=false;t.escL=false;t.delay=false}
+    Object.assign(t,{o,proc,who,start:s0,due:d0});msg='工程を更新しました';
+  }else{
+    t={id:'X'+(++seq),o,proc,who,start:s0,due:d0,done:false,doneAt:null,n:0,last:null,escN:false,escL:false,delay:false};
+    T.push(t);const id=t.id;msg='工程を追加しました';
+    snack(msg,()=>{T.splice(T.findIndex(x=>x.id===id),1);render()});
+  }
+  if(editId)snack(msg,null);
+  panel=null;tick();vd=nextWd(dayOf(s0)>dayOf(now)||dayOf(d0)<dayOf(now)?dayOf(s0):dayOf(now));render();
+}
+function snack(text,fn){
+  snackFn=fn;$('snackT').textContent=text;$('snack').querySelector('button').style.display=fn?'':'none';
+  $('snack').style.display='flex';clearTimeout(snackTimer);snackTimer=setTimeout(()=>{$('snack').style.display='none'},6000);
+}
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');
+  if(!b&&e.target.closest('#grid')){const g=$('grid').getBoundingClientRect();const c=Math.floor((e.clientX-g.left)/g.width*lastDs.length);if(lastDs[c]!==undefined)openForm(null,lastDs[c]);return}
+  if(!b||b.disabled)return;
+  const a=b.dataset.a,id=b.dataset.t;
+  if(a==='adv')advance(60);
+  else if(a==='play'){if(timer){stopPlay();render()}else{timer=setInterval(()=>{if(now>=END-0.5){stopPlay();render();return}advance(30)},1000);render()}}
+  else if(a==='today'){vd=dayOf(now);while(we(vd))vd++;render()}
+  else if(a==='prev'){shift(-1);render()}
+  else if(a==='next'){shift(1);render()}
+  else if(a==='tab'){tab=b.dataset.v;render()}
+  else if(a==='ev'){popT=id;popRect=b.getBoundingClientRect();renderPop()}
+  else if(a==='close')closeAll();
+  else if(a==='set'){popT=null;panel='set';renderPop()}
+  else if(a==='new')openForm(null);
+  else if(a==='edit')openForm(task(id));
+  else if(a==='save')save();
+  else if(a==='del'){const i=T.findIndex(t=>t.id===id),[t]=T.splice(i,1);popT=null;render();snack(`「${t.proc}｜${ord(t.o).short}」を削除しました`,()=>{T.splice(i,0,t);render()})}
+  else if(a==='snack-undo'){if(snackFn)snackFn();snackFn=null;$('snack').style.display='none'}
+  else if(a==='adm'){complete(id)}
+  else if(a==='undo'){const t=task(id);t.done=false;t.doneAt=null;render()}
+  else if(a==='see'){sel=task(id).who;tab='line';popT=null;render()}
+  else if(a==='see-ev'){const t=task(id);vd=Math.max(dayOf(t.start),Math.min(dayOf(now),dayOf(t.due)));while(we(vd))vd++;tab='cal';popT=id;popRect=null;render()}
+  else if(a==='done')complete(id,b.dataset.by||null);
+  else if(a==='late')delay(id);
+  else if(a==='morning'){closeAll();morning()}
+  else if(a==='reset'){stopPlay();closeAll();init()}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+$('who').addEventListener('change',e=>{sel=e.target.value;render()});
+$('fOrd').addEventListener('change',e=>{$('fNew').style.display=e.target.value==='new'?'grid':'none';if(e.target.value==='new')$('fNo').focus()});
+$('fWho').addEventListener('change',()=>{whoTouched=true});
+$('fProc').addEventListener('input',e=>{const w=AUTO[e.target.value.trim()];if(w&&!whoTouched)$('fWho').value=w});
+$('form').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();save()}});
+$('people').addEventListener('change',e=>{const p=e.target.dataset.p;if(e.target.checked)hidden.delete(p);else hidden.add(p);render()});
+const num=(id,min,def)=>{const v=parseFloat($(id).value);return isFinite(v)&&v>=min?v:def};
+['sLead','sIv','sEsc','sWork'].forEach(id=>$(id).addEventListener('change',()=>{S.lead=num('sLead',0.5,4);S.iv=num('sIv',0.5,1);S.esc=Math.round(num('sEsc',1,3));S.work=$('sWork').checked;render()}));
+addEventListener('resize',()=>render());
+init();
+}
+</script>
+</body></html>
